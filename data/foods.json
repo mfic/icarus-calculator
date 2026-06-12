@@ -1,0 +1,4978 @@
+{
+  "refreshed_at": "2026-06-12T21:27:12.630792+00:00",
+  "source": "https://icarus.wiki.gg",
+  "items": [
+    {
+      "name": "Arctic Animal Feed",
+      "slug": "Arctic_Animal_Feed",
+      "description": "A feed that promotes defence and survival.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "10",
+      "bench": "Ranching Station",
+      "benches": [
+        "Ranching Station"
+      ],
+      "buffs": [
+        "+125 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "15% Movement Speed in Arctic",
+        "-30% Food Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Arctic_Animal_Feed",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Avocado",
+      "slug": "Avocado",
+      "description": "A fruit with creamy texture and nutty flavor, high in fats.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.3 kg",
+      "stack": "10",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Avocado",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Banana",
+      "slug": "Banana",
+      "description": "A delicious looking yellow Banana",
+      "duration": "600 sec",
+      "spoil_time": null,
+      "weight": "0.1 Kg",
+      "stack": "20",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+10 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "-10% Food consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Banana",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Banana Bread",
+      "slug": "Banana_Bread",
+      "description": "Banana bread which should only be consumed in the workplace.",
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Potbelly Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+350 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+200 Maximum Health",
+        "+50% Health Regeneration",
+        "+200 Maximum Stamina",
+        "+50% Stamina Regeneration",
+        "-50% Stamina Regeneration Delay",
+        "-10% Food Consumption",
+        "+10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Banana",
+            "quantity": 10.0
+          },
+          {
+            "name": "Bread Dough",
+            "quantity": 4.0
+          },
+          {
+            "name": "Butter",
+            "quantity": 1.0
+          },
+          {
+            "name": "Flour",
+            "quantity": 2.0
+          },
+          {
+            "name": "Salt",
+            "quantity": 1.0
+          },
+          {
+            "name": "Sugar Cubes",
+            "quantity": 2.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Banana Bread",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Banana_Bread",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Barbeque Carrot",
+      "slug": "Barbeque_Carrot",
+      "description": "New plant, new rules.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Campfire"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+5% Projectile Damage"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Barbeque_Carrot",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Basic Dried Meat",
+      "slug": "Basic_Dried_Meat",
+      "description": "A plain piece of dried meat.",
+      "duration": "1,320 sec",
+      "spoil_time": null,
+      "weight": "0.75 Kg",
+      "stack": null,
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack",
+        "Smoker"
+      ],
+      "buffs": [
+        "+20 Health when Consumed",
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+20% Health Regeneration",
+        "-25% Food consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Basic Dried Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Drying Rack",
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Basic_Dried_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Berry & Seed Bar",
+      "slug": "Berry_&_Seed_Bar",
+      "description": "Full of energy for long hikes",
+      "duration": "600 sec",
+      "spoil_time": null,
+      "weight": "0.2kg",
+      "stack": "25",
+      "bench": "Character Crafting",
+      "benches": [
+        "Character Crafting"
+      ],
+      "buffs": [
+        "+50 food when consumed",
+        "+20 water when consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "-10% Stamina Consumed by Tool Actions",
+        "+15% Water Effects Duration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Seed",
+            "quantity": 1.0
+          },
+          {
+            "name": "Wild Berry",
+            "quantity": 10.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Character Crafting"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Berry_&_Seed_Bar",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Berry Jam",
+      "slug": "Berry_Jam",
+      "description": "Slightly bitter, but unsurpassed.",
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "20",
+      "bench": "Kitchen Bench Marble Kitchen Bench",
+      "benches": [
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+40 Food when Consumed",
+        "''Provides the 'Jammed' modifier for 900 seconds:''",
+        "Consumes 1 space in Stomach",
+        "+125 Maximum Stamina",
+        "-20 Water Consumption",
+        "+10% Shared Experience"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Glass Jar",
+            "quantity": 1.0
+          },
+          {
+            "name": "Wild Berry",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Berry Jam",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Berry_Jam",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Berry Smoked Saltwater Fillet",
+      "slug": "Berry_Smoked_Saltwater_Fillet",
+      "description": "A tender snack made by smoking and preserving tender fillets of freshwater fish.",
+      "duration": "1,200 sec",
+      "spoil_time": null,
+      "weight": "0.25 Kg",
+      "stack": null,
+      "bench": "Smoker",
+      "benches": [
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+200 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+75 Maximum Stamina",
+        "+25% Stamina Regeneration",
+        "+5% Exposure Resistance",
+        "-25% Water Consumption",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Saltwater Fish Fillet",
+            "quantity": 1.0
+          },
+          {
+            "name": "Wild Berry",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Berry Smoked Saltwater Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Berry_Smoked_Saltwater_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Big Breakfast",
+      "slug": "Big_Breakfast",
+      "description": null,
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": null,
+      "bench": null,
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Egg",
+            "quantity": 1.0
+          },
+          {
+            "name": "Potato",
+            "quantity": 1.0
+          },
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Tomato",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Big Breakfast",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Big_Breakfast",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Bread",
+      "slug": "Bread",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": null,
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+10 Health when Consumed",
+        "+80 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Bread' modifier * +125 Maximum Stamina * +10% Experience"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Bread Dough",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Bread",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Bread",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Bread Dough",
+      "slug": "Bread_Dough",
+      "description": "Makes bread, just add to a fire.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": "0.05 kg",
+      "stack": "50",
+      "bench": "Kitchen Bench Marble Kitchen Bench",
+      "benches": [
+        "Kitchen Bench"
+      ],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Flour",
+            "quantity": 5.0
+          },
+          {
+            "name": "Yeast",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Bread Dough",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Bread_Dough",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Broiled Kumara",
+      "slug": "Broiled_Kumara",
+      "description": null,
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+5% Melee Attack Speed"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Kumara",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Broiled Kumara",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Broiled_Kumara",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Butter",
+      "slug": "Butter",
+      "description": null,
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": null,
+      "bench": null,
+      "benches": [],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Cream",
+            "quantity": 3.0
+          },
+          {
+            "name": "Salt",
+            "quantity": 3.0
+          }
+        ],
+        "outputs": [],
+        "benches": []
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Butter",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Carrot",
+      "slug": "Carrot",
+      "description": "A carrot, like many before it.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": ".02 kg",
+      "stack": "50",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 food when consumed",
+        "Consumes 1 Space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Carrot",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Charred Corn",
+      "slug": "Charred_Corn",
+      "description": "Grilled to perfection, depending on your standards.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "-10% Stamina Consumed by Actions"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Corn",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Charred Corn",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Charred_Corn",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cocoa Smoked Soft Meat",
+      "slug": "Cocoa_Smoked_Soft_Meat",
+      "description": null,
+      "duration": "1,200 sec",
+      "spoil_time": null,
+      "weight": "1.0 Kg",
+      "stack": null,
+      "bench": "Smoker",
+      "benches": [
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+200 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Stamina",
+        "+25% Stamina Regeneration",
+        "-40% Food Consumption",
+        "+20% Health Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Cocoa",
+            "quantity": 5.0
+          },
+          {
+            "name": "Raw Soft Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Cocoa Smoked Soft Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cocoa_Smoked_Soft_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Coffee Smoked Fatty Tbone",
+      "slug": "Coffee_Smoked_Fatty_Tbone",
+      "description": "A large, fatty piece of smoked meat, with a punch of energy.",
+      "duration": "1,200 sec",
+      "spoil_time": null,
+      "weight": "0.5 Kg",
+      "stack": null,
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+200 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Health",
+        "+50% Yield from Butchering Animals",
+        "-25% Food Consumption",
+        "+20% Health Regeneration"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Coffee_Smoked_Fatty_Tbone",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked Bacon",
+      "slug": "Cooked_Bacon",
+      "description": null,
+      "duration": "1.200 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "50",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+15 Experience Gained",
+        "+75 Maximum Health",
+        "+75 Maximum Stamina"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Bacon",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_Bacon",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked Fatty Tbone",
+      "slug": "Cooked_Fatty_Tbone",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "?",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Campfire"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+150 Maximum Health",
+        "+20 Health Regeneration per minute",
+        "+5% Experience Gained"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_Fatty_Tbone",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked Gamey Meat",
+      "slug": "Cooked_Gamey_Meat",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "?",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+150 Maximum Health",
+        "+20 Health Regeneration per minute",
+        "+5% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Gamey Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Cooked Gamey Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_Gamey_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked Giant Steak",
+      "slug": "Cooked_Giant_Steak",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "?",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+150 Maximum Health",
+        "+20 Health Regeneration per minute",
+        "+5% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Giant Steak",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Cooked Giant Steak",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_Giant_Steak",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked Meat",
+      "slug": "Cooked_Meat",
+      "description": "Can be eaten to satisfy hunger.",
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": "0.01 Kg",
+      "stack": "20 Max",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+20 Health when Consumed",
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "20% Health Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Cooked Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked Soft Meat",
+      "slug": "Cooked_Soft_Meat",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "?",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+150 Maximum Health",
+        "+20 Health Regeneration per minute",
+        "+5% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Soft Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Cooked Soft Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_Soft_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked Stringy Meat",
+      "slug": "Cooked_Stringy_Meat",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "?",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+150 Maximum Health",
+        "+20 Health Regeneration per minute",
+        "+5% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Stringy Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Cooked Stringy Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_Stringy_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cooked White Meat",
+      "slug": "Cooked_White_Meat",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "?",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+150 Maximum Health",
+        "+20 Health Regeneration per minute",
+        "+5% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw White Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Cooked White Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cooked_White_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Corn",
+      "slug": "Corn",
+      "description": "A staple on several planets.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": "0.1 kg",
+      "stack": "100",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 food when consumed"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Corn",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Cream",
+      "slug": "Cream",
+      "description": null,
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": null,
+      "bench": null,
+      "benches": [],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 2.0
+          },
+          {
+            "name": "Milk",
+            "quantity": 1000.0
+          }
+        ],
+        "outputs": [],
+        "benches": []
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Cream",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Creamed Corn",
+      "slug": "Creamed_Corn",
+      "description": null,
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Cooking Station",
+      "benches": [
+        "Cooking Station",
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+150 Maximum Health",
+        "-10% Stamina Consumed by Actions"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Corn",
+            "quantity": 1.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Creamed Corn",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Cooking Station",
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Creamed_Corn",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Crispy Bacon",
+      "slug": "Crispy_Bacon",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "50",
+      "bench": "Potbelly Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+15 Experience Gained",
+        "+90 Maximum Health",
+        "+90 Maximum Stamina",
+        "+10% Critical Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Raw Bacon",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Crispy Bacon",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Crispy_Bacon",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Crispy Potato",
+      "slug": "Crispy_Potato",
+      "description": "Improves stamina and keeps you fuller for longer.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "-10% Food Consumption",
+        "10% Melee Attack Speed"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Potato",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Crispy Potato",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Crispy_Potato",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Crumbed Saltwater Fillet",
+      "slug": "Crumbed_Saltwater_Fillet",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Cumbed Fish modifier",
+        "* +150 Maximum Health * +75 Maximum Stamina * +15% Stamina Regeneration * +10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Bread Dough",
+            "quantity": 1.0
+          },
+          {
+            "name": "Saltwater Fish Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Crumbed Saltwater Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Crumbed_Saltwater_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Desert Animal Feed",
+      "slug": "Desert_Animal_Feed",
+      "description": "A feed that will help animals survive desert envionments.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "10",
+      "bench": "Ranching Station",
+      "benches": [
+        "Ranching Station"
+      ],
+      "buffs": [
+        "+125 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+15% Movement Speed in the Desert",
+        "-30% Water Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Desert_Animal_Feed",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Dried Fatty Tbone",
+      "slug": "Dried_Fatty_Tbone",
+      "description": null,
+      "duration": "1,200",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "20",
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack Smoker"
+      ],
+      "buffs": [
+        "+30 Heath when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+25% Yield from Butchering Meat",
+        "-25% Food Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Dried_Fatty_Tbone",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Dried Game Meat",
+      "slug": "Dried_Game_Meat",
+      "description": null,
+      "duration": "1,200",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "20",
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack Smoker"
+      ],
+      "buffs": [
+        "+30 Heath when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+15% Melee Damage",
+        "-25% Food Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Dried_Game_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Dried Giant Steak",
+      "slug": "Dried_Giant_Steak",
+      "description": null,
+      "duration": "1,200",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "20",
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack",
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Heath when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Health",
+        "+25% Health Regeneration",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Giant Steak",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Dried Giant Steak",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Drying Rack",
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Dried_Giant_Steak",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Dried Saltwater Fillet",
+      "slug": "Dried_Saltwater_Fillet",
+      "description": "A flavorful snack made by drying and preserving tender fillets of saltwater fish.",
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "0.25",
+      "stack": "10",
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack",
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+15% Stamina Regeneration",
+        "+5% Exposure Resistance",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Saltwater Fish Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Dried Saltwater Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Drying Rack",
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Dried_Saltwater_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Dried Soft Meat",
+      "slug": "Dried_Soft_Meat",
+      "description": null,
+      "duration": "1,200",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "20",
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack",
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Heath when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+15% Stamina Regeneration",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Soft Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Dried Soft Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Drying Rack",
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Dried_Soft_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Dried Stringy Meat",
+      "slug": "Dried_Stringy_Meat",
+      "description": null,
+      "duration": "1,200",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "20",
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack",
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Heath when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+15% Melee Attack Speed",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Stringy Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Dried Stringy Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Drying Rack",
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Dried_Stringy_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Dried White Meat",
+      "slug": "Dried_White_Meat",
+      "description": null,
+      "duration": "1,200",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "20",
+      "bench": "Drying Rack Smoker",
+      "benches": [
+        "Drying Rack",
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Heath when Consumed",
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+10% Exposure Resistance",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw White Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Dried White Meat",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Drying Rack",
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Dried_White_Meat",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Endurance Animal Feed",
+      "slug": "Endurance_Animal_Feed",
+      "description": "A feed that promotes long distance travel.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "10",
+      "bench": "Ranching Station",
+      "benches": [
+        "Ranching Station"
+      ],
+      "buffs": [
+        "+125 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "-75% Stamina Consumed",
+        "-25% Sprint Speed"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Endurance_Animal_Feed",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fish Chunk Stew",
+      "slug": "Fish_Chunk_Stew",
+      "description": "A hearty and flavorful soup made with tender chunks of fish and vegetables in a rich and savory broth.",
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": "0.15",
+      "stack": "10",
+      "bench": "Potbelly Stove Biofuel Stove Electric Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Health",
+        "+75 Maximum Stamina",
+        "+10% Stamina Regeneration",
+        "-10% Stamina Consumed",
+        "+5% Melee Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Corn",
+            "quantity": 1.0
+          },
+          {
+            "name": "Fish Chunks",
+            "quantity": 1.0
+          },
+          {
+            "name": "Squash",
+            "quantity": 1.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fish Chunk Stew",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fish_Chunk_Stew",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fish Chunks",
+      "slug": "Fish_Chunks",
+      "description": "A pile of roughly diced fish.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": "0.05 kg",
+      "stack": "20",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+15 Food when Consumed"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fish_Chunks",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fish Pie",
+      "slug": "Fish_Pie",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+225 Maximum Health",
+        "+5% Health Regeneration",
+        "+30% Stamina Regeneration",
+        "5% Exposure Resistance",
+        "+10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Saltwater Fish Fillet",
+            "quantity": 1.0
+          },
+          {
+            "name": "Freshwater Fish Fillet",
+            "quantity": 1.0
+          },
+          {
+            "name": "Mushroom",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fish Pie",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fish_Pie",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Flatbread",
+      "slug": "Flatbread",
+      "description": "Longlasting and healthful.",
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+10 Health when Consumed",
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100% Stamina Regeneration",
+        "+10% Water Consumption",
+        "+5% Experienced Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Flatbread Dough",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Flatbread",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Flatbread",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Flatbread Dough",
+      "slug": "Flatbread_Dough",
+      "description": "Makes flatbread, just add to a fire.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": "0.025 kg",
+      "stack": "100",
+      "bench": "Herbalism Bench Marble Kitchen Bench",
+      "benches": [
+        "Herbalism Bench"
+      ],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Flour",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Flatbread Dough",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Herbalism Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Flatbread_Dough",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Freshwater Fillet Curry",
+      "slug": "Freshwater_Fillet_Curry",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Potbelly Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Stamina",
+        "+10% Experience Gained",
+        "-10% Water Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Freshwater Fish Fillet",
+            "quantity": 1.0
+          },
+          {
+            "name": "Soy Bean",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Freshwater Fillet Curry",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Freshwater_Fillet_Curry",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Freshwater Fish Fillet",
+      "slug": "Freshwater_Fish_Fillet",
+      "description": "A neatly trimmed fillet ready for cooking.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": "0.25 kg",
+      "stack": "25",
+      "bench": "Basic Fishing Bench",
+      "benches": [
+        "Basic Fishing Bench"
+      ],
+      "buffs": [
+        "+15 Food when Consumed"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Freshwater_Fish_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fried Chunky Vegetables",
+      "slug": "Fried_Chunky_Vegetables",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+150 Maximum Stamina",
+        "+10% Exposure Resistance",
+        "10% Melee Attack Speed"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Kumara",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pumpkin",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fried Chunky Vegetables",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fried_Chunky_Vegetables",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fried Eggs",
+      "slug": "Fried_Eggs",
+      "description": "A fresh egg, fried just right",
+      "duration": "10 Minutes",
+      "spoil_time": null,
+      "weight": "0.5 Kg",
+      "stack": "1",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Fried Egg' modifier",
+        "+75 Maximum Health",
+        "10% Chance to find additional Stone while MIning"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Egg",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fried Eggs",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fried_Eggs",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fried Fish Chunks",
+      "slug": "Fried_Fish_Chunks",
+      "description": "An easy snack for the hungry prospector who's short on time.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.1 kg",
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+15 Health when Consumed",
+        "+80 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+10% Stamina Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Fish Chunks",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fried Fish Chunks",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fried_Fish_Chunks",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fruit Muffin",
+      "slug": "Fruit_Muffin",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+225 Maximum Stamina",
+        "-20% Water Consumption",
+        "+35% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Bread Dough",
+            "quantity": 1.0
+          },
+          {
+            "name": "Strawberry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Watermelon",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fruit Muffin",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fruit_Muffin",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fruit Pie",
+      "slug": "Fruit_Pie",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1 KG",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Fruit Pie' modifier",
+        "* +75 Maximum Health * +150 Maximum Stamina * -15% Oxygen Consumption * -15% Water Consumption * +10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Wild Berry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Watermelon",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fruit Pie",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fruit_Pie",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Fruit Salad",
+      "slug": "Fruit_Salad",
+      "description": null,
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Cooking Station",
+      "benches": [
+        "Cooking Station",
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+75 Maximum Stamina",
+        "-10% Oxygen Consumption",
+        "-10% Water Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Watermelon",
+            "quantity": 1.0
+          },
+          {
+            "name": "Wild Berry",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Fruit Salad",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Cooking Station",
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Fruit_Salad",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Glass Milk Bottle",
+      "slug": "Glass_Milk_Bottle",
+      "description": null,
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": null,
+      "bench": null,
+      "benches": [
+        "Glassworking Bench"
+      ],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Glass",
+            "quantity": 7.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Glass Milk Bottle",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Glassworking Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Glass_Milk_Bottle",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Grilled Freshwater Fillet",
+      "slug": "Grilled_Freshwater_Fillet",
+      "description": "Recently filleted fish grilled over an open fire.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.05 kg",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+15 Health when Consumed",
+        "+120 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+15% Stamina Regeneration",
+        "+5% Health Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Freshwater Fish Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Grilled Freshwater Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Grilled_Freshwater_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Grilled Pumpkin",
+      "slug": "Grilled_Pumpkin",
+      "description": "Lightly charred, fairly delicious.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+5% Exposure Resistance"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Pumpkin",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Grilled Pumpkin",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Grilled_Pumpkin",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Grilled Saltwater Fillet",
+      "slug": "Grilled_Saltwater_Fillet",
+      "description": "Recently filleted fish grilled over an open fire.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.05 kg",
+      "stack": "20",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+15 Health when Consumed",
+        "+120 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+15% Stamina Regeneration",
+        "+5% Exposure Resistance"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Saltwater Fish Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Grilled Saltwater Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Grilled_Saltwater_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Honey",
+      "slug": "Honey",
+      "description": "Freshly processed Honey, ready to eat or add to your food",
+      "duration": "60sec",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "25",
+      "bench": "Mortar and Pestle Beehive Extractor",
+      "benches": [
+        "Material Processor",
+        "Mortar and Pestle",
+        "Sterile Mortar & Pestle",
+        "Windmill"
+      ],
+      "buffs": [
+        "+20 when consumed"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Honeycomb",
+            "quantity": 2.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Honey",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Material Processor",
+          "Mortar and Pestle",
+          "Sterile Mortar & Pestle",
+          "Windmill"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Honey",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Honey Glazed Pastry",
+      "slug": "Honey_Glazed_Pastry",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Stamina",
+        "+35% Food Effects Duration",
+        "+15% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Honey",
+            "quantity": 5.0
+          },
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Honey Glazed Pastry",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Honey_Glazed_Pastry",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Honey Smoked Bacon",
+      "slug": "Honey_Smoked_Bacon",
+      "description": "Delightfully smoked bacon infused with honey.",
+      "duration": "1,200 sec",
+      "spoil_time": null,
+      "weight": "0.5 Kg",
+      "stack": null,
+      "bench": "Smoker",
+      "benches": [
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+200 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+75 Maximum Health",
+        "+20% Health Regeneration",
+        "-25% Food Consumption",
+        "+15% Experience Gained",
+        "+25% Food Effects Generation"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Honey",
+            "quantity": 5.0
+          },
+          {
+            "name": "Raw Bacon",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Honey Smoked Bacon",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Honey_Smoked_Bacon",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Honeycomb Bar",
+      "slug": "Honeycomb_Bar",
+      "description": "A sweet and tasty snack for your travels",
+      "duration": "600 sec",
+      "spoil_time": null,
+      "weight": "0.2kg",
+      "stack": "25",
+      "bench": "Character Crafting",
+      "benches": [
+        "Character Crafting"
+      ],
+      "buffs": [
+        "+50 food when consumed",
+        "+20 water when consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "-10% Stamina Consumed by Tool Actions",
+        "+15% Food Effects Duration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Honeycomb",
+            "quantity": 2.0
+          },
+          {
+            "name": "Seed",
+            "quantity": 10.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Honeycomb Bar",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Character Crafting"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Honeycomb_Bar",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Jarred Honey",
+      "slug": "Jarred_Honey",
+      "description": "A handy way to store your honey",
+      "duration": "900 sec",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "20",
+      "bench": "Kitchen Bench Marble Kitchen Bench",
+      "benches": [
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+40 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+125% Maximum Stamina",
+        "+20% Food Effects Duration",
+        "+20% Shared Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Glass Jar",
+            "quantity": 1.0
+          },
+          {
+            "name": "Honey",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Jarred Honey",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Jarred_Honey",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Kumara",
+      "slug": "Kumara",
+      "description": ".",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.3 kg",
+      "stack": "10",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Kumara",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Mature Coconut",
+      "slug": "Mature_Coconut",
+      "description": "Maturity diminishes liquid content, but offers more satisfying flesh.",
+      "duration": "600sec",
+      "spoil_time": null,
+      "weight": "0.2kg",
+      "stack": "1",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+10 Food when Consumed",
+        "+2 Water when Consumed",
+        "+50 Maximum Health",
+        "-10% Food Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Mature_Coconut",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Meat Pie",
+      "slug": "Meat_Pie",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1 KG",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Meat Pie' modifier",
+        "* +225 Maximum Health * +15% Exposure Resistance * +15% Stamina Regeneration * +15% Health Regeneration * +10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Mushroom",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pumpkin",
+            "quantity": 1.0
+          },
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Meat Pie",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Meat_Pie",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Milk",
+      "slug": "Milk",
+      "description": null,
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": null,
+      "bench": null,
+      "benches": [
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Soy Bean",
+            "quantity": 8.0
+          },
+          {
+            "name": "Glass Milk Bottle",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Milk",
+            "quantity": 500.0
+          }
+        ],
+        "benches": [
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Milk",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Mixed Berries",
+      "slug": "Mixed_Berries",
+      "description": "A tasty combination of berries to keep you going.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Kitchen Bench Cooking Station",
+      "benches": [
+        "Cooking Station",
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+75 Maximum Stamina",
+        "-10% Oxygen Consumption",
+        "-10% Water Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Strawberry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Wild Berry",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Mixed Berries",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Cooking Station",
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Mixed_Berries",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Mountaineering Animal Feed",
+      "slug": "Mountaineering_Animal_Feed",
+      "description": "A feed that promotes rough terain and rocky traversal.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "10",
+      "bench": "Ranching Station",
+      "benches": [
+        "Ranching Station"
+      ],
+      "buffs": [
+        "+125 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+50% Falling Resistance",
+        "-50% Stamina Consumed while Jumping"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Mountaineering_Animal_Feed",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Mushroom",
+      "slug": "Mushroom",
+      "description": "A nutritional fungus, can be eaten raw, but best fried.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.1 kg",
+      "stack": "100",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 Food when Consumed",
+        "Consumes 1 space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Mushroom",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Mushroom Omlette",
+      "slug": "Mushroom_Omlette",
+      "description": "Fried egg with a generous helping of mushrooms",
+      "duration": "990s",
+      "spoil_time": null,
+      "weight": "0.5 Kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Mushroom Omelette' modifier",
+        "+150 Maximum Health",
+        "15% Chance to find additional Stone while Mining",
+        "15% Stamina Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Egg",
+            "quantity": 1.0
+          },
+          {
+            "name": "Mushroom",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Mushroom Omlette",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Mushroom_Omlette",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Mushroom Soup",
+      "slug": "Mushroom_Soup",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+10% Stamina Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Mushroom",
+            "quantity": 1.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Mushroom Soup",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Mushroom_Soup",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Pastry",
+      "slug": "Pastry",
+      "description": null,
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": null,
+      "bench": null,
+      "benches": [
+        "Kitchen Bench"
+      ],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Flour",
+            "quantity": 1.0
+          },
+          {
+            "name": "{{Icon link|Water}}",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Pastry",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Pickled Avocado",
+      "slug": "Pickled_Avocado",
+      "description": "Avocado that has been marinated resulting in a tangy and slightly sour flavor.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Kitchen Bench",
+      "benches": [
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "+150 Maximum Stamina",
+        "+20% Projectile Damage",
+        "+20% Shared Experience Gained",
+        "-20% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Avocado",
+            "quantity": 1.0
+          },
+          {
+            "name": "Glass Jar",
+            "quantity": 1.0
+          },
+          {
+            "name": "Salt",
+            "quantity": 5.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Pickled Avocado",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Pickled_Avocado",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Pickled Carrot",
+      "slug": "Pickled_Carrot",
+      "description": null,
+      "duration": null,
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Kitchen Bench",
+      "benches": [
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+150 Maximum Stamina",
+        "+20% Projectile Damage",
+        "+20% Shared Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Carrot",
+            "quantity": 1.0
+          },
+          {
+            "name": "Glass Jar",
+            "quantity": 1.0
+          },
+          {
+            "name": "Salt",
+            "quantity": 5.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Pickled Carrot",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Pickled_Carrot",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Pickled Freshwater Fillet",
+      "slug": "Pickled_Freshwater_Fillet",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "20",
+      "bench": "Kitchen Bench Marble Kitchen Bench",
+      "benches": [
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 space in Stomach",
+        "+150 Maximum Health",
+        "+30% Stamina Regeneration",
+        "+10% Health Regeneration",
+        "+20% Shared Experience"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Freshwater Fish Fillet",
+            "quantity": 1.0
+          },
+          {
+            "name": "Glass Jar",
+            "quantity": 1.0
+          },
+          {
+            "name": "Salt",
+            "quantity": 5.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Pickled_Freshwater_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Plain Jerky",
+      "slug": "Plain_Jerky",
+      "description": "A piece of plain jerky.",
+      "duration": "1,200 sec",
+      "spoil_time": null,
+      "weight": "1.0 Kg",
+      "stack": null,
+      "bench": "Smoker",
+      "benches": [
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+200 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Health",
+        "+60% Health Regeneration",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Salt",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Plain_Jerky",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Potato and Carrot Fries",
+      "slug": "Potato_and_Carrot_Fries",
+      "description": "Delivers a wide range of health benefits.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "+150 Maximum Heath",
+        "+10% Health Regeneration",
+        "-10% Food Consumption",
+        "+10% Projectile Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Animal Fat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Carrot",
+            "quantity": 1.0
+          },
+          {
+            "name": "Potato",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Potato_and_Carrot_Fries",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Potato Bread",
+      "slug": "Potato_Bread",
+      "description": "Inproves stamina and keeps you fuller for longer.",
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Stamina",
+        "-20% Food Consumption",
+        "+15% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Bread Dough",
+            "quantity": 1.0
+          },
+          {
+            "name": "Potato",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Potato_Bread",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Pumpkin",
+      "slug": "Pumpkin",
+      "description": "A deep yellow squash cultivar.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "20",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 Food when consumed",
+        "Consumes 1 Space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Pumpkin",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Pumpkin Bread",
+      "slug": "Pumpkin_Bread",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Pumpkin Bread' modifier * +150 Maximum Stamina * +15% Exposure Resistance * +15% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Bread Dough",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pumpkin",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Pumpkin_Bread",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Rhubarb",
+      "slug": "Rhubarb",
+      "description": "A tart and tangy vegetable with large green leaves and pink or red stalks.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.3 kg",
+      "stack": "10",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Rhubarb",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Rhubarb Stew",
+      "slug": "Rhubarb_Stew",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+225 Maximum Stamina",
+        "-10% Oxygen Consumption",
+        "-10% Water Consumption",
+        "-10% Stamina Consumed"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Corn",
+            "quantity": 1.0
+          },
+          {
+            "name": "Rhubarb",
+            "quantity": 1.0
+          },
+          {
+            "name": "Wild Berry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Rhubarb_Stew",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Ripe Coconut",
+      "slug": "Ripe_Coconut",
+      "description": "A balance of light sustenance and moderate hydration, in a fiberous shell.",
+      "duration": "600sec",
+      "spoil_time": null,
+      "weight": "0.2kg",
+      "stack": "1",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+8 Food when Consumed",
+        "+8 Water when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75% Maximum Health",
+        "-10% Food Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Ripe_Coconut",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Roast Squash",
+      "slug": "Roast_Squash",
+      "description": "Like roast pumpkin, boasting a similar flavor and most of the same effects.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+5% Melee Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Squash",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Roast_Squash",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Roast Vegetables",
+      "slug": "Roast_Vegetables",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Potbelly Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+225 Maximum Stamina",
+        "+10% Exposure Resistance",
+        "+10% Melee Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Carrot",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pumpkin",
+            "quantity": 1.0
+          },
+          {
+            "name": "Squash",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Roast_Vegetables",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Saltwater Fillet Sashimi",
+      "slug": "Saltwater_Fillet_Sashimi",
+      "description": "A delicacy consisting of raw, thinly sliced saltwater fish.",
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": "0.3",
+      "stack": "10",
+      "bench": "Cooking Station Kitchen Bench Marble Kitchen Bench",
+      "benches": [
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+75% Maximum Stamina",
+        "+15% Stamina Regeneration",
+        "+5% Exposure Resistance",
+        "+5% Projectile Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Carrot",
+            "quantity": 1.0
+          },
+          {
+            "name": "Saltwater Fish Fillet",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Saltwater_Fillet_Sashimi",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Saltwater Fish Fillet",
+      "slug": "Saltwater_Fish_Fillet",
+      "description": "A neatly trimmed fillet ready for cooking.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": "0.25 kg",
+      "stack": "25",
+      "bench": "Basic Fishing Bench",
+      "benches": [
+        "Basic Fishing Bench"
+      ],
+      "buffs": [
+        "+15 Food when Consumed"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Saltwater_Fish_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Sauteed Rhubarb",
+      "slug": "Sauteed_Rhubarb",
+      "description": "This snack is lightly cooked in a pan with sugar or honey.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        ",br.Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "-10% Oxygen Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Rhubarb",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Sauteed_Rhubarb",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Savory Roll",
+      "slug": "Savory_Roll",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+225 Maximum Health",
+        "+75 Maximum Stamina",
+        "-30% Food Consumption",
+        "15% Stamina Regeneration",
+        "+30% Health Regeneration",
+        "+10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Avocado",
+            "quantity": 1.0
+          },
+          {
+            "name": "Mushroom",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Savory_Roll",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Seared Mushroom",
+      "slug": "Seared_Mushroom",
+      "description": "Lightly fried fungus.",
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "10",
+      "bench": "Campfire",
+      "benches": [
+        "Art Deco Fireplace",
+        "Biofuel Fireplace",
+        "Biofuel Stove",
+        "Campfire",
+        "Electric Fireplace",
+        "Electric Stove",
+        "Firepit",
+        "Fireplace",
+        "Homestead Fireplace",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Campfire",
+        "MXC Camping Cooker",
+        "Potbelly Stove",
+        "Stone Brick Fireplace",
+        "Wood Burner"
+      ],
+      "buffs": [
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+5% Stamina Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Mushroom",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Art Deco Fireplace",
+          "Biofuel Fireplace",
+          "Biofuel Stove",
+          "Campfire",
+          "Electric Fireplace",
+          "Electric Stove",
+          "Firepit",
+          "Fireplace",
+          "Homestead Fireplace",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Campfire",
+          "MXC Camping Cooker",
+          "Potbelly Stove",
+          "Stone Brick Fireplace",
+          "Wood Burner"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Seared_Mushroom",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Seed Animal Feed",
+      "slug": "Seed_Animal_Feed",
+      "description": "Nutritionally dense animal feed.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "<0.1kg",
+      "stack": "100",
+      "bench": "Ranching Station",
+      "benches": [
+        "Ranching Station"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+125 Maximum Stamina",
+        "50% Stamina Regeneration"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Seed_Animal_Feed",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Seed Cracker",
+      "slug": "Seed_Cracker",
+      "description": "A very dense crunchy snack.",
+      "duration": "900 sec",
+      "spoil_time": null,
+      "weight": "0.2kg",
+      "stack": "25",
+      "bench": "Cooking Station",
+      "benches": [
+        "Cooking Station",
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+10 Health when Consumed",
+        "+50 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "-15% Stamina Consumed by Tool Actions"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Seed",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Cooking Station",
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Seed_Cracker",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Shepherd's Pie",
+      "slug": "Shepherd's_Pie",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "* +150 Maximum Health * +75 Maximum Stamina * +225 Maximum Health * +40% Health Regeneration * +10% Experience Gained * -20% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Potato",
+            "quantity": 1.0
+          },
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Tomato",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Shepherd's_Pie",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Shepherd's Roll",
+      "slug": "Shepherd's_Roll",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Health",
+        "+150 Maximum Stamina",
+        "+15% Health Regeneration",
+        "15% Melee Attack Speed",
+        "15% Projectile Damage",
+        "+10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Carrot",
+            "quantity": 1.0
+          },
+          {
+            "name": "Kumara",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Shepherd's_Roll",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Soy Bean",
+      "slug": "Soy_Bean",
+      "description": "Close to to the perfect food source.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.02 kg",
+      "stack": "100",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 Food when Consumed",
+        "Consumes 1 space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Soy_Bean",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Soy Bean Stir-Fry",
+      "slug": "Soy_Bean_Stir-Fry",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Potbelly Stove",
+      "benches": [
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Health",
+        "+75 Maximum Stamina",
+        "+10% Projectile Damage",
+        "+10% Stamina Regeneration",
+        "+10% Health Regeneration"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Soy_Bean_Stir-Fry",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Sprinters Animal Feed",
+      "slug": "Sprinters_Animal_Feed",
+      "description": "A feed that promotes short and fast travel.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "10",
+      "bench": "Ranching Station",
+      "benches": [
+        "Ranching Station"
+      ],
+      "buffs": [
+        "+125 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75% Movement Stamina Consumed",
+        "+20% Sprint Speed"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Sprinters_Animal_Feed",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Squash",
+      "slug": "Squash",
+      "description": "An edible herbaceous vine fruit.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.1 kg",
+      "stack": "100",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 food when consumed",
+        "Consumes 1 Space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Squash",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Stew",
+      "slug": "Stew",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Potbelly Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Health",
+        "+75 Maximum Stamina",
+        "+10% Health Regeneration",
+        "+10% Stamina Regeneration",
+        "+10% Projectile Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Carrot",
+            "quantity": 1.0
+          },
+          {
+            "name": "Mushroom",
+            "quantity": 1.0
+          },
+          {
+            "name": "Raw Meat",
+            "quantity": 1.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Stew",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Strawberry",
+      "slug": "Strawberry",
+      "description": "A sweet and juicy fruit with a bright red colour.",
+      "duration": "60 seconds",
+      "spoil_time": null,
+      "weight": "0.1 kg",
+      "stack": "50",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+20 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+30 Maximum Health"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Strawberry",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Strawberry Jam",
+      "slug": "Strawberry_Jam",
+      "description": "A sweet and fruity spread.",
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "20",
+      "bench": "Kitchen Bench Marble Kitchen Bench",
+      "benches": [
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+40 Food when Consumed",
+        "''Provides the 'Jammed' modifier for 900 seconds:''",
+        "Consumes 1 space in Stomach",
+        "+125 Maximum Stamina",
+        "+20 Experience Gained",
+        "+10% Shared Experience"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Glass Jar",
+            "quantity": 1.0
+          },
+          {
+            "name": "Strawberry",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Strawberry_Jam",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Stuffed Avocado",
+      "slug": "Stuffed_Avocado",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Cooking Station",
+      "benches": [
+        "Cooking Station",
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+75% Maximum Stamina",
+        "+10% Health Regeneration",
+        "-10% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Avocado",
+            "quantity": 1.0
+          },
+          {
+            "name": "Soy Bean",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Cooking Station",
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Stuffed_Avocado",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Sugar Cubes",
+      "slug": "Sugar_Cubes",
+      "description": "A handful of sweet sugar cubes.",
+      "duration": null,
+      "spoil_time": null,
+      "weight": "0.1 kg",
+      "stack": "500",
+      "bench": null,
+      "benches": [
+        "Mortar and Pestle",
+        "Material Processor"
+      ],
+      "buffs": [],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Sugar Cane",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [
+          {
+            "name": "Sugar Cubes",
+            "quantity": 1.0
+          }
+        ],
+        "benches": [
+          "Mortar and Pestle",
+          "Material Processor"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Sugar_Cubes",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Sweetcorn Soup",
+      "slug": "Sweetcorn_Soup",
+      "description": null,
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": null,
+      "stack": "10",
+      "bench": "Potbelly Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Stamina",
+        "-20% Stamina Consumed by Actions"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Corn",
+            "quantity": 3.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Sweetcorn_Soup",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Tea Smoked Freshwater Fillet",
+      "slug": "Tea_Smoked_Freshwater_Fillet",
+      "description": "A tender snack made by smoking and preserving tender fillets of freshwater fish.",
+      "duration": "1,200 sec",
+      "spoil_time": null,
+      "weight": "0.25 Kg",
+      "stack": null,
+      "bench": "Smoker",
+      "benches": [
+        "Smoker"
+      ],
+      "buffs": [
+        "+30 Health when Consumed",
+        "+200 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+75 Maximum Health",
+        "+75 Maximum Stamina",
+        "+25% Stamina Regeneration",
+        "+50% Health Regeneration",
+        "-25% Food Consumption"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Freshwater Fish Fillet",
+            "quantity": 1.0
+          },
+          {
+            "name": "Tea",
+            "quantity": 5.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Smoker"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Tea_Smoked_Freshwater_Fillet",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Tomato & Egg Bowl",
+      "slug": "Tomato_&_Egg_Bowl",
+      "description": "Considered a delicacy back on Earth",
+      "duration": "900s",
+      "spoil_time": null,
+      "weight": "0.5 Kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Tomato & Egg Bowl' modifier",
+        "+75 Maximum Health",
+        "+75 Maximum Stamina",
+        "15% Chance to find additional Stone while Mining",
+        "10% Projectile Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Egg",
+            "quantity": 1.0
+          },
+          {
+            "name": "Tomato",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Tomato_&_Egg_Bowl",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Tomato Soup",
+      "slug": "Tomato_Soup",
+      "description": "Boosts stamina and health regeneration.",
+      "duration": "900 seconds",
+      "spoil_time": null,
+      "weight": "0.5 Kg",
+      "stack": "10",
+      "bench": "Biofuel Stove Electric Stove Potbelly Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Iron Stove",
+        "Homestead Kitchen Stove",
+        "MXC Camping Cooker",
+        "Potbelly Stove"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "+25 Water when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+100 Maximum Stamina",
+        "+20% Health Regeneration"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Tomato",
+            "quantity": 1.0
+          },
+          {
+            "name": "Water",
+            "quantity": 100.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Iron Stove",
+          "Homestead Kitchen Stove",
+          "MXC Camping Cooker",
+          "Potbelly Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Tomato_Soup",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Vegetable Pie",
+      "slug": "Vegetable_Pie",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "Provides the 'Vegetable Pie' modifier",
+        "* +150 Maximum Health * +150 Maximum Stamina * -15% Stamina Consumed by Actions * +15% Melee Damage * +10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Corn",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Soy Bean",
+            "quantity": 1.0
+          },
+          {
+            "name": "Squash",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Vegetable_Pie",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Vegetable Roll",
+      "slug": "Vegetable_Roll",
+      "description": null,
+      "duration": "1,200 seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Biofuel Stove",
+      "benches": [
+        "Biofuel Stove",
+        "Electric Stove",
+        "Homestead Kitchen Stove"
+      ],
+      "buffs": [
+        "+150 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Health",
+        "+150 Maximum Stamina",
+        "-30% Oxygen Consumption",
+        "+15% Exposure Resistance",
+        "+30% Health Regeneration",
+        "+10% Experience Gained"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Pastry",
+            "quantity": 1.0
+          },
+          {
+            "name": "Pumpkin",
+            "quantity": 1.0
+          },
+          {
+            "name": "Rhubarb",
+            "quantity": 1.0
+          },
+          {
+            "name": "Soy Bean",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Biofuel Stove",
+          "Electric Stove",
+          "Homestead Kitchen Stove"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Vegetable_Roll",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Volcanic Animal Feed",
+      "slug": "Volcanic_Animal_Feed",
+      "description": "A feed that will help animals survive volcanic environments.",
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "0.5kg",
+      "stack": "10",
+      "bench": "Ranching Station",
+      "benches": [
+        "Ranching Station"
+      ],
+      "buffs": [
+        "+125 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+50 Fire Resistance",
+        "+50% Fire Resistance while in Lava"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Volcanic_Animal_Feed",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Watermelon",
+      "slug": "Watermelon",
+      "description": "Mainly water and sugar.",
+      "duration": "600",
+      "spoil_time": null,
+      "weight": "0.5 kg",
+      "stack": "20",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+50 Food when consumed",
+        "+60 Water when consumed",
+        "Consumes 1 Space in Stomach",
+        "+50 Maximum Stamina",
+        "-10% Water Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Watermelon",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Wild Berry",
+      "slug": "Wild_Berry",
+      "description": null,
+      "duration": "600 seconds",
+      "spoil_time": null,
+      "weight": ".001kg",
+      "stack": "100",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+4 food when consumed",
+        "+2 water when consumed",
+        "Consumes 1 Space in Stomach",
+        "+50 Maximum Stamina",
+        "-10% Water Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Wild_Berry",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Wild Salad",
+      "slug": "Wild_Salad",
+      "description": null,
+      "duration": "900 Seconds",
+      "spoil_time": null,
+      "weight": "<.1kg",
+      "stack": "10",
+      "bench": "Cooking Station",
+      "benches": [
+        "Cooking Station",
+        "Homestead Kitchen Bench",
+        "Kitchen Bench",
+        "Marble Kitchen Bench"
+      ],
+      "buffs": [
+        "+100 Food when Consumed",
+        "Consumes 1 Space in Stomach",
+        "+150 Maximum Stamina",
+        "+10% Exposure Resistance",
+        "+10% Melee Damage"
+      ],
+      "recipe": {
+        "inputs": [
+          {
+            "name": "Pumpkin",
+            "quantity": 1.0
+          },
+          {
+            "name": "Squash",
+            "quantity": 1.0
+          }
+        ],
+        "outputs": [],
+        "benches": [
+          "Cooking Station",
+          "Homestead Kitchen Bench",
+          "Kitchen Bench",
+          "Marble Kitchen Bench"
+        ]
+      },
+      "wiki_url": "https://icarus.wiki.gg/wiki/Wild_Salad",
+      "source": "icarus.wiki.gg"
+    },
+    {
+      "name": "Young Coconut",
+      "slug": "Young_Coconut",
+      "description": "Mostly water, young coconuts will quench thirst, but wont do much for hunger.",
+      "duration": "600sec",
+      "spoil_time": null,
+      "weight": "0.2kg",
+      "stack": "1",
+      "bench": null,
+      "benches": [],
+      "buffs": [
+        "+2 Food when Consumed",
+        "+10 Water when Consumed",
+        "Consumes One Space in Stomach",
+        "+25 Maximum Health",
+        "-10% Food Consumption"
+      ],
+      "recipe": null,
+      "wiki_url": "https://icarus.wiki.gg/wiki/Young_Coconut",
+      "source": "icarus.wiki.gg"
+    }
+  ]
+}

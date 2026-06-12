@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ICARUS Food Calculator</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>ICARUS Food Calculator</h1>
+        <p id="meta">Loading wiki data...</p>
+      </div>
+      <button id="refreshBtn" class="secondary" type="button">Refresh Wiki Data</button>
+    </header>
+
+    <main class="layout">
+      <section class="panel foods-panel">
+        <div class="panel-heading">
+          <h2>Foods & Buffs</h2>
+          <input id="search" type="search" placeholder="Search food, buff, bench, ingredient" />
+        </div>
+        <div id="foods" class="food-list"></div>
+      </section>
+
+      <aside class="panel bucket-panel">
+        <div class="panel-heading">
+          <h2>Loadouts</h2>
+          <form id="bucketForm" class="inline-form">
+            <input id="bucketName" type="text" placeholder="New bucket" maxlength="80" />
+            <button type="submit">Create</button>
+          </form>
+        </div>
+        <select id="bucketSelect"></select>
+        <div id="bucketItems" class="bucket-items"></div>
+
+        <h3>Bare Materials</h3>
+        <div id="materials" class="summary-list"></div>
+
+        <h3>Crafting Steps</h3>
+        <div id="steps" class="steps-list"></div>
+      </aside>
+    </main>
+
+    <template id="foodTemplate">
+      <article class="food-card">
+        <div class="food-main">
+          <h3></h3>
+          <p class="bench"></p>
+          <div class="buffs"></div>
+          <details>
+            <summary>Recipe</summary>
+            <ul class="recipe"></ul>
+          </details>
+        </div>
+        <div class="add-control">
+          <input type="number" min="1" value="1" />
+          <button type="button">Add</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

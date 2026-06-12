@@ -1,0 +1,46 @@
+# ICARUS Resource Calculator
+
+A small hosted PoC for ICARUS food loadouts. It fetches food data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadout buckets persistent in `data/buckets.json`.
+
+## Run Locally
+
+```bash
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+Open `http://localhost:8000`.
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+The `data/` folder is mounted as a volume so wiki cache and buckets survive restarts.
+
+## Data Refresh
+
+The app refreshes wiki data:
+
+- on startup when the cache is empty or older than 24 hours
+- every 24 hours while the server is running
+- manually via the **Refresh Wiki Data** button or `POST /api/refresh`
+
+## API
+
+- `GET /api/foods`
+- `GET /api/foods?q=stamina`
+- `GET /api/buckets`
+- `POST /api/buckets`
+- `PUT /api/buckets/{bucket_id}/items`
+- `GET /api/buckets/{bucket_id}/resources`
+
+## Persistence
+
+Server state is JSON-file based:
+
+- `data/foods.json`: current wiki cache
+- `data/buckets.json`: shared bucket/loadout data
+
+The browser also mirrors the selected bucket and latest bucket snapshot in `localStorage` as a client-side convenience.
