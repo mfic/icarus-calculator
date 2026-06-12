@@ -60,7 +60,7 @@ function renderFoods() {
     : state.foods;
   const filtered = categoryFiltered.filter((food) => {
     const recipeInputs = food.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
-    return `${food.name} ${food.buffs.join(" ")} ${food.benches.join(" ")} ${food.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
+    return `${food.name} ${food.tier || ""} ${food.buffs.join(" ")} ${food.benches.join(" ")} ${food.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
   });
 
   els.foods.innerHTML = "";
@@ -74,6 +74,12 @@ function renderFoods() {
     node.querySelector(".bench").textContent = food.benches.length ? `Crafted at: ${food.benches.join(", ")}` : "No crafting bench listed";
 
     const categories = node.querySelector(".categories");
+    if (food.tier) {
+      const tier = document.createElement("span");
+      tier.className = "tier-pill";
+      tier.textContent = food.tier;
+      categories.appendChild(tier);
+    }
     for (const categoryName of food.categories.slice(0, 5)) {
       const pill = document.createElement("span");
       pill.className = "category-pill";

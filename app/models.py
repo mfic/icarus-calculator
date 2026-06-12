@@ -16,6 +16,7 @@ class FoodItem(BaseModel):
     name: str
     slug: str
     categories: list[str] = Field(default_factory=list)
+    tier: str | None = None
     description: str | None = None
     duration: str | None = None
     spoil_time: str | None = None

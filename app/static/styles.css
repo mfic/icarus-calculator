@@ -181,9 +181,16 @@ h3 {
   padding: 3px 7px;
 }
 
-.category-pill {
+.category-pill,
+.tier-pill {
   border-color: #5f5b3e;
   color: #eadba3;
+}
+
+.tier-pill {
+  border-color: #8f7040;
+  color: #ffd38a;
+  font-weight: 800;
 }
 
 details {

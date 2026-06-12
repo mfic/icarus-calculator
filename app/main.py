@@ -96,6 +96,7 @@ def filter_items(items: list[FoodItem], q: str | None = None, category: str | No
             if needle in item.name.lower()
             or any(needle in buff.lower() for buff in item.buffs)
             or any(needle in bench.lower() for bench in item.benches)
+            or (item.tier and needle in item.tier.lower())
             or (
                 item.recipe
                 and any(needle in ingredient.name.lower() for ingredient in item.recipe.inputs)

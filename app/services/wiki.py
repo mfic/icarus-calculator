@@ -27,6 +27,7 @@ ITEM_ICON_RE = re.compile(r"\{\{Item icon\|([^}|]+).*?\}\}")
 LINK_RE = re.compile(r"\[\[(?:[^|\]]+\|)?([^\]]+)\]\]")
 TAG_RE = re.compile(r"<[^>]+>")
 CATEGORY_RE = re.compile(r"\[\[Category:([^|\]]+)")
+TIER_RE = re.compile(r"\bTier\s+\d+\b", re.IGNORECASE)
 
 
 def extract_template(wikitext: str, name: str) -> str | None:
@@ -78,6 +79,21 @@ def parse_categories(wikitext: str, extra: Iterable[str] = ()) -> list[str]:
     categories = {clean_category(category) for category in extra if category}
     categories.update(match.strip() for match in CATEGORY_RE.findall(wikitext))
     return sorted(category for category in categories if category)
+
+
+def parse_tier(categories: Iterable[str], *values: str | None) -> str | None:
+    for category in categories:
+        match = TIER_RE.search(category)
+        if match:
+            return match.group(0).title()
+    for value in values:
+        cleaned = clean_text(value)
+        if not cleaned:
+            continue
+        match = TIER_RE.search(cleaned)
+        if match:
+            return match.group(0).title()
+    return None
 
 
 def parse_quantity(value: str) -> float:
@@ -235,10 +251,18 @@ def food_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()
     bench = clean_text(consumables.get("bench"))
     benches = recipe.benches if recipe and recipe.benches else ([bench] if bench else [])
     description = clean_text(consumables.get("description"))
+    categories = parse_categories(wikitext, categories)
     return FoodItem(
         name=title,
         slug=slugify(title),
-        categories=parse_categories(wikitext, categories),
+        categories=categories,
+        tier=parse_tier(
+            categories,
+            consumables.get("tech"),
+            consumables.get("tier"),
+            consumables.get("techLevelNeeded"),
+            consumables.get("techLevelUnlock"),
+        ),
         description=description,
         duration=clean_text(consumables.get("duration")),
         spoil_time=clean_text(consumables.get("spoiltime") or consumables.get("spoil_time")),
