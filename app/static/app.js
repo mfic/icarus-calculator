@@ -1,7 +1,9 @@
 const state = {
   foods: [],
+  categories: [],
   buckets: [],
   activeBucketId: localStorage.getItem("icarus.activeBucketId") || "",
+  activeCategory: localStorage.getItem("icarus.activeCategory") || "",
   resources: null,
 };
 
@@ -9,6 +11,7 @@ const els = {
   meta: document.querySelector("#meta"),
   foods: document.querySelector("#foods"),
   search: document.querySelector("#search"),
+  categoryFilter: document.querySelector("#categoryFilter"),
   bucketForm: document.querySelector("#bucketForm"),
   bucketName: document.querySelector("#bucketName"),
   bucketSelect: document.querySelector("#bucketSelect"),
@@ -33,6 +36,7 @@ async function api(path, options = {}) {
 function saveLocalBuckets() {
   localStorage.setItem("icarus.buckets.snapshot", JSON.stringify(state.buckets));
   localStorage.setItem("icarus.activeBucketId", state.activeBucketId || "");
+  localStorage.setItem("icarus.activeCategory", state.activeCategory || "");
 }
 
 function formatQuantity(value) {
@@ -50,16 +54,32 @@ function renderMeta(meta) {
 
 function renderFoods() {
   const term = els.search.value.trim().toLowerCase();
-  const filtered = state.foods.filter((food) => {
+  const category = state.activeCategory.toLowerCase();
+  const categoryFiltered = category
+    ? state.foods.filter((food) => food.categories.some((entry) => entry.toLowerCase() === category))
+    : state.foods;
+  const filtered = categoryFiltered.filter((food) => {
     const recipeInputs = food.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
-    return `${food.name} ${food.buffs.join(" ")} ${food.benches.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
+    return `${food.name} ${food.buffs.join(" ")} ${food.benches.join(" ")} ${food.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
   });
 
   els.foods.innerHTML = "";
+  if (!filtered.length) {
+    els.foods.innerHTML = '<p class="muted">No items match this filter.</p>';
+    return;
+  }
   for (const food of filtered) {
     const node = els.foodTemplate.content.firstElementChild.cloneNode(true);
     node.querySelector("h3").textContent = food.name;
     node.querySelector(".bench").textContent = food.benches.length ? `Crafted at: ${food.benches.join(", ")}` : "No crafting bench listed";
+
+    const categories = node.querySelector(".categories");
+    for (const categoryName of food.categories.slice(0, 5)) {
+      const pill = document.createElement("span");
+      pill.className = "category-pill";
+      pill.textContent = categoryName;
+      categories.appendChild(pill);
+    }
 
     const buffs = node.querySelector(".buffs");
     for (const buff of food.buffs.slice(0, 8)) {
@@ -93,6 +113,23 @@ function renderFoods() {
     node.querySelector("button").addEventListener("click", () => addFood(food.name, Number(quantity.value || 1)));
     els.foods.appendChild(node);
   }
+}
+
+function renderCategories() {
+  els.categoryFilter.innerHTML = '<option value="">All categories</option>';
+  for (const category of state.categories) {
+    const option = document.createElement("option");
+    option.value = category.name;
+    option.textContent = `${category.name} (${category.count})`;
+    els.categoryFilter.appendChild(option);
+  }
+  if (state.activeCategory && state.categories.some((category) => category.name === state.activeCategory)) {
+    els.categoryFilter.value = state.activeCategory;
+  } else {
+    state.activeCategory = "";
+    els.categoryFilter.value = "";
+  }
+  saveLocalBuckets();
 }
 
 function renderBuckets() {
@@ -182,13 +219,15 @@ async function loadResources() {
 }
 
 async function loadAll() {
-  const [meta, foods, buckets] = await Promise.all([
+  const [meta, foods, categories, buckets] = await Promise.all([
     api("/api/meta"),
-    api("/api/foods"),
+    api("/api/items"),
+    api("/api/categories"),
     api("/api/buckets"),
   ]);
   renderMeta(meta);
   state.foods = foods.items;
+  state.categories = categories.categories;
   state.buckets = buckets.buckets;
   if (!state.buckets.length) {
     const created = await api("/api/buckets", {
@@ -197,6 +236,7 @@ async function loadAll() {
     });
     state.buckets = [created];
   }
+  renderCategories();
   renderFoods();
   renderBuckets();
   await loadResources();
@@ -226,6 +266,11 @@ async function removeFood(food) {
 }
 
 els.search.addEventListener("input", renderFoods);
+els.categoryFilter.addEventListener("change", () => {
+  state.activeCategory = els.categoryFilter.value;
+  saveLocalBuckets();
+  renderFoods();
+});
 els.bucketSelect.addEventListener("change", async () => {
   state.activeBucketId = els.bucketSelect.value;
   saveLocalBuckets();
@@ -251,8 +296,10 @@ els.refreshBtn.addEventListener("click", async () => {
   els.refreshBtn.textContent = "Refreshing...";
   const meta = await api("/api/refresh", { method: "POST" });
   renderMeta(meta);
-  const foods = await api("/api/foods");
+  const [foods, categories] = await Promise.all([api("/api/items"), api("/api/categories")]);
   state.foods = foods.items;
+  state.categories = categories.categories;
+  renderCategories();
   renderFoods();
   await loadResources();
   els.refreshBtn.disabled = false;

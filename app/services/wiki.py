@@ -11,9 +11,22 @@ from app.models import FoodItem, Ingredient, Recipe
 from app.services.storage import save_foods
 
 
+ITEM_CATEGORIES = [
+    "Category:Items",
+    "Category:Resources",
+    "Category:Crafted Resources",
+    "Category:Food",
+    "Category:Consumables",
+    "Category:Tools",
+    "Category:Deployables",
+    "Category:Weapons",
+]
+
+
 ITEM_ICON_RE = re.compile(r"\{\{Item icon\|([^}|]+).*?\}\}")
 LINK_RE = re.compile(r"\[\[(?:[^|\]]+\|)?([^\]]+)\]\]")
 TAG_RE = re.compile(r"<[^>]+>")
+CATEGORY_RE = re.compile(r"\[\[Category:([^|\]]+)")
 
 
 def extract_template(wikitext: str, name: str) -> str | None:
@@ -55,6 +68,16 @@ def split_list(value: str | None) -> list[str]:
     if not value:
         return []
     return [entry for entry in (clean_text(part) for part in value.split(",")) if entry]
+
+
+def clean_category(category: str) -> str:
+    return category.removeprefix("Category:").strip()
+
+
+def parse_categories(wikitext: str, extra: Iterable[str] = ()) -> list[str]:
+    categories = {clean_category(category) for category in extra if category}
+    categories.update(match.strip() for match in CATEGORY_RE.findall(wikitext))
+    return sorted(category for category in categories if category)
 
 
 def parse_quantity(value: str) -> float:
@@ -206,7 +229,7 @@ def slugify(title: str) -> str:
     return title.replace(" ", "_")
 
 
-def food_from_wikitext(title: str, wikitext: str) -> FoodItem:
+def food_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()) -> FoodItem:
     consumables = parse_consumables(wikitext)
     recipe = parse_recipe(wikitext) or parse_wikitable_recipe(title, wikitext)
     bench = clean_text(consumables.get("bench"))
@@ -215,6 +238,7 @@ def food_from_wikitext(title: str, wikitext: str) -> FoodItem:
     return FoodItem(
         name=title,
         slug=slugify(title),
+        categories=parse_categories(wikitext, categories),
         description=description,
         duration=clean_text(consumables.get("duration")),
         spoil_time=clean_text(consumables.get("spoiltime") or consumables.get("spoil_time")),
@@ -241,8 +265,8 @@ async def fetch_json(client: httpx.AsyncClient, params: dict[str, str | int]) ->
     return response.json()
 
 
-async def fetch_category_titles(client: httpx.AsyncClient, category: str) -> list[str]:
-    titles: list[str] = []
+async def fetch_category_titles(client: httpx.AsyncClient, category: str) -> dict[str, set[str]]:
+    titles: dict[str, set[str]] = {}
     params: dict[str, str | int] = {
         "action": "query",
         "list": "categorymembers",
@@ -252,15 +276,22 @@ async def fetch_category_titles(client: httpx.AsyncClient, category: str) -> lis
     }
     while True:
         payload = await fetch_json(client, params)
-        titles.extend(
-            page["title"]
-            for page in payload.get("query", {}).get("categorymembers", [])
-            if page.get("ns") == 0
-        )
+        for page in payload.get("query", {}).get("categorymembers", []):
+            if page.get("ns") == 0:
+                titles.setdefault(page["title"], set()).add(clean_category(category))
         cont = payload.get("continue")
         if not cont:
             return titles
         params.update(cont)
+
+
+async def fetch_seed_titles(client: httpx.AsyncClient) -> dict[str, set[str]]:
+    titles: dict[str, set[str]] = {}
+    for category in ITEM_CATEGORIES:
+        for title, categories in (await fetch_category_titles(client, category)).items():
+            titles.setdefault(title, set()).update(categories)
+        await asyncio.sleep(0.2)
+    return titles
 
 
 async def fetch_wikitext(client: httpx.AsyncClient, title: str) -> str | None:
@@ -276,6 +307,34 @@ async def fetch_wikitext(client: httpx.AsyncClient, title: str) -> str | None:
     return payload.get("parse", {}).get("wikitext", {}).get("*")
 
 
+async def fetch_wikitext_batch(client: httpx.AsyncClient, titles: list[str]) -> dict[str, str]:
+    if not titles:
+        return {}
+    payload = await fetch_json(
+        client,
+        {
+            "action": "query",
+            "prop": "revisions",
+            "rvprop": "content",
+            "rvslots": "main",
+            "titles": "|".join(titles),
+            "format": "json",
+            "formatversion": 2,
+        },
+    )
+    pages = payload.get("query", {}).get("pages", [])
+    result: dict[str, str] = {}
+    for page in pages:
+        if page.get("missing"):
+            continue
+        revisions = page.get("revisions") or []
+        slots = revisions[0].get("slots", {}) if revisions else {}
+        content = slots.get("main", {}).get("content")
+        if content:
+            result[page["title"]] = content
+    return result
+
+
 def recipe_dependencies(items: Iterable[FoodItem]) -> set[str]:
     deps: set[str] = set()
     for item in items:
@@ -286,36 +345,42 @@ def recipe_dependencies(items: Iterable[FoodItem]) -> set[str]:
     return deps
 
 
-async def scrape_foods(max_extra_pages: int = 300) -> list[FoodItem]:
+async def scrape_foods(max_extra_pages: int = 800) -> list[FoodItem]:
     headers = {"User-Agent": USER_AGENT}
     async with httpx.AsyncClient(headers=headers, timeout=30, follow_redirects=True) as client:
-        queue = await fetch_category_titles(client, "Category:Food")
+        seed_titles = await fetch_seed_titles(client)
+        queue = list(seed_titles)
         seen: set[str] = set()
         items: dict[str, FoodItem] = {}
         extra_pages = 0
 
         while queue:
-            title = queue.pop(0)
-            key = title.lower()
-            if key in seen:
+            batch: list[str] = []
+            while queue and len(batch) < 50:
+                title = queue.pop(0)
+                key = title.lower()
+                if key in seen:
+                    continue
+                seen.add(key)
+                batch.append(title)
+            if not batch:
                 continue
-            seen.add(key)
+
             try:
-                wikitext = await fetch_wikitext(client, title)
+                pages = await fetch_wikitext_batch(client, batch)
             except httpx.HTTPError:
-                continue
-            if not wikitext:
-                continue
+                pages = {}
 
-            item = food_from_wikitext(title, wikitext)
-            if item.buffs or item.recipe:
-                items[item.name.lower()] = item
+            for title, wikitext in pages.items():
+                item = food_from_wikitext(title, wikitext, seed_titles.get(title, set()))
+                if item.categories or item.buffs or item.recipe:
+                    items[item.name.lower()] = item
 
-            for dep in recipe_dependencies([item]):
-                dep_key = dep.lower()
-                if dep_key not in seen and dep_key not in items and extra_pages < max_extra_pages:
-                    queue.append(dep)
-                    extra_pages += 1
+                for dep in recipe_dependencies([item]):
+                    dep_key = dep.lower()
+                    if dep_key not in seen and dep_key not in items and extra_pages < max_extra_pages:
+                        queue.append(dep)
+                        extra_pages += 1
 
             await asyncio.sleep(0.2)
 

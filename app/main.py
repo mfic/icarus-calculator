@@ -8,7 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import BASE_DIR, FOODS_PATH
-from app.models import BucketCreate, BucketItemInput
+from app.models import BucketCreate, BucketItemInput, FoodItem
 from app.services.calculator import calculate_bucket
 from app.services.storage import (
     create_bucket,
@@ -80,9 +80,14 @@ def refresh() -> dict:
     return refresh_food_data()
 
 
-@app.get("/api/foods")
-def foods(q: str | None = Query(default=None)) -> dict:
-    items = load_foods()
+def filter_items(items: list[FoodItem], q: str | None = None, category: str | None = None) -> list[FoodItem]:
+    if category:
+        category_needle = category.lower()
+        items = [
+            item
+            for item in items
+            if any(category_needle == item_category.lower() for item_category in item.categories)
+        ]
     if q:
         needle = q.lower()
         items = [
@@ -95,8 +100,34 @@ def foods(q: str | None = Query(default=None)) -> dict:
                 item.recipe
                 and any(needle in ingredient.name.lower() for ingredient in item.recipe.inputs)
             )
+            or any(needle in category.lower() for category in item.categories)
         ]
+    return items
+
+
+@app.get("/api/items")
+def items(q: str | None = Query(default=None), category: str | None = Query(default=None)) -> dict:
+    items = filter_items(load_foods(), q=q, category=category)
     return {"items": [item.model_dump() for item in items]}
+
+
+@app.get("/api/foods")
+def foods(q: str | None = Query(default=None), category: str | None = Query(default=None)) -> dict:
+    return items(q=q, category=category)
+
+
+@app.get("/api/categories")
+def categories() -> dict:
+    counts: dict[str, int] = {}
+    for item in load_foods():
+        for category in item.categories:
+            counts[category] = counts.get(category, 0) + 1
+    return {
+        "categories": [
+            {"name": name, "count": count}
+            for name, count in sorted(counts.items(), key=lambda entry: entry[0].lower())
+        ]
+    }
 
 
 @app.get("/api/buckets")

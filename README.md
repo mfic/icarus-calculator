@@ -1,6 +1,6 @@
 # ICARUS Resource Calculator
 
-A small hosted PoC for ICARUS food loadouts. It fetches food data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadout buckets persistent in `data/buckets.json`.
+A small hosted PoC for ICARUS item and food loadouts. It fetches item data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadout buckets persistent in `data/buckets.json`.
 
 ## Run Locally
 
@@ -42,8 +42,10 @@ The app refreshes wiki data:
 
 ## API
 
-- `GET /api/foods`
-- `GET /api/foods?q=stamina`
+- `GET /api/items`
+- `GET /api/items?q=stamina&category=Food`
+- `GET /api/categories`
+- `GET /api/foods` compatibility alias for items
 - `GET /api/buckets`
 - `POST /api/buckets`
 - `PUT /api/buckets/{bucket_id}/items`

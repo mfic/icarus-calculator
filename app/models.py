@@ -15,6 +15,7 @@ class Recipe(BaseModel):
 class FoodItem(BaseModel):
     name: str
     slug: str
+    categories: list[str] = Field(default_factory=list)
     description: str | None = None
     duration: str | None = None
     spoil_time: str | None = None

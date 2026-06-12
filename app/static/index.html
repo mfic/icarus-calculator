@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ICARUS Food Calculator</title>
+    <title>ICARUS Item Calculator</title>
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <header class="topbar">
       <div>
-        <h1>ICARUS Food Calculator</h1>
+        <h1>ICARUS Item Calculator</h1>
         <p id="meta">Loading wiki data...</p>
       </div>
       <button id="refreshBtn" class="secondary" type="button">Refresh Wiki Data</button>
@@ -18,8 +18,13 @@
     <main class="layout">
       <section class="panel foods-panel">
         <div class="panel-heading">
-          <h2>Foods & Buffs</h2>
-          <input id="search" type="search" placeholder="Search food, buff, bench, ingredient" />
+          <h2>Items</h2>
+          <div class="filters">
+            <select id="categoryFilter">
+              <option value="">All categories</option>
+            </select>
+            <input id="search" type="search" placeholder="Search item, buff, bench, ingredient" />
+          </div>
         </div>
         <div id="foods" class="food-list"></div>
       </section>
@@ -48,6 +53,7 @@
         <div class="food-main">
           <h3></h3>
           <p class="bench"></p>
+          <div class="categories"></div>
           <div class="buffs"></div>
           <details>
             <summary>Recipe</summary>
