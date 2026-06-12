@@ -20,6 +20,12 @@ ITEM_CATEGORIES = [
     "Category:Tools",
     "Category:Deployables",
     "Category:Weapons",
+    "Category:Ammo",
+    "Category:Arrows",
+    "Category:Bolts",
+    "Category:Bows",
+    "Category:Crossbows",
+    "Category:Firearms",
 ]
 
 
@@ -289,24 +295,42 @@ async def fetch_json(client: httpx.AsyncClient, params: dict[str, str | int]) ->
     return response.json()
 
 
-async def fetch_category_titles(client: httpx.AsyncClient, category: str) -> dict[str, set[str]]:
+async def fetch_category_titles(
+    client: httpx.AsyncClient,
+    category: str,
+    max_depth: int = 4,
+) -> dict[str, set[str]]:
     titles: dict[str, set[str]] = {}
-    params: dict[str, str | int] = {
-        "action": "query",
-        "list": "categorymembers",
-        "cmtitle": category,
-        "cmlimit": 500,
-        "format": "json",
-    }
-    while True:
-        payload = await fetch_json(client, params)
-        for page in payload.get("query", {}).get("categorymembers", []):
-            if page.get("ns") == 0:
-                titles.setdefault(page["title"], set()).add(clean_category(category))
-        cont = payload.get("continue")
-        if not cont:
-            return titles
-        params.update(cont)
+    category_queue: list[tuple[str, int]] = [(category, 0)]
+    seen_categories: set[str] = set()
+
+    while category_queue:
+        current_category, depth = category_queue.pop(0)
+        if current_category in seen_categories:
+            continue
+        seen_categories.add(current_category)
+        current_label = clean_category(current_category)
+        params: dict[str, str | int] = {
+            "action": "query",
+            "list": "categorymembers",
+            "cmtitle": current_category,
+            "cmlimit": 500,
+            "format": "json",
+        }
+        while True:
+            payload = await fetch_json(client, params)
+            for page in payload.get("query", {}).get("categorymembers", []):
+                if page.get("ns") == 0:
+                    titles.setdefault(page["title"], set()).add(current_label)
+                elif page.get("ns") == 14 and depth < max_depth:
+                    category_queue.append((page["title"], depth + 1))
+            cont = payload.get("continue")
+            if not cont:
+                break
+            params.update(cont)
+        await asyncio.sleep(0.1)
+
+    return titles
 
 
 async def fetch_seed_titles(client: httpx.AsyncClient) -> dict[str, set[str]]:
