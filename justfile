@@ -7,6 +7,9 @@ install:
     python -m pip install -r requirements-dev.txt
 
 dev:
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+local-dev:
     python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 start:

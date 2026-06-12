@@ -15,7 +15,8 @@ Open `http://localhost:8000`.
 
 ```bash
 just install       # install runtime and test dependencies
-just dev           # run the local FastAPI server with reload
+just dev           # run Docker Compose dev server with reload
+just local-dev     # run the local Python FastAPI server with reload
 just start         # build and start Docker compose
 just stop          # stop Docker compose
 just update        # refresh wiki data cache
