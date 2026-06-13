@@ -56,6 +56,12 @@ class LoadoutCreate(BaseModel):
     name: str = Field(min_length=1, max_length=80)
 
 
+class LoadoutImport(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+    items: list[LoadoutItem] = Field(default_factory=list)
+    collected: dict[str, float] = Field(default_factory=dict)
+
+
 class LoadoutItemInput(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 

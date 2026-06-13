@@ -4,6 +4,7 @@ A small hosted PoC for ICARUS item loadouts. It fetches item data from the ICARU
 
 Items include wiki categories, tier metadata, and effects/stats when the wiki exposes them.
 Each loadout can also track collected material quantities, so the material summary shows what is still remaining.
+Loadouts have UUIDs for shareable links, and can be exported/imported as JSON files without user accounts.
 
 ## Run Locally
 

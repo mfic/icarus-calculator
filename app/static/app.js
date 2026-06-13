@@ -15,10 +15,14 @@ const els = {
   loadoutForm: document.querySelector("#loadoutForm"),
   loadoutName: document.querySelector("#loadoutName"),
   loadoutSelect: document.querySelector("#loadoutSelect"),
+  loadoutId: document.querySelector("#loadoutId"),
   loadoutItems: document.querySelector("#loadoutItems"),
   materials: document.querySelector("#materials"),
   steps: document.querySelector("#steps"),
   clearCollectedBtn: document.querySelector("#clearCollectedBtn"),
+  copyShareBtn: document.querySelector("#copyShareBtn"),
+  exportLoadoutBtn: document.querySelector("#exportLoadoutBtn"),
+  importLoadoutInput: document.querySelector("#importLoadoutInput"),
   refreshBtn: document.querySelector("#refreshBtn"),
   itemTemplate: document.querySelector("#itemTemplate"),
 };
@@ -153,9 +157,18 @@ function renderLoadouts() {
   if (loadout) {
     state.activeLoadoutId = loadout.id;
     els.loadoutSelect.value = loadout.id;
+    els.loadoutId.textContent = loadout.id;
+  } else {
+    els.loadoutId.textContent = "No loadout selected";
   }
   saveLocalLoadouts();
   renderLoadoutItems();
+}
+
+function loadoutShareUrl(loadout) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("loadout", loadout.id);
+  return url.toString();
 }
 
 function renderLoadoutItems() {
@@ -259,6 +272,10 @@ async function loadAll() {
   state.items = items.items;
   state.categories = categories.categories;
   state.loadouts = loadouts.loadouts;
+  const requestedLoadoutId = new URLSearchParams(window.location.search).get("loadout");
+  if (requestedLoadoutId && state.loadouts.some((loadout) => loadout.id === requestedLoadoutId)) {
+    state.activeLoadoutId = requestedLoadoutId;
+  }
   if (!state.loadouts.length) {
     const created = await api("/api/loadouts", {
       method: "POST",
@@ -316,6 +333,57 @@ async function clearCollected() {
   await loadResources();
 }
 
+async function copyShareLink() {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  await navigator.clipboard.writeText(loadoutShareUrl(loadout));
+  els.copyShareBtn.textContent = "Copied";
+  setTimeout(() => {
+    els.copyShareBtn.textContent = "Copy Link";
+  }, 1200);
+}
+
+function exportLoadout() {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const payload = {
+    version: 1,
+    exported_at: new Date().toISOString(),
+    loadout: {
+      name: loadout.name,
+      items: loadout.items.map((entry) => ({ item: entry.item || entry.food, quantity: entry.quantity })),
+      collected: loadout.collected || {},
+    },
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${loadout.name.replace(/[^a-z0-9_-]+/gi, "-").replace(/^-|-$/g, "") || "icarus-loadout"}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function importLoadout(file) {
+  if (!file) return;
+  const payload = JSON.parse(await file.text());
+  const loadout = payload.loadout || payload;
+  const created = await api("/api/loadouts/import", {
+    method: "POST",
+    body: JSON.stringify({
+      name: loadout.name || "Imported Loadout",
+      items: loadout.items || [],
+      collected: loadout.collected || loadout.farmed || {},
+    }),
+  });
+  state.loadouts.push(created);
+  state.activeLoadoutId = created.id;
+  renderLoadouts();
+  await loadResources();
+}
+
 els.search.addEventListener("input", renderItems);
 els.categoryFilter.addEventListener("change", () => {
   state.activeCategory = els.categoryFilter.value;
@@ -343,6 +411,12 @@ els.loadoutForm.addEventListener("submit", async (event) => {
   await loadResources();
 });
 els.clearCollectedBtn.addEventListener("click", clearCollected);
+els.copyShareBtn.addEventListener("click", copyShareLink);
+els.exportLoadoutBtn.addEventListener("click", exportLoadout);
+els.importLoadoutInput.addEventListener("change", async () => {
+  await importLoadout(els.importLoadoutInput.files[0]);
+  els.importLoadoutInput.value = "";
+});
 els.refreshBtn.addEventListener("click", async () => {
   els.refreshBtn.disabled = true;
   els.refreshBtn.textContent = "Refreshing...";

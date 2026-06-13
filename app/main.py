@@ -8,13 +8,14 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import BASE_DIR, ITEMS_PATH
-from app.models import CollectedItemInput, Item, LoadoutCreate, LoadoutItemInput
+from app.models import CollectedItemInput, Item, LoadoutCreate, LoadoutImport, LoadoutItemInput
 from app.services.calculator import calculate_loadout
 from app.services.storage import (
     create_loadout,
     delete_loadout,
     delete_loadout_item,
     clear_collected_items,
+    import_loadout,
     item_metadata,
     load_items,
     load_loadouts,
@@ -139,9 +140,22 @@ def loadouts() -> dict:
     return {"loadouts": [loadout.model_dump() for loadout in load_loadouts()]}
 
 
+@app.get("/api/loadouts/{loadout_id}")
+def get_loadout(loadout_id: str) -> dict:
+    loadout = next((entry for entry in load_loadouts() if entry.id == loadout_id), None)
+    if not loadout:
+        raise HTTPException(status_code=404, detail="Loadout not found")
+    return loadout.model_dump()
+
+
 @app.post("/api/loadouts")
 def add_loadout(payload: LoadoutCreate) -> dict:
     return create_loadout(payload).model_dump()
+
+
+@app.post("/api/loadouts/import")
+def import_loadout_file(payload: LoadoutImport) -> dict:
+    return import_loadout(payload).model_dump()
 
 
 @app.delete("/api/loadouts/{loadout_id}")
@@ -206,6 +220,11 @@ def loadout_resources(loadout_id: str) -> dict:
 @app.get("/api/buckets")
 def buckets() -> dict:
     return {"buckets": loadouts()["loadouts"]}
+
+
+@app.get("/api/buckets/{bucket_id}")
+def get_bucket(bucket_id: str) -> dict:
+    return get_loadout(bucket_id)
 
 
 @app.post("/api/buckets")

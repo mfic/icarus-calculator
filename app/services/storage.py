@@ -5,7 +5,15 @@ from pathlib import Path
 from typing import Any
 
 from app.config import DATA_DIR, ITEMS_PATH, LOADOUTS_PATH
-from app.models import CollectedItemInput, Item, Loadout, LoadoutCreate, LoadoutItem, LoadoutItemInput
+from app.models import (
+    CollectedItemInput,
+    Item,
+    Loadout,
+    LoadoutCreate,
+    LoadoutImport,
+    LoadoutItem,
+    LoadoutItemInput,
+)
 
 
 def utc_now() -> str:
@@ -71,6 +79,22 @@ def create_loadout(data: LoadoutCreate) -> Loadout:
     loadouts = load_loadouts()
     now = utc_now()
     loadout = Loadout(id=str(uuid.uuid4()), name=data.name.strip(), created_at=now, updated_at=now)
+    loadouts.append(loadout)
+    save_loadouts(loadouts)
+    return loadout
+
+
+def import_loadout(data: LoadoutImport) -> Loadout:
+    loadouts = load_loadouts()
+    now = utc_now()
+    loadout = Loadout(
+        id=str(uuid.uuid4()),
+        name=data.name.strip(),
+        items=data.items,
+        collected=data.collected,
+        created_at=now,
+        updated_at=now,
+    )
     loadouts.append(loadout)
     save_loadouts(loadouts)
     return loadout

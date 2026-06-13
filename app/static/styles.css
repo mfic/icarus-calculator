@@ -236,6 +236,43 @@ ul {
   width: 100%;
 }
 
+.share-tools {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  margin-top: 10px;
+}
+
+.code-pill {
+  background: #101410;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.76rem;
+  overflow: hidden;
+  padding: 8px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-button {
+  align-items: center;
+  border: 1px solid #b58f39;
+  border-radius: 6px;
+  color: var(--accent);
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 700;
+  min-height: 36px;
+  padding: 0 12px;
+}
+
+.file-button input {
+  display: none;
+}
+
 .loadout-items,
 .summary-list,
 .steps-list {
@@ -341,6 +378,10 @@ ul {
   }
 
   .material-row {
+    grid-template-columns: 1fr;
+  }
+
+  .share-tools {
     grid-template-columns: 1fr;
   }
 }
