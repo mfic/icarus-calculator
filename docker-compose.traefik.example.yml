@@ -1,0 +1,24 @@
+# Copy this file to docker-compose.traefik.yml and adjust the labels for your
+# domain, Traefik network, entrypoint, and certificate resolver.
+#
+# The copied docker-compose.traefik.yml file is intentionally git-ignored so
+# deployments can keep hostnames and infrastructure details local.
+
+services:
+  icarus-calculator:
+    # Remove the base compose file's direct 8001:8000 host port so Traefik is
+    # the only entrypoint. Delete this line if you also want the direct port.
+    ports: !reset []
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.icarus-calculator.rule=Host(`icarus.example.com`)"
+      - "traefik.http.routers.icarus-calculator.entrypoints=websecure"
+      - "traefik.http.routers.icarus-calculator.tls=true"
+      - "traefik.http.routers.icarus-calculator.tls.certresolver=letsencrypt"
+      - "traefik.http.services.icarus-calculator.loadbalancer.server.port=8000"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

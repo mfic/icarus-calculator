@@ -30,9 +30,14 @@ just install       # install runtime and test dependencies
 just dev           # run Docker Compose dev server with reload
 just local-dev     # run the local Python FastAPI server with reload
 just start         # build and start Docker compose
+just start-traefik # start with docker-compose.traefik.yml override
 just stop          # stop Docker compose
+just stop-traefik  # stop the Traefik override stack
 just restart       # stop then start Docker compose
+just restart-traefik # restart with Traefik override
 just logs          # follow Docker compose logs
+just logs-traefik  # follow logs with Traefik override
+just dev-traefik   # run dev compose with Traefik override
 just test          # run tests
 just update        # refresh wiki data cache (local Python env)
 just refresh       # refresh wiki data cache (running Docker container)
@@ -58,6 +63,24 @@ This starts two services:
 The `data/` folder is mounted as a volume in both services, so the wiki cache and
 loadouts survive restarts and the web app picks up the refreshed `items.json`
 automatically (no restart needed).
+
+### Optional Traefik Override
+
+Traefik labels are optional and live in a local override file that is ignored by
+git:
+
+```powershell
+Copy-Item docker-compose.traefik.example.yml docker-compose.traefik.yml
+```
+
+Edit `docker-compose.traefik.yml` for your hostname, certificate resolver, and
+external Traefik network, then run:
+
+```bash
+just start-traefik
+```
+
+For development behind Traefik, use `just dev-traefik`.
 
 ## Data Refresh
 
@@ -138,3 +161,9 @@ Server state is JSON-file based:
 - `data/item_overrides.json`: manual corrections (tier, primary category, extra categories), keyed by item name and merged into the wiki-scraped item data on each refresh
 
 The browser also mirrors its account code, the selected loadout, and the latest loadout snapshot in `localStorage` as a client-side convenience.
+
+## Community & License
+
+This project uses the [GNU Affero General Public License v3.0](LICENSE). Please read the
+[Code of Conduct](CODE_OF_CONDUCT.md), [Contributing Guide](CONTRIBUTING.md),
+and [Security Policy](SECURITY.md) before opening issues or pull requests.

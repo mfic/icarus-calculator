@@ -15,13 +15,27 @@ local-dev:
 start:
     docker compose up -d --build
 
+start-traefik:
+    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d --build
+
 stop:
     docker compose down
 
+stop-traefik:
+    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.traefik.yml down
+
 restart: stop start
+
+restart-traefik: stop-traefik start-traefik
 
 logs:
     docker compose logs -f
+
+logs-traefik:
+    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.traefik.yml logs -f
+
+dev-traefik:
+    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.traefik.yml up --build
 
 test:
     python -m pytest
