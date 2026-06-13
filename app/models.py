@@ -39,10 +39,15 @@ class LoadoutItem(BaseModel):
 
 
 class Loadout(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     id: str
     name: str
     items: list[LoadoutItem] = Field(default_factory=list)
-    farmed: dict[str, float] = Field(default_factory=dict)
+    collected: dict[str, float] = Field(
+        default_factory=dict,
+        validation_alias=AliasChoices("collected", "farmed"),
+    )
     created_at: str
     updated_at: str
 
@@ -58,7 +63,7 @@ class LoadoutItemInput(BaseModel):
     quantity: int = Field(default=1, ge=1)
 
 
-class FarmedItemInput(BaseModel):
+class CollectedItemInput(BaseModel):
     item: str = Field(min_length=1)
     quantity: float = Field(default=0, ge=0)
 
@@ -68,3 +73,4 @@ BucketItem = LoadoutItem
 Bucket = Loadout
 BucketCreate = LoadoutCreate
 BucketItemInput = LoadoutItemInput
+FarmedItemInput = CollectedItemInput

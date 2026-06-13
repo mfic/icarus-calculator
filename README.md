@@ -3,7 +3,7 @@
 A small hosted PoC for ICARUS item loadouts. It fetches item data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadouts persistent in `data/loadouts.json`.
 
 Items include wiki categories, tier metadata, and effects/stats when the wiki exposes them.
-Each loadout can also track farmed material quantities, so the material summary shows what is still remaining.
+Each loadout can also track collected material quantities, so the material summary shows what is still remaining.
 
 ## Run Locally
 

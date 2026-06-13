@@ -271,17 +271,17 @@ ul {
   gap: 4px;
 }
 
-.farmed-control {
+.collected-control {
   display: flex;
   gap: 6px;
 }
 
-.farmed-control input {
+.collected-control input {
   min-width: 0;
   width: 70px;
 }
 
-.farmed-control button {
+.collected-control button {
   padding: 0 8px;
 }
 
