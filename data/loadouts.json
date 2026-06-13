@@ -6,6 +6,7 @@
       "items": [],
       "collected": {},
       "recipe_choices": {},
+      "ignored_materials": [],
       "created_at": "2026-06-12T22:14:54.138569+00:00",
       "updated_at": "2026-06-13T00:39:38.346763+00:00"
     },
@@ -17,6 +18,7 @@
       "recipe_choices": {
         "Epoxy": "sulfur+tree sap"
       },
+      "ignored_materials": [],
       "created_at": "2026-06-13T00:56:38.196482+00:00",
       "updated_at": "2026-06-13T14:17:56.106062+00:00"
     },
@@ -35,12 +37,22 @@
         {
           "item": "Bacon Butty",
           "quantity": 10
+        },
+        {
+          "item": "Shepherd's Roll",
+          "quantity": 10
         }
       ],
       "collected": {},
-      "recipe_choices": {},
+      "recipe_choices": {
+        "Milk": "glass milk bottle+soy bean"
+      },
+      "ignored_materials": [
+        "Glass",
+        "Water"
+      ],
       "created_at": "2026-06-13T14:18:08.549131+00:00",
-      "updated_at": "2026-06-13T14:19:39.520888+00:00"
+      "updated_at": "2026-06-13T15:37:24.415543+00:00"
     }
   ]
 }

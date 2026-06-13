@@ -10,6 +10,7 @@ Each loadout can also track collected material quantities, so the material summa
 Loadouts have UUIDs for shareable links, and can be exported/imported as JSON files without user accounts.
 The main category filter uses normalized in-game categories; wiki categories remain available as subcategories, and items can additionally be filtered by tier. A Reset button clears all active filters and the search box.
 The Bare Materials and Crafting Steps lists show small color-coded dots indicating which loadout item(s) each material or step comes from.
+A separate [Gather View](#gather-view) (`/gather`) shows a large-print, touch-friendly Bare Materials checklist for a loadout, suitable for a second monitor or tablet while out gathering.
 
 ## Run Locally
 
@@ -28,7 +29,8 @@ just dev           # run Docker Compose dev server with reload
 just local-dev     # run the local Python FastAPI server with reload
 just start         # build and start Docker compose
 just stop          # stop Docker compose
-just update        # refresh wiki data cache
+just update        # refresh wiki data cache (local Python env)
+just refresh       # refresh wiki data cache (running Docker container)
 just test          # run tests
 just clean         # remove Python/test cache files
 ```
@@ -39,15 +41,34 @@ just clean         # remove Python/test cache files
 docker compose up --build
 ```
 
-The `data/` folder is mounted as a volume so wiki cache and loadouts survive restarts.
+This starts two services:
+
+- `icarus-calculator`: the web app (port 8001)
+- `icarus-refresh`: a sidecar that refreshes the wiki data cache once on startup and
+  then every 24 hours
+
+The `data/` folder is mounted as a volume in both services, so the wiki cache and
+loadouts survive restarts and the web app picks up the refreshed `items.json`
+automatically (no restart needed).
 
 ## Data Refresh
 
-The app refreshes wiki data:
+The wiki data cache is refreshed:
 
-- on startup when the cache is empty or older than 24 hours
-- every 24 hours while the server is running
-- manually via the **Refresh Wiki Data** button or `POST /api/refresh`
+- automatically by the `icarus-refresh` compose service (once on startup, then every
+  24 hours)
+- manually via `just refresh` (running Docker container) or `just update` (local
+  Python env). There is no internet-facing refresh endpoint or button, so the
+  re-scrape can only be triggered by the operator.
+
+## Gather View
+
+`/gather` is a standalone, full-page view of a loadout's Bare Materials list, meant
+to be opened in its own browser tab/window (e.g. on a second monitor or a tablet next
+to the game). It shares the loadout's collected-material tracking with the main
+calculator, refreshes itself periodically to pick up changes made elsewhere, and has
+a "Hide completed" toggle plus large touch-friendly +/- steppers for updating
+collected amounts.
 
 ## API
 

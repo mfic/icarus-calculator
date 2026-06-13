@@ -29,6 +29,9 @@ test:
 update:
     python -c "from app.services.wiki import refresh_item_data; print(refresh_item_data())"
 
+refresh:
+    docker compose exec icarus-calculator python -c "from app.services.wiki import refresh_item_data; print(refresh_item_data())"
+
 status:
     python -c "from app.services.storage import item_metadata; print(item_metadata())"
 

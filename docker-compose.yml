@@ -6,3 +6,10 @@ services:
     volumes:
       - ./data:/app/data
     restart: unless-stopped
+
+  icarus-refresh:
+    build: .
+    command: ["python", "-m", "app.scripts.refresh_loop"]
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

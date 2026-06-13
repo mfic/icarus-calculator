@@ -24,26 +24,16 @@ const els = {
   loadoutSelect: document.querySelector("#loadoutSelect"),
   loadoutId: document.querySelector("#loadoutId"),
   loadoutItems: document.querySelector("#loadoutItems"),
+  ignoredMaterials: document.querySelector("#ignoredMaterials"),
   materials: document.querySelector("#materials"),
   steps: document.querySelector("#steps"),
   clearCollectedBtn: document.querySelector("#clearCollectedBtn"),
   copyShareBtn: document.querySelector("#copyShareBtn"),
   exportLoadoutBtn: document.querySelector("#exportLoadoutBtn"),
   importLoadoutInput: document.querySelector("#importLoadoutInput"),
-  refreshBtn: document.querySelector("#refreshBtn"),
+  gatherLink: document.querySelector("#gatherLink"),
   itemTemplate: document.querySelector("#itemTemplate"),
 };
-
-async function api(path, options = {}) {
-  const response = await fetch(path, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-  });
-  if (!response.ok) {
-    throw new Error(await response.text());
-  }
-  return response.json();
-}
 
 function saveLocalLoadouts() {
   localStorage.setItem("icarus.loadouts.snapshot", JSON.stringify(state.loadouts));
@@ -53,49 +43,8 @@ function saveLocalLoadouts() {
   localStorage.setItem("icarus.activeTier", state.activeTier || "");
 }
 
-function formatQuantity(value) {
-  return Number.isInteger(value) ? value.toString() : Number(value).toFixed(2).replace(/\.?0+$/, "");
-}
-
 function activeLoadout() {
   return state.loadouts.find((loadout) => loadout.id === state.activeLoadoutId) || state.loadouts[0];
-}
-
-const SOURCE_COLORS = [
-  "#d2a84a",
-  "#72b587",
-  "#5f9ee1",
-  "#e16f5f",
-  "#b58fe1",
-  "#e1c95f",
-  "#5fe1c9",
-  "#e15f9e",
-  "#9ee15f",
-  "#e1925f",
-];
-
-function sourceColorMap(loadout) {
-  const map = new Map();
-  if (!loadout) return map;
-  loadout.items.forEach((entry, index) => {
-    const name = entry.item || entry.food;
-    map.set(name, SOURCE_COLORS[index % SOURCE_COLORS.length]);
-  });
-  return map;
-}
-
-function renderSourceDots(sources, colors) {
-  if (!sources?.length) return null;
-  const wrap = document.createElement("span");
-  wrap.className = "source-dots";
-  for (const source of sources) {
-    const dot = document.createElement("span");
-    dot.className = "source-dot";
-    dot.style.backgroundColor = colors.get(source) || "var(--muted)";
-    dot.title = source;
-    wrap.appendChild(dot);
-  }
-  return wrap;
 }
 
 function renderMeta(meta) {
@@ -276,8 +225,10 @@ function renderLoadouts() {
     state.activeLoadoutId = loadout.id;
     els.loadoutSelect.value = loadout.id;
     els.loadoutId.textContent = loadout.id;
+    els.gatherLink.href = `/gather?loadout=${encodeURIComponent(loadout.id)}`;
   } else {
     els.loadoutId.textContent = "No loadout selected";
+    els.gatherLink.href = "/gather";
   }
   saveLocalLoadouts();
   renderLoadoutItems();
@@ -309,20 +260,15 @@ function renderLoadoutItems() {
     dot.style.marginRight = "6px";
     nameSpan.appendChild(dot);
     nameSpan.appendChild(document.createTextNode(itemName));
-    const qtyInput = document.createElement("input");
-    qtyInput.type = "number";
-    qtyInput.className = "qty-input";
-    qtyInput.min = "1";
-    qtyInput.step = "1";
-    qtyInput.value = entry.quantity;
-    qtyInput.setAttribute("aria-label", `Quantity for ${itemName}`);
-    qtyInput.addEventListener("change", () => {
-      const value = Math.max(1, Math.round(Number(qtyInput.value) || 1));
-      qtyInput.value = value;
-      setItemQuantity(itemName, value);
+    const stepper = createStepper({
+      value: entry.quantity,
+      min: 1,
+      step: 1,
+      ariaLabel: `Quantity for ${itemName}`,
+      onChange: (value) => setItemQuantity(itemName, Math.round(value)),
     });
     row.appendChild(nameSpan);
-    row.appendChild(qtyInput);
+    row.appendChild(stepper);
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "danger";
@@ -355,6 +301,12 @@ function renderResources() {
     name.textContent = material.name;
     const materialDots = renderSourceDots(material.sources, colors);
     if (materialDots) name.appendChild(materialDots);
+    const ignoreToggle = createIgnoreToggle({
+      ignored: false,
+      ariaLabel: `Ignore ${material.name}`,
+      onToggle: () => setIgnoredMaterial(material.name, true),
+    });
+    name.appendChild(ignoreToggle);
     const summary = document.createElement("span");
     summary.className = "muted";
     summary.textContent = `Need ${formatQuantity(material.quantity)} · Remaining ${formatQuantity(material.remaining ?? material.quantity)}`;
@@ -363,21 +315,19 @@ function renderResources() {
     row.appendChild(main);
     const tracker = document.createElement("div");
     tracker.className = "collected-control";
-    const input = document.createElement("input");
-    input.type = "number";
-    input.min = "0";
-    input.step = "1";
-    input.value = formatQuantity(material.collected ?? material.farmed ?? 0);
-    input.setAttribute("aria-label", `Collected ${material.name}`);
-    const save = document.createElement("button");
-    save.type = "button";
-    save.textContent = "Save";
-    save.addEventListener("click", () => updateCollected(material.name, Number(input.value || 0)));
-    tracker.appendChild(input);
-    tracker.appendChild(save);
+    const stepper = createStepper({
+      value: formatQuantity(material.collected ?? material.farmed ?? 0),
+      min: 0,
+      step: 1,
+      ariaLabel: `Collected ${material.name}`,
+      onChange: (value) => updateCollected(material.name, value),
+    });
+    tracker.appendChild(stepper);
     row.appendChild(tracker);
     els.materials.appendChild(row);
   }
+
+  renderIgnoredChips(els.ignoredMaterials, activeLoadout()?.ignored_materials || [], (name) => setIgnoredMaterial(name, false));
 
   if (!data.steps.length) {
     els.steps.innerHTML = '<p class="muted">No craftable steps in this loadout.</p>';
@@ -541,6 +491,18 @@ async function setRecipeChoice(itemName, recipeId) {
   await loadResources();
 }
 
+async function setIgnoredMaterial(itemName, ignored) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/ignored-materials`, {
+    method: "PUT",
+    body: JSON.stringify({ item: itemName, ignored }),
+  });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
+  await loadResources();
+}
+
 async function clearCollected() {
   const loadout = activeLoadout();
   if (!loadout) return;
@@ -571,6 +533,7 @@ function exportLoadout() {
       items: loadout.items.map((entry) => ({ item: entry.item || entry.food, quantity: entry.quantity })),
       collected: loadout.collected || {},
       recipe_choices: loadout.recipe_choices || {},
+      ignored_materials: loadout.ignored_materials || [],
     },
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -601,6 +564,7 @@ async function importLoadout(file) {
       items: loadout.items || [],
       collected: loadout.collected || loadout.farmed || {},
       recipe_choices: loadout.recipe_choices || {},
+      ignored_materials: loadout.ignored_materials || [],
     }),
   });
   state.loadouts.push(created);
@@ -669,24 +633,6 @@ els.importLoadoutInput.addEventListener("change", async () => {
     els.importLoadoutInput.value = "";
   }
 });
-els.refreshBtn.addEventListener("click", async () => {
-  els.refreshBtn.disabled = true;
-  els.refreshBtn.textContent = "Refreshing...";
-  const meta = await api("/api/refresh", { method: "POST" });
-  renderMeta(meta);
-  const [items, categories, tiers] = await Promise.all([api("/api/items"), api("/api/categories"), api("/api/tiers")]);
-  state.items = items.items;
-  state.categories = categories.categories;
-  state.tiers = tiers.tiers;
-  renderCategories();
-  renderSubcategories();
-  renderTiers();
-  renderItems();
-  await loadResources();
-  els.refreshBtn.disabled = false;
-  els.refreshBtn.textContent = "Refresh Wiki Data";
-});
-
 loadAll().catch((error) => {
   document.body.innerHTML = `<main class="panel" style="margin:16px"><h1>Startup failed</h1><p>${error.message}</p></main>`;
 });

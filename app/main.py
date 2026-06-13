@@ -1,15 +1,18 @@
-import logging
-from contextlib import asynccontextmanager
-from datetime import datetime, timezone
-
-from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.config import BASE_DIR, ITEMS_PATH
-from app.models import CollectedItemInput, Item, LoadoutCreate, LoadoutImport, LoadoutItemInput, RecipeChoiceInput
+from app.config import BASE_DIR
+from app.models import (
+    CollectedItemInput,
+    IgnoredMaterialInput,
+    Item,
+    LoadoutCreate,
+    LoadoutImport,
+    LoadoutItemInput,
+    RecipeChoiceInput,
+)
 from app.services.calculator import _item_recipes, calculate_loadout
 from app.services.storage import (
     create_loadout,
@@ -21,15 +24,12 @@ from app.services.storage import (
     load_items,
     load_loadouts,
     set_collected_item,
+    set_ignored_material,
     set_recipe_choice,
     upsert_loadout_item,
 )
-from app.services.wiki import refresh_item_data, refresh_item_data_async
 
 
-logger = logging.getLogger(__name__)
-
-scheduler = BackgroundScheduler(timezone="UTC")
 CATEGORY_ORDER = [
     "Tools",
     "Bows",
@@ -46,30 +46,7 @@ CATEGORY_ORDER = [
 ]
 
 
-def needs_refresh() -> bool:
-    metadata = item_metadata()
-    refreshed_at = metadata.get("refreshed_at")
-    if not ITEMS_PATH.exists() or not refreshed_at or metadata.get("count", 0) == 0:
-        return True
-    then = datetime.fromisoformat(str(refreshed_at).replace("Z", "+00:00"))
-    age = datetime.now(timezone.utc) - then
-    return age.total_seconds() >= 24 * 60 * 60
-
-
-@asynccontextmanager
-async def lifespan(_: FastAPI):
-    if needs_refresh():
-        try:
-            await refresh_item_data_async()
-        except Exception:
-            logger.exception("Initial wiki data refresh failed")
-    scheduler.add_job(refresh_item_data, "interval", days=1, id="daily-wiki-refresh", replace_existing=True)
-    scheduler.start()
-    yield
-    scheduler.shutdown(wait=False)
-
-
-app = FastAPI(title="ICARUS Resource Calculator", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="ICARUS Resource Calculator", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -91,14 +68,14 @@ def favicon() -> FileResponse:
     return FileResponse(static_dir / "favicon.ico")
 
 
+@app.get("/gather")
+def gather() -> FileResponse:
+    return FileResponse(static_dir / "gather.html")
+
+
 @app.get("/api/meta")
 def meta() -> dict:
     return item_metadata()
-
-
-@app.post("/api/refresh")
-def refresh() -> dict:
-    return refresh_item_data()
 
 
 def filter_items(
@@ -290,6 +267,14 @@ def clear_collected(loadout_id: str) -> dict:
 def put_recipe_choice(loadout_id: str, payload: RecipeChoiceInput) -> dict:
     try:
         return set_recipe_choice(loadout_id, payload).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.put("/api/loadouts/{loadout_id}/ignored-materials")
+def put_ignored_material(loadout_id: str, payload: IgnoredMaterialInput) -> dict:
+    try:
+        return set_ignored_material(loadout_id, payload).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 

@@ -96,6 +96,66 @@ def test_calculate_loadout_merges_steps_for_shared_subrecipes():
     assert wood_material["sources"] == ["Crate", "Shelf"]
 
 
+def test_calculate_loadout_ignored_material_cascades_to_sub_ingredients():
+    items = [
+        Item(
+            name="Plank",
+            slug="Plank",
+            recipe=Recipe(
+                inputs=[Ingredient(name="Wood", quantity=2)],
+                outputs=[Ingredient(name="Plank", quantity=1)],
+                benches=["Workbench"],
+            ),
+        ),
+        Item(
+            name="Crate",
+            slug="Crate",
+            recipe=Recipe(
+                inputs=[Ingredient(name="Plank", quantity=4)],
+                outputs=[Ingredient(name="Crate", quantity=1)],
+                benches=["Workbench"],
+            ),
+        ),
+        Item(
+            name="Shelf",
+            slug="Shelf",
+            recipe=Recipe(
+                inputs=[Ingredient(name="Plank", quantity=2)],
+                outputs=[Ingredient(name="Shelf", quantity=1)],
+                benches=["Workbench"],
+            ),
+        ),
+        Item(
+            name="Torch",
+            slug="Torch",
+            recipe=Recipe(
+                inputs=[Ingredient(name="Stick", quantity=1)],
+                outputs=[Ingredient(name="Torch", quantity=1)],
+                benches=["Workbench"],
+            ),
+        ),
+    ]
+    loadout = Loadout(
+        id="loadout",
+        name="Loadout",
+        items=[
+            LoadoutItem(item="Crate", quantity=1),
+            LoadoutItem(item="Shelf", quantity=1),
+            LoadoutItem(item="Torch", quantity=1),
+        ],
+        ignored_materials=["Plank"],
+        created_at="2026-06-12T00:00:00+00:00",
+        updated_at="2026-06-12T00:00:00+00:00",
+    )
+
+    result = calculate_loadout(loadout, items)
+
+    assert result["materials"] == [
+        {"name": "Stick", "quantity": 1, "collected": 0, "remaining": 1, "sources": ["Torch"]},
+    ]
+    assert [step["item"] for step in result["steps"]] == ["Crate", "Shelf", "Torch"]
+
+
 def _epoxy_item() -> Item:
     sulfur_recipe = Recipe(
         inputs=[Ingredient(name="Sulfur", quantity=2), Ingredient(name="Tree Sap", quantity=4)],
@@ -139,6 +199,15 @@ def test_resolve_materials_uses_recipe_choice():
 
     assert totals == {"Crushed Bone": 8}
     assert steps[0]["inputs"] == [{"name": "Crushed Bone", "quantity": 8}]
+
+
+def test_resolve_materials_returns_empty_for_ignored_item():
+    items_by_name = {"epoxy": _epoxy_item()}
+
+    totals, steps = resolve_materials("Epoxy", 2, items_by_name, ignored=frozenset({"epoxy"}))
+
+    assert totals == {}
+    assert steps == []
 
 
 def test_calculate_loadout_includes_recipe_options_for_multi_recipe_items():

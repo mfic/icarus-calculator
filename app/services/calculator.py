@@ -34,8 +34,11 @@ def resolve_materials(
     items_by_name: dict[str, Item],
     recipe_choices: dict[str, str] | None = None,
     trail: tuple[str, ...] = (),
+    ignored: frozenset[str] = frozenset(),
 ) -> tuple[dict[str, float], list[dict[str, Any]]]:
     recipe_choices = recipe_choices or {}
+    if item_name.lower() in ignored:
+        return {}, []
     item = items_by_name.get(item_name.lower())
     recipe = _select_recipe(item, recipe_choices) if item else None
     if not item or not recipe or not recipe.inputs or item.name in trail:
@@ -68,6 +71,7 @@ def resolve_materials(
             items_by_name,
             recipe_choices,
             trail + (item.name,),
+            ignored,
         )
         for name, amount in child_totals.items():
             totals[name] += amount
@@ -119,9 +123,10 @@ def calculate_loadout(loadout: Loadout, items: list[Item]) -> dict[str, Any]:
     steps: list[dict[str, Any]] = []
     missing: list[str] = []
 
+    ignored = frozenset(name.lower() for name in loadout.ignored_materials)
     for loadout_item in loadout.items:
         totals, item_steps = resolve_materials(
-            loadout_item.item, loadout_item.quantity, items_by_name, loadout.recipe_choices
+            loadout_item.item, loadout_item.quantity, items_by_name, loadout.recipe_choices, ignored=ignored
         )
         if loadout_item.item.lower() not in items_by_name:
             missing.append(loadout_item.item)

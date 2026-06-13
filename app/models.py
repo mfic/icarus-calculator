@@ -53,6 +53,7 @@ class Loadout(BaseModel):
         validation_alias=AliasChoices("collected", "farmed"),
     )
     recipe_choices: dict[str, str] = Field(default_factory=dict)
+    ignored_materials: list[str] = Field(default_factory=list)
     created_at: str
     updated_at: str
 
@@ -66,6 +67,7 @@ class LoadoutImport(BaseModel):
     items: list[LoadoutItem] = Field(default_factory=list, max_length=500)
     collected: dict[str, float] = Field(default_factory=dict)
     recipe_choices: dict[str, str] = Field(default_factory=dict)
+    ignored_materials: list[str] = Field(default_factory=list, max_length=500)
 
     @field_validator("collected")
     @classmethod
@@ -89,6 +91,14 @@ class LoadoutImport(BaseModel):
                 raise ValueError("recipe_choices values must be at most 200 characters")
         return value
 
+    @field_validator("ignored_materials")
+    @classmethod
+    def _validate_ignored_materials(cls, value: list[str]) -> list[str]:
+        for name in value:
+            if not (1 <= len(name) <= 120):
+                raise ValueError("ignored_materials entries must be between 1 and 120 characters")
+        return value
+
 
 class LoadoutItemInput(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
@@ -105,6 +115,11 @@ class CollectedItemInput(BaseModel):
 class RecipeChoiceInput(BaseModel):
     item: str = Field(min_length=1, max_length=120)
     recipe_id: str = Field(default="", max_length=200)
+
+
+class IgnoredMaterialInput(BaseModel):
+    item: str = Field(min_length=1, max_length=120)
+    ignored: bool
 
 
 FoodItem = Item

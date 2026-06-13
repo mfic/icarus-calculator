@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gather View - ICARUS Item Calculator</title>
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body class="gather-page">
+    <header class="topbar">
+      <div>
+        <h1>Gather View</h1>
+        <p id="gatherSubtitle" class="muted">Loading...</p>
+      </div>
+      <a class="secondary button-link" href="/">Back to Calculator</a>
+    </header>
+
+    <main class="gather-main">
+      <div class="gather-controls">
+        <select id="gatherLoadoutSelect"></select>
+        <label class="gather-toggle">
+          <input id="hideCompletedToggle" type="checkbox" />
+          Hide completed
+        </label>
+        <button id="clearCollectedBtn" class="secondary" type="button">Clear Collected</button>
+      </div>
+      <div id="gatherIgnored" class="ignored-chips" hidden></div>
+      <div id="gatherMaterials" class="gather-grid"></div>
+    </main>
+
+    <script src="/static/shared.js"></script>
+    <script src="/static/gather.js"></script>
+  </body>
+</html>

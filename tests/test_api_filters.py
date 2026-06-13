@@ -1,4 +1,4 @@
-from app.main import _tier_sort_key, filter_items
+from app.main import _tier_sort_key, app, filter_items
 from app.services.wiki import classify_primary_category
 from app.models import Ingredient, Item, Recipe
 
@@ -70,3 +70,16 @@ def test_tier_sort_key_handles_mixed_numeric_and_text_tiers():
     result = sorted(entries, key=_tier_sort_key)
 
     assert [name for name, _ in result] == ["Tier 1", "Tier 2", "Tier 10", "Bonus"]
+
+
+def test_refresh_endpoint_is_not_exposed():
+    paths = {route.path for route in app.routes}
+
+    assert "/api/refresh" not in paths
+    assert "/gather" in paths
+
+
+def test_ignored_materials_endpoint_is_exposed():
+    paths = {route.path for route in app.routes}
+
+    assert "/api/loadouts/{loadout_id}/ignored-materials" in paths

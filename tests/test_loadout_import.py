@@ -19,3 +19,19 @@ def test_import_loadout_gets_new_uuid(monkeypatch, tmp_path):
     assert loadout.name == "Shared Run"
     assert loadout.items[0].item == "Dirt Ramp"
     assert loadout.collected == {"Dirt": 5}
+
+
+def test_import_loadout_preserves_ignored_materials(monkeypatch, tmp_path):
+    import app.services.storage as storage
+
+    monkeypatch.setattr(storage, "LOADOUTS_PATH", tmp_path / "loadouts.json")
+
+    loadout = import_loadout(
+        LoadoutImport(
+            name="Shared Run",
+            items=[LoadoutItem(item="Milk Bottle", quantity=1)],
+            ignored_materials=["Milk Bottle"],
+        )
+    )
+
+    assert loadout.ignored_materials == ["Milk Bottle"]

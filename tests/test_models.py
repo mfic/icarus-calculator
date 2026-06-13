@@ -50,3 +50,13 @@ def test_loadout_import_rejects_overlong_recipe_choice_key():
 def test_loadout_import_rejects_overlong_recipe_choice_value():
     with pytest.raises(ValidationError):
         LoadoutImport(name="Big Loadout", recipe_choices={"Epoxy": "x" * 201})
+
+
+def test_loadout_import_rejects_too_many_ignored_materials():
+    with pytest.raises(ValidationError):
+        LoadoutImport(name="Big Loadout", ignored_materials=[f"item-{i}" for i in range(501)])
+
+
+def test_loadout_import_rejects_overlong_ignored_material_name():
+    with pytest.raises(ValidationError):
+        LoadoutImport(name="Big Loadout", ignored_materials=["x" * 121])

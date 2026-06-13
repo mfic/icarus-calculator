@@ -8,6 +8,7 @@ from typing import Any
 from app.config import DATA_DIR, ITEMS_PATH, LOADOUTS_PATH
 from app.models import (
     CollectedItemInput,
+    IgnoredMaterialInput,
     Item,
     Loadout,
     LoadoutCreate,
@@ -43,18 +44,24 @@ def write_json(path: Path, data: Any) -> None:
 
 
 _items_cache: list[Item] | None = None
+_items_cache_mtime: float | None = None
 
 
 def load_items() -> list[Item]:
-    global _items_cache
-    if _items_cache is None:
+    global _items_cache, _items_cache_mtime
+    try:
+        mtime = ITEMS_PATH.stat().st_mtime
+    except FileNotFoundError:
+        mtime = None
+    if _items_cache is None or mtime != _items_cache_mtime:
         payload = read_json(ITEMS_PATH, {"items": []})
         _items_cache = [Item.model_validate(item) for item in payload.get("items", [])]
+        _items_cache_mtime = mtime
     return _items_cache
 
 
 def save_items(items: list[Item], refreshed_at: str) -> None:
-    global _items_cache
+    global _items_cache, _items_cache_mtime
     write_json(
         ITEMS_PATH,
         {
@@ -64,6 +71,7 @@ def save_items(items: list[Item], refreshed_at: str) -> None:
         },
     )
     _items_cache = items
+    _items_cache_mtime = ITEMS_PATH.stat().st_mtime
 
 
 def item_metadata() -> dict[str, Any]:
@@ -108,6 +116,7 @@ def import_loadout(data: LoadoutImport) -> Loadout:
             items=data.items,
             collected=data.collected,
             recipe_choices=data.recipe_choices,
+            ignored_materials=data.ignored_materials,
             created_at=now,
             updated_at=now,
         )
@@ -168,6 +177,24 @@ def set_recipe_choice(loadout_id: str, choice: RecipeChoiceInput) -> Loadout:
                     loadout.recipe_choices[choice.item] = choice.recipe_id
                 else:
                     loadout.recipe_choices.pop(choice.item, None)
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
+    raise KeyError(loadout_id)
+
+
+def set_ignored_material(loadout_id: str, payload: IgnoredMaterialInput) -> Loadout:
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id:
+                if payload.ignored:
+                    if payload.item.lower() not in {name.lower() for name in loadout.ignored_materials}:
+                        loadout.ignored_materials.append(payload.item)
+                else:
+                    loadout.ignored_materials = [
+                        name for name in loadout.ignored_materials if name.lower() != payload.item.lower()
+                    ]
                 loadout.updated_at = utc_now()
                 save_loadouts(loadouts)
                 return loadout

@@ -13,7 +13,7 @@
         <h1>ICARUS Item Calculator</h1>
         <p id="meta">Loading wiki data...</p>
       </div>
-      <button id="refreshBtn" class="secondary" type="button">Refresh Wiki Data</button>
+      <a id="gatherLink" class="secondary button-link" href="/gather" target="_blank" rel="noopener">Gather View</a>
     </header>
 
     <main class="layout">
@@ -63,6 +63,7 @@
           <h3>Bare Materials</h3>
           <button id="clearCollectedBtn" class="secondary" type="button">Clear Collected</button>
         </div>
+        <div id="ignoredMaterials" class="ignored-chips" hidden></div>
         <div id="materials" class="summary-list"></div>
 
         <h3>Crafting Steps</h3>
@@ -89,6 +90,7 @@
       </article>
     </template>
 
+    <script src="/static/shared.js"></script>
     <script src="/static/app.js"></script>
   </body>
 </html>
