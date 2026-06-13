@@ -47,8 +47,9 @@ The app refreshes wiki data:
 ## API
 
 - `GET /api/items`
-- `GET /api/items?q=stamina&category=Food`
+- `GET /api/items?q=stamina&category=Food&tier=Tier%202`
 - `GET /api/categories`
+- `GET /api/tiers`
 - `GET /api/foods` compatibility alias for items
 - `GET /api/loadouts`
 - `POST /api/loadouts`

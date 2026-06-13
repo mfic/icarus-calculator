@@ -1,9 +1,11 @@
 const state = {
   items: [],
   categories: [],
+  tiers: [],
   loadouts: [],
   activeLoadoutId: localStorage.getItem("icarus.activeLoadoutId") || localStorage.getItem("icarus.activeBucketId") || "",
   activeCategory: localStorage.getItem("icarus.activeCategory") || "",
+  activeTier: localStorage.getItem("icarus.activeTier") || "",
   resources: null,
 };
 
@@ -12,6 +14,7 @@ const els = {
   items: document.querySelector("#items"),
   search: document.querySelector("#search"),
   categoryFilter: document.querySelector("#categoryFilter"),
+  tierFilter: document.querySelector("#tierFilter"),
   loadoutForm: document.querySelector("#loadoutForm"),
   loadoutName: document.querySelector("#loadoutName"),
   loadoutSelect: document.querySelector("#loadoutSelect"),
@@ -42,6 +45,7 @@ function saveLocalLoadouts() {
   localStorage.setItem("icarus.loadouts.snapshot", JSON.stringify(state.loadouts));
   localStorage.setItem("icarus.activeLoadoutId", state.activeLoadoutId || "");
   localStorage.setItem("icarus.activeCategory", state.activeCategory || "");
+  localStorage.setItem("icarus.activeTier", state.activeTier || "");
 }
 
 function formatQuantity(value) {
@@ -60,10 +64,14 @@ function renderMeta(meta) {
 function renderItems() {
   const term = els.search.value.trim().toLowerCase();
   const category = state.activeCategory.toLowerCase();
+  const tier = state.activeTier.toLowerCase();
   const categoryFiltered = category
     ? state.items.filter((item) => item.categories.some((entry) => entry.toLowerCase() === category))
     : state.items;
-  const filtered = categoryFiltered.filter((item) => {
+  const tierFiltered = tier
+    ? categoryFiltered.filter((item) => item.tier && item.tier.toLowerCase() === tier)
+    : categoryFiltered;
+  const filtered = tierFiltered.filter((item) => {
     const recipeInputs = item.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
     const effects = item.effects?.length ? item.effects : item.buffs || [];
     return `${item.name} ${item.tier || ""} ${effects.join(" ")} ${item.benches.join(" ")} ${item.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
@@ -141,6 +149,23 @@ function renderCategories() {
   } else {
     state.activeCategory = "";
     els.categoryFilter.value = "";
+  }
+  saveLocalLoadouts();
+}
+
+function renderTiers() {
+  els.tierFilter.innerHTML = '<option value="">All tiers</option>';
+  for (const tier of state.tiers) {
+    const option = document.createElement("option");
+    option.value = tier.name;
+    option.textContent = `${tier.name} (${tier.count})`;
+    els.tierFilter.appendChild(option);
+  }
+  if (state.activeTier && state.tiers.some((tier) => tier.name === state.activeTier)) {
+    els.tierFilter.value = state.activeTier;
+  } else {
+    state.activeTier = "";
+    els.tierFilter.value = "";
   }
   saveLocalLoadouts();
 }
@@ -262,15 +287,17 @@ async function loadResources() {
 }
 
 async function loadAll() {
-  const [meta, items, categories, loadouts] = await Promise.all([
+  const [meta, items, categories, tiers, loadouts] = await Promise.all([
     api("/api/meta"),
     api("/api/items"),
     api("/api/categories"),
+    api("/api/tiers"),
     api("/api/loadouts"),
   ]);
   renderMeta(meta);
   state.items = items.items;
   state.categories = categories.categories;
+  state.tiers = tiers.tiers;
   state.loadouts = loadouts.loadouts;
   const requestedLoadoutId = new URLSearchParams(window.location.search).get("loadout");
   if (requestedLoadoutId && state.loadouts.some((loadout) => loadout.id === requestedLoadoutId)) {
@@ -284,6 +311,7 @@ async function loadAll() {
     state.loadouts = [created];
   }
   renderCategories();
+  renderTiers();
   renderItems();
   renderLoadouts();
   await loadResources();
@@ -390,6 +418,11 @@ els.categoryFilter.addEventListener("change", () => {
   saveLocalLoadouts();
   renderItems();
 });
+els.tierFilter.addEventListener("change", () => {
+  state.activeTier = els.tierFilter.value;
+  saveLocalLoadouts();
+  renderItems();
+});
 els.loadoutSelect.addEventListener("change", async () => {
   state.activeLoadoutId = els.loadoutSelect.value;
   saveLocalLoadouts();
@@ -422,10 +455,12 @@ els.refreshBtn.addEventListener("click", async () => {
   els.refreshBtn.textContent = "Refreshing...";
   const meta = await api("/api/refresh", { method: "POST" });
   renderMeta(meta);
-  const [items, categories] = await Promise.all([api("/api/items"), api("/api/categories")]);
+  const [items, categories, tiers] = await Promise.all([api("/api/items"), api("/api/categories"), api("/api/tiers")]);
   state.items = items.items;
   state.categories = categories.categories;
+  state.tiers = tiers.tiers;
   renderCategories();
+  renderTiers();
   renderItems();
   await loadResources();
   els.refreshBtn.disabled = false;

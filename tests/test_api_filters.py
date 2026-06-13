@@ -33,3 +33,14 @@ def test_search_matches_tier():
     result = filter_items(items, q="tier 2")
 
     assert [item.name for item in result] == ["Iron Knife"]
+
+
+def test_tier_filter_applies_before_search():
+    items = [
+        Item(name="Iron Knife", slug="Iron_Knife", categories=["Weapons"], tier="Tier 2"),
+        Item(name="Steel Knife", slug="Steel_Knife", categories=["Weapons"], tier="Tier 3"),
+    ]
+
+    result = filter_items(items, q="knife", tier="Tier 3")
+
+    assert [item.name for item in result] == ["Steel Knife"]

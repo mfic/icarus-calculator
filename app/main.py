@@ -83,7 +83,12 @@ def refresh() -> dict:
     return refresh_item_data()
 
 
-def filter_items(items: list[Item], q: str | None = None, category: str | None = None) -> list[Item]:
+def filter_items(
+    items: list[Item],
+    q: str | None = None,
+    category: str | None = None,
+    tier: str | None = None,
+) -> list[Item]:
     if category:
         category_needle = category.lower()
         items = [
@@ -91,6 +96,9 @@ def filter_items(items: list[Item], q: str | None = None, category: str | None =
             for item in items
             if any(category_needle == item_category.lower() for item_category in item.categories)
         ]
+    if tier:
+        tier_needle = tier.lower()
+        items = [item for item in items if item.tier and item.tier.lower() == tier_needle]
     if q:
         needle = q.lower()
         items = [
@@ -111,14 +119,22 @@ def filter_items(items: list[Item], q: str | None = None, category: str | None =
 
 
 @app.get("/api/items")
-def items(q: str | None = Query(default=None), category: str | None = Query(default=None)) -> dict:
-    items = filter_items(load_items(), q=q, category=category)
+def items(
+    q: str | None = Query(default=None),
+    category: str | None = Query(default=None),
+    tier: str | None = Query(default=None),
+) -> dict:
+    items = filter_items(load_items(), q=q, category=category, tier=tier)
     return {"items": [item.model_dump() for item in items]}
 
 
 @app.get("/api/foods")
-def foods(q: str | None = Query(default=None), category: str | None = Query(default=None)) -> dict:
-    return items(q=q, category=category)
+def foods(
+    q: str | None = Query(default=None),
+    category: str | None = Query(default=None),
+    tier: str | None = Query(default=None),
+) -> dict:
+    return items(q=q, category=category, tier=tier)
 
 
 @app.get("/api/categories")
@@ -131,6 +147,23 @@ def categories() -> dict:
         "categories": [
             {"name": name, "count": count}
             for name, count in sorted(counts.items(), key=lambda entry: entry[0].lower())
+        ]
+    }
+
+
+@app.get("/api/tiers")
+def tiers() -> dict:
+    counts: dict[str, int] = {}
+    for item in load_items():
+        if item.tier:
+            counts[item.tier] = counts.get(item.tier, 0) + 1
+    return {
+        "tiers": [
+            {"name": name, "count": count}
+            for name, count in sorted(
+                counts.items(),
+                key=lambda entry: int(entry[0].split()[-1]) if entry[0].split()[-1].isdigit() else entry[0],
+            )
         ]
     }
 
