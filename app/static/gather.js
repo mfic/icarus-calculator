@@ -132,7 +132,7 @@ els.hideCompletedToggle.addEventListener("change", () => {
 
 els.clearCollectedBtn.addEventListener("click", clearCollected);
 
-setInterval(loadResources, 15000);
+setInterval(loadResources, 5000);
 window.addEventListener("focus", loadResources);
 
 init().catch((error) => {

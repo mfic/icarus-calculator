@@ -478,6 +478,16 @@ async function loadResources() {
   renderGatherView();
 }
 
+async function pollUpdates() {
+  try {
+    const { loadouts } = await api("/api/loadouts");
+    state.loadouts = loadouts;
+    await loadResources();
+  } catch (error) {
+    console.error("Poll for updates failed:", error);
+  }
+}
+
 async function loadAll() {
   els.accountId.textContent = getAccountId();
   els.hideCompletedToggle.checked = state.hideCompleted;
@@ -775,6 +785,9 @@ els.importLoadoutInput.addEventListener("change", async () => {
     els.importLoadoutInput.value = "";
   }
 });
+setInterval(pollUpdates, 5000);
+window.addEventListener("focus", pollUpdates);
+
 loadAll().catch((error) => {
   document.body.innerHTML = `<main class="panel" style="margin:16px"><h1>Startup failed</h1><p>${error.message}</p></main>`;
 });
