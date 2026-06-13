@@ -12,7 +12,7 @@ Loadouts have UUIDs for shareable links, and can be exported/imported as JSON fi
 Each browser gets a private [account code](#accounts--sharing); loadouts are only visible to their owner unless explicitly shared with another account code.
 The main category filter uses normalized in-game categories; wiki categories remain available as subcategories, and items can additionally be filtered by tier. A Reset button clears all active filters and the search box.
 The Bare Materials and Crafting Steps lists show small color-coded dots indicating which loadout item(s) each material or step comes from.
-A separate [Gather View](#gather-view) (`/gather`) shows a large-print, touch-friendly Bare Materials checklist for a loadout, suitable for a second monitor or tablet while out gathering.
+A [Gather tab](#gather-view) shows a large-print, touch-friendly Bare Materials checklist for the active loadout in place, and the same view is also available as a standalone page (`/gather`) for a second monitor or tablet while out gathering.
 
 ## Run Locally
 

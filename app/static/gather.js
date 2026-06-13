@@ -44,60 +44,11 @@ function renderMaterials() {
   const data = state.resources;
   if (!data) return;
   const colors = sourceColorMap(loadout);
-  const materials = state.hideCompleted
-    ? data.materials.filter((material) => (material.remaining ?? material.quantity) > 0)
-    : data.materials;
-  if (!materials.length) {
-    els.materials.innerHTML = '<p class="muted">Nothing to gather. Add items to this loadout from the calculator.</p>';
-    return;
-  }
-  for (const material of materials) {
-    const remaining = material.remaining ?? material.quantity;
-    const card = document.createElement("article");
-    card.className = "gather-card";
-    if (remaining <= 0) card.classList.add("done");
-
-    const header = document.createElement("div");
-    header.className = "gather-card-header";
-    const name = document.createElement("strong");
-    name.textContent = material.name;
-    const dots = renderSourceDots(material.sources, colors);
-    if (dots) name.appendChild(dots);
-    const ignoreToggle = createIgnoreToggle({
-      ignored: false,
-      ariaLabel: `Ignore ${material.name}`,
-      onToggle: () => setIgnoredMaterial(material.name, true),
-    });
-    name.appendChild(ignoreToggle);
-    header.appendChild(name);
-    card.appendChild(header);
-
-    const summary = document.createElement("p");
-    summary.className = "muted";
-    summary.textContent = `Need ${formatQuantity(material.quantity)} · Remaining ${formatQuantity(remaining)}`;
-    card.appendChild(summary);
-
-    const actions = document.createElement("div");
-    actions.className = "gather-card-actions";
-    const stepper = createStepper({
-      value: formatQuantity(material.collected ?? material.farmed ?? 0),
-      min: 0,
-      step: 1,
-      ariaLabel: `Collected ${material.name}`,
-      onChange: (value) => updateCollected(material.name, value),
-    });
-    actions.appendChild(stepper);
-    const maxBtn = document.createElement("button");
-    maxBtn.type = "button";
-    maxBtn.className = "secondary";
-    maxBtn.textContent = "Max";
-    maxBtn.setAttribute("aria-label", `Set ${material.name} collected to ${formatQuantity(material.quantity)}`);
-    maxBtn.addEventListener("click", () => updateCollected(material.name, material.quantity));
-    actions.appendChild(maxBtn);
-    card.appendChild(actions);
-
-    els.materials.appendChild(card);
-  }
+  renderMaterialCards(els.materials, data.materials, colors, {
+    hideCompleted: state.hideCompleted,
+    onIgnore: (name) => setIgnoredMaterial(name, true),
+    onCollectedChange: updateCollected,
+  });
 
   renderIgnoredChips(els.ignoredMaterials, activeLoadout()?.ignored_materials || [], (name) => setIgnoredMaterial(name, false));
 }

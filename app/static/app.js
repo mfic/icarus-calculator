@@ -8,11 +8,21 @@ const state = {
   activeCategory: localStorage.getItem("icarus.activeCategory") || "",
   activeSubcategory: localStorage.getItem("icarus.activeSubcategory") || "",
   activeTier: localStorage.getItem("icarus.activeTier") || "",
+  hideCompleted: localStorage.getItem("icarus.gather.hideCompleted") === "1",
   resources: null,
 };
 
 const els = {
   meta: document.querySelector("#meta"),
+  calculatorView: document.querySelector("#calculatorView"),
+  gatherView: document.querySelector("#gatherView"),
+  calculatorTab: document.querySelector("#calculatorTab"),
+  gatherTab: document.querySelector("#gatherTab"),
+  gatherLoadoutSelect: document.querySelector("#gatherLoadoutSelect"),
+  hideCompletedToggle: document.querySelector("#hideCompletedToggle"),
+  gatherClearCollectedBtn: document.querySelector("#gatherClearCollectedBtn"),
+  gatherIgnored: document.querySelector("#gatherIgnored"),
+  gatherMaterials: document.querySelector("#gatherMaterials"),
   items: document.querySelector("#items"),
   search: document.querySelector("#search"),
   resetFiltersBtn: document.querySelector("#resetFiltersBtn"),
@@ -418,19 +428,59 @@ function renderResources() {
   }
 }
 
+function renderGatherView() {
+  els.gatherLoadoutSelect.innerHTML = "";
+  for (const loadout of state.loadouts) {
+    const option = document.createElement("option");
+    option.value = loadout.id;
+    option.textContent = loadout.name;
+    els.gatherLoadoutSelect.appendChild(option);
+  }
+  const loadout = activeLoadout();
+  const data = state.resources;
+  if (!loadout || !data) {
+    els.gatherMaterials.innerHTML = '<p class="muted">Select a Loadout to calculate materials.</p>';
+    els.gatherIgnored.hidden = true;
+    return;
+  }
+  els.gatherLoadoutSelect.value = loadout.id;
+  const colors = sourceColorMap(loadout);
+  renderMaterialCards(els.gatherMaterials, data.materials, colors, {
+    hideCompleted: state.hideCompleted,
+    onIgnore: (name) => setIgnoredMaterial(name, true),
+    onCollectedChange: updateCollected,
+  });
+  renderIgnoredChips(els.gatherIgnored, loadout.ignored_materials || [], (name) => setIgnoredMaterial(name, false));
+}
+
+function switchView(view) {
+  const isGather = view === "gather";
+  els.calculatorView.hidden = isGather;
+  els.gatherView.hidden = !isGather;
+  els.calculatorTab.setAttribute("aria-selected", String(!isGather));
+  els.gatherTab.setAttribute("aria-selected", String(isGather));
+  location.hash = isGather ? "gather" : "";
+}
+
 async function loadResources() {
   const loadout = activeLoadout();
   if (!loadout) {
     state.resources = null;
     renderResources();
+    renderGatherView();
     return;
   }
   state.resources = await api(`/api/loadouts/${loadout.id}/resources`);
   renderResources();
+  renderGatherView();
 }
 
 async function loadAll() {
   els.accountId.textContent = getAccountId();
+  els.hideCompletedToggle.checked = state.hideCompleted;
+  if (location.hash === "#gather") {
+    switchView("gather");
+  }
   const [meta, items, categories, tiers, loadouts] = await Promise.all([
     api("/api/meta"),
     api("/api/items"),
@@ -652,6 +702,20 @@ els.loadoutForm.addEventListener("submit", async (event) => {
   await loadResources();
 });
 els.clearCollectedBtn.addEventListener("click", clearCollected);
+els.calculatorTab.addEventListener("click", () => switchView("calculator"));
+els.gatherTab.addEventListener("click", () => switchView("gather"));
+els.gatherLoadoutSelect.addEventListener("change", async () => {
+  state.activeLoadoutId = els.gatherLoadoutSelect.value;
+  saveLocalLoadouts();
+  renderLoadouts();
+  await loadResources();
+});
+els.hideCompletedToggle.addEventListener("change", () => {
+  state.hideCompleted = els.hideCompletedToggle.checked;
+  localStorage.setItem("icarus.gather.hideCompleted", state.hideCompleted ? "1" : "0");
+  renderGatherView();
+});
+els.gatherClearCollectedBtn.addEventListener("click", clearCollected);
 els.copyShareBtn.addEventListener("click", copyShareLink);
 els.copyAccountBtn.addEventListener("click", async () => {
   await navigator.clipboard.writeText(getAccountId());

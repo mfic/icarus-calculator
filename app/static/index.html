@@ -14,12 +14,16 @@
         <p id="meta">Loading wiki data...</p>
       </div>
       <nav class="topbar-actions" aria-label="Project links">
-        <a id="gatherLink" class="secondary button-link" href="/gather" target="_blank" rel="noopener">Gather View</a>
+        <div class="view-tabs" role="tablist">
+          <button id="calculatorTab" class="tab" role="tab" type="button" aria-selected="true">Calculator</button>
+          <button id="gatherTab" class="tab" role="tab" type="button" aria-selected="false">Gather</button>
+        </div>
+        <a id="gatherLink" class="secondary button-link" href="/gather" target="_blank" rel="noopener" title="Open Gather View in a new window">Open in new window</a>
         <a class="secondary button-link" href="https://github.com/mfic/icarus-calculator" target="_blank" rel="noopener">GitHub</a>
       </nav>
     </header>
 
-    <main class="layout">
+    <main id="calculatorView" class="layout">
       <section class="panel items-panel">
         <div class="panel-heading">
           <h2>Items</h2>
@@ -97,6 +101,19 @@
         <h3>Crafting Steps</h3>
         <div id="steps" class="steps-list"></div>
       </aside>
+    </main>
+
+    <main id="gatherView" class="gather-main" hidden>
+      <div class="gather-controls">
+        <select id="gatherLoadoutSelect"></select>
+        <label class="gather-toggle">
+          <input id="hideCompletedToggle" type="checkbox" />
+          Hide completed
+        </label>
+        <button id="gatherClearCollectedBtn" class="secondary" type="button">Clear Collected</button>
+      </div>
+      <div id="gatherIgnored" class="ignored-chips" hidden></div>
+      <div id="gatherMaterials" class="gather-grid"></div>
     </main>
 
     <template id="itemTemplate">

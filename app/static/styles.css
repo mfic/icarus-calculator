@@ -94,6 +94,23 @@ select {
   justify-content: flex-end;
 }
 
+.view-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.view-tabs .tab {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.view-tabs .tab[aria-selected="true"] {
+  background: var(--accent);
+  border-color: #b58f39;
+  color: #171306;
+}
+
 h1,
 h2,
 h3,
@@ -123,6 +140,11 @@ h3 {
   gap: 16px;
   grid-template-columns: minmax(0, 1fr) 420px;
   padding: 16px;
+}
+
+#calculatorView[hidden],
+#gatherView[hidden] {
+  display: none;
 }
 
 .panel {
