@@ -42,3 +42,30 @@ def test_compact_crafting_table_parses_dirt_recipe():
     assert item.recipe.inputs[0].name == "Dirt"
     assert item.recipe.inputs[0].quantity == 20
     assert item.recipe.outputs[0].name == "Dirt Corner"
+
+
+def test_pagename_recipe_outputs_are_resolved():
+    item = item_from_wikitext(
+        "Polymerizer",
+        """{{Crafting|
+  {{Recipe
+    |Inputs=Titanium Plate:20
+    |Outputs={{PAGENAME}}:1
+  }}
+}}""",
+    )
+
+    assert item.recipe is not None
+    assert item.recipe.outputs[0].name == "Polymerizer"
+
+
+def test_tech_tier_field_sets_tier():
+    item = item_from_wikitext(
+        "Crude Oil Generator",
+        """{{Deployables
+  | tech_tier=[[:Category:Tier 5|Tier 5]]
+}}
+""",
+    )
+
+    assert item.tier == "Tier 5"

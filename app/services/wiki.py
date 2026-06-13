@@ -6,7 +6,7 @@ from typing import Iterable
 
 import httpx
 
-from app.config import USER_AGENT, WIKI_API_URL
+from app.config import DATA_DIR, USER_AGENT, WIKI_API_URL
 from app.models import Ingredient, Item, Recipe
 from app.services.storage import save_items
 
@@ -30,6 +30,7 @@ ITEM_CATEGORIES = [
 ]
 
 ITEM_INFO_TEMPLATES = [
+    "ItemData",
     "Ammo",
     "Buildings",
     "Consumables",
@@ -122,6 +123,17 @@ def parse_tier(categories: Iterable[str], *values: str | None) -> str | None:
         if match:
             return match.group(0).title()
     return None
+
+
+def load_item_overrides() -> dict[str, dict]:
+    path = DATA_DIR / "item_overrides.json"
+    if not path.exists():
+        return {}
+    import json
+
+    with path.open("r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    return {name.lower(): override for name, override in payload.get("items", {}).items()}
 
 
 def parse_quantity(value: str) -> float:
@@ -318,29 +330,34 @@ def item_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()
     consumables = parse_consumables(wikitext)
     item_info = parse_item_info(wikitext)
     info_fields = {**item_info, **consumables}
-    recipe = parse_recipe(wikitext) or parse_wikitable_recipe(title, wikitext)
+    resolved_wikitext = wikitext.replace("{{PAGENAME}}", title)
+    recipe = parse_recipe(resolved_wikitext) or parse_wikitable_recipe(title, resolved_wikitext)
     bench = clean_text(info_fields.get("bench") or info_fields.get("benchtool"))
     benches = recipe.benches if recipe and recipe.benches else ([bench] if bench else [])
-    description = clean_text(info_fields.get("description"))
+    overrides = load_item_overrides().get(title.lower(), {})
+    description = clean_text(info_fields.get("description") or info_fields.get("Itemable_description"))
     categories = parse_categories(wikitext, categories)
+    categories = sorted(set(categories).union(overrides.get("categories", [])))
     effects = parse_effects(info_fields)
+    tier = overrides.get("tier") or parse_tier(
+        categories,
+        info_fields.get("tech"),
+        info_fields.get("techlvl"),
+        info_fields.get("tech_tier"),
+        info_fields.get("tier"),
+        info_fields.get("techLevelNeeded"),
+        info_fields.get("techLevelUnlock"),
+    )
     return Item(
         name=title,
         slug=slugify(title),
         categories=categories,
-        tier=parse_tier(
-            categories,
-            info_fields.get("tech"),
-            info_fields.get("techlvl"),
-            info_fields.get("tier"),
-            info_fields.get("techLevelNeeded"),
-            info_fields.get("techLevelUnlock"),
-        ),
+        tier=tier,
         description=description,
         duration=clean_text(info_fields.get("duration")),
         spoil_time=clean_text(info_fields.get("spoiltime") or info_fields.get("spoil_time")),
-        weight=clean_text(info_fields.get("weight")),
-        stack=clean_text(info_fields.get("stack")),
+        weight=clean_text(info_fields.get("weight") or info_fields.get("Itemable_weight")),
+        stack=clean_text(info_fields.get("stack") or info_fields.get("Itemable_maxStack")),
         bench=bench,
         benches=benches,
         effects=effects,
@@ -401,10 +418,35 @@ async def fetch_category_titles(
     return titles
 
 
+async def fetch_template_titles(client: httpx.AsyncClient, template: str, label: str) -> dict[str, set[str]]:
+    titles: dict[str, set[str]] = {}
+    params: dict[str, str | int] = {
+        "action": "query",
+        "list": "embeddedin",
+        "eititle": f"Template:{template}",
+        "einamespace": 0,
+        "eilimit": 500,
+        "format": "json",
+    }
+    while True:
+        payload = await fetch_json(client, params)
+        for page in payload.get("query", {}).get("embeddedin", []):
+            titles.setdefault(page["title"], set()).add(label)
+        cont = payload.get("continue")
+        if not cont:
+            return titles
+        params.update(cont)
+
+
 async def fetch_seed_titles(client: httpx.AsyncClient) -> dict[str, set[str]]:
     titles: dict[str, set[str]] = {}
     for category in ITEM_CATEGORIES:
         for title, categories in (await fetch_category_titles(client, category)).items():
+            titles.setdefault(title, set()).update(categories)
+        await asyncio.sleep(0.2)
+    for template in ITEM_INFO_TEMPLATES:
+        label = "Items" if template == "ItemData" else template
+        for title, categories in (await fetch_template_titles(client, template, label)).items():
             titles.setdefault(title, set()).update(categories)
         await asyncio.sleep(0.2)
     return titles
