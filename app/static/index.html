@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ICARUS Item Calculator</title>
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/styles.css?v=0.1.2" />
   </head>
   <body>
     <header class="topbar">
@@ -51,28 +51,32 @@
           </form>
         </div>
         <div class="account-tools">
-          <div class="account-code-row">
+          <div class="code-tools-row">
             <span class="muted">Account code:</span>
-            <span id="accountId" class="code-pill"></span>
-          </div>
-          <div class="account-action-row">
-            <button id="copyAccountBtn" class="secondary" type="button">Copy</button>
-            <button id="switchAccountBtn" class="secondary" type="button">Use different code</button>
+            <div class="code-tools-stack">
+              <span id="accountId" class="code-pill"></span>
+              <div class="account-action-row">
+                <button id="copyAccountBtn" class="secondary" type="button">Copy</button>
+                <button id="switchAccountBtn" class="secondary" type="button">Use different code</button>
+              </div>
+            </div>
           </div>
         </div>
         <select id="loadoutSelect"></select>
         <div class="share-tools">
-          <div class="loadout-code-row">
+          <div class="code-tools-row">
             <span class="muted">Loadout code:</span>
-            <span id="loadoutId" class="code-pill">No loadout selected</span>
-          </div>
-          <div class="loadout-action-row">
-            <button id="copyShareBtn" class="secondary" type="button">Copy Link</button>
-            <button id="exportLoadoutBtn" class="secondary" type="button">Export</button>
-            <label class="file-button">
-              Import
-              <input id="importLoadoutInput" type="file" accept="application/json,.json" />
-            </label>
+            <div class="code-tools-stack">
+              <span id="loadoutId" class="code-pill">No loadout selected</span>
+              <div class="loadout-action-row">
+                <button id="copyShareBtn" class="secondary" type="button">Copy Link</button>
+                <button id="exportLoadoutBtn" class="secondary" type="button">Export</button>
+                <label class="file-button">
+                  Import
+                  <input id="importLoadoutInput" type="file" accept="application/json,.json" />
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <div id="shareSection" class="share-row" hidden>

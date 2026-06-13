@@ -307,10 +307,17 @@ ul {
   margin: 8px 0;
 }
 
-.account-code-row,
-.loadout-code-row {
+.code-tools-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+}
+
+.code-tools-stack {
   display: grid;
   gap: 6px;
+  min-width: 0;
 }
 
 .account-action-row,
@@ -319,16 +326,6 @@ ul {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
-}
-
-.account-code-row {
-  align-self: center;
-  width: min(100%, 34rem);
-}
-
-.account-action-row {
-  align-self: center;
-  width: min(100%, 34rem);
 }
 
 .account-action-row button,
@@ -616,6 +613,10 @@ ul {
   .loadout-action-row {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .code-tools-row {
+    grid-template-columns: 1fr;
   }
 }
 
