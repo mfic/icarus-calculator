@@ -299,7 +299,23 @@ ul {
   margin-top: 10px;
 }
 
-.account-tools,
+.account-tools {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.account-code-row {
+  display: grid;
+  gap: 6px;
+}
+
+.account-action-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+}
+
 .share-row {
   align-items: center;
   display: flex;
@@ -309,8 +325,8 @@ ul {
 }
 
 .account-tools .code-pill {
-  flex: 1;
-  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .code-pill {
@@ -575,6 +591,10 @@ ul {
   }
 
   .share-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .account-action-row {
     grid-template-columns: 1fr;
   }
 }
