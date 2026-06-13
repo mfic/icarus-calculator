@@ -1,25 +1,25 @@
 const state = {
-  foods: [],
+  items: [],
   categories: [],
-  buckets: [],
-  activeBucketId: localStorage.getItem("icarus.activeBucketId") || "",
+  loadouts: [],
+  activeLoadoutId: localStorage.getItem("icarus.activeLoadoutId") || localStorage.getItem("icarus.activeBucketId") || "",
   activeCategory: localStorage.getItem("icarus.activeCategory") || "",
   resources: null,
 };
 
 const els = {
   meta: document.querySelector("#meta"),
-  foods: document.querySelector("#foods"),
+  items: document.querySelector("#items"),
   search: document.querySelector("#search"),
   categoryFilter: document.querySelector("#categoryFilter"),
-  bucketForm: document.querySelector("#bucketForm"),
-  bucketName: document.querySelector("#bucketName"),
-  bucketSelect: document.querySelector("#bucketSelect"),
-  bucketItems: document.querySelector("#bucketItems"),
+  loadoutForm: document.querySelector("#loadoutForm"),
+  loadoutName: document.querySelector("#loadoutName"),
+  loadoutSelect: document.querySelector("#loadoutSelect"),
+  loadoutItems: document.querySelector("#loadoutItems"),
   materials: document.querySelector("#materials"),
   steps: document.querySelector("#steps"),
   refreshBtn: document.querySelector("#refreshBtn"),
-  foodTemplate: document.querySelector("#foodTemplate"),
+  itemTemplate: document.querySelector("#itemTemplate"),
 };
 
 async function api(path, options = {}) {
@@ -33,9 +33,9 @@ async function api(path, options = {}) {
   return response.json();
 }
 
-function saveLocalBuckets() {
-  localStorage.setItem("icarus.buckets.snapshot", JSON.stringify(state.buckets));
-  localStorage.setItem("icarus.activeBucketId", state.activeBucketId || "");
+function saveLocalLoadouts() {
+  localStorage.setItem("icarus.loadouts.snapshot", JSON.stringify(state.loadouts));
+  localStorage.setItem("icarus.activeLoadoutId", state.activeLoadoutId || "");
   localStorage.setItem("icarus.activeCategory", state.activeCategory || "");
 }
 
@@ -43,8 +43,8 @@ function formatQuantity(value) {
   return Number.isInteger(value) ? value.toString() : Number(value).toFixed(2).replace(/\.?0+$/, "");
 }
 
-function activeBucket() {
-  return state.buckets.find((bucket) => bucket.id === state.activeBucketId) || state.buckets[0];
+function activeLoadout() {
+  return state.loadouts.find((loadout) => loadout.id === state.activeLoadoutId) || state.loadouts[0];
 }
 
 function renderMeta(meta) {
@@ -52,43 +52,43 @@ function renderMeta(meta) {
   els.meta.textContent = `${meta.count || 0} items cached from wiki.gg. Last refresh: ${when}.`;
 }
 
-function renderFoods() {
+function renderItems() {
   const term = els.search.value.trim().toLowerCase();
   const category = state.activeCategory.toLowerCase();
   const categoryFiltered = category
-    ? state.foods.filter((food) => food.categories.some((entry) => entry.toLowerCase() === category))
-    : state.foods;
-  const filtered = categoryFiltered.filter((food) => {
-    const recipeInputs = food.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
-    const effects = food.effects?.length ? food.effects : food.buffs || [];
-    return `${food.name} ${food.tier || ""} ${effects.join(" ")} ${food.benches.join(" ")} ${food.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
+    ? state.items.filter((item) => item.categories.some((entry) => entry.toLowerCase() === category))
+    : state.items;
+  const filtered = categoryFiltered.filter((item) => {
+    const recipeInputs = item.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
+    const effects = item.effects?.length ? item.effects : item.buffs || [];
+    return `${item.name} ${item.tier || ""} ${effects.join(" ")} ${item.benches.join(" ")} ${item.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
   });
 
-  els.foods.innerHTML = "";
+  els.items.innerHTML = "";
   if (!filtered.length) {
-    els.foods.innerHTML = '<p class="muted">No items match this filter.</p>';
+    els.items.innerHTML = '<p class="muted">No items match this filter.</p>';
     return;
   }
-  for (const food of filtered) {
-    const node = els.foodTemplate.content.firstElementChild.cloneNode(true);
-    node.querySelector("h3").textContent = food.name;
-    node.querySelector(".bench").textContent = food.benches.length ? `Crafted at: ${food.benches.join(", ")}` : "No crafting bench listed";
+  for (const item of filtered) {
+    const node = els.itemTemplate.content.firstElementChild.cloneNode(true);
+    node.querySelector("h3").textContent = item.name;
+    node.querySelector(".bench").textContent = item.benches.length ? `Crafted at: ${item.benches.join(", ")}` : "No crafting bench listed";
 
     const categories = node.querySelector(".categories");
-    if (food.tier) {
+    if (item.tier) {
       const tier = document.createElement("span");
       tier.className = "tier-pill";
-      tier.textContent = food.tier;
+      tier.textContent = item.tier;
       categories.appendChild(tier);
     }
-    for (const categoryName of food.categories.slice(0, 5)) {
+    for (const categoryName of item.categories.slice(0, 5)) {
       const pill = document.createElement("span");
       pill.className = "category-pill";
       pill.textContent = categoryName;
       categories.appendChild(pill);
     }
 
-    const effects = food.effects?.length ? food.effects : food.buffs || [];
+    const effects = item.effects?.length ? item.effects : item.buffs || [];
     const effectList = node.querySelector(".effects");
     for (const effect of effects.slice(0, 8)) {
       const pill = document.createElement("span");
@@ -104,7 +104,7 @@ function renderFoods() {
     }
 
     const recipe = node.querySelector(".recipe");
-    const inputs = food.recipe?.inputs || [];
+    const inputs = item.recipe?.inputs || [];
     if (inputs.length) {
       for (const ingredient of inputs) {
         const li = document.createElement("li");
@@ -118,8 +118,8 @@ function renderFoods() {
     }
 
     const quantity = node.querySelector("input");
-    node.querySelector("button").addEventListener("click", () => addFood(food.name, Number(quantity.value || 1)));
-    els.foods.appendChild(node);
+    node.querySelector("button").addEventListener("click", () => addItem(item.name, Number(quantity.value || 1)));
+    els.items.appendChild(node);
   }
 }
 
@@ -137,44 +137,45 @@ function renderCategories() {
     state.activeCategory = "";
     els.categoryFilter.value = "";
   }
-  saveLocalBuckets();
+  saveLocalLoadouts();
 }
 
-function renderBuckets() {
-  els.bucketSelect.innerHTML = "";
-  for (const bucket of state.buckets) {
+function renderLoadouts() {
+  els.loadoutSelect.innerHTML = "";
+  for (const loadout of state.loadouts) {
     const option = document.createElement("option");
-    option.value = bucket.id;
-    option.textContent = bucket.name;
-    els.bucketSelect.appendChild(option);
+    option.value = loadout.id;
+    option.textContent = loadout.name;
+    els.loadoutSelect.appendChild(option);
   }
-  const bucket = activeBucket();
-  if (bucket) {
-    state.activeBucketId = bucket.id;
-    els.bucketSelect.value = bucket.id;
+  const loadout = activeLoadout();
+  if (loadout) {
+    state.activeLoadoutId = loadout.id;
+    els.loadoutSelect.value = loadout.id;
   }
-  saveLocalBuckets();
-  renderBucketItems();
+  saveLocalLoadouts();
+  renderLoadoutItems();
 }
 
-function renderBucketItems() {
-  const bucket = activeBucket();
-  els.bucketItems.innerHTML = "";
-  if (!bucket || !bucket.items.length) {
-    els.bucketItems.innerHTML = '<p class="muted">No foods in this loadout yet.</p>';
+function renderLoadoutItems() {
+  const loadout = activeLoadout();
+  els.loadoutItems.innerHTML = "";
+  if (!loadout || !loadout.items.length) {
+    els.loadoutItems.innerHTML = '<p class="muted">No items in this loadout yet.</p>';
     return;
   }
-  for (const item of bucket.items) {
+  for (const entry of loadout.items) {
+    const itemName = entry.item || entry.food;
     const row = document.createElement("div");
-    row.className = "bucket-row";
-    row.innerHTML = `<span>${item.food}</span><span class="qty">x${item.quantity}</span>`;
+    row.className = "loadout-row";
+    row.innerHTML = `<span>${itemName}</span><span class="qty">x${entry.quantity}</span>`;
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "danger";
     remove.textContent = "Remove";
-    remove.addEventListener("click", () => removeFood(item.food));
+    remove.addEventListener("click", () => removeItem(itemName));
     row.appendChild(remove);
-    els.bucketItems.appendChild(row);
+    els.loadoutItems.appendChild(row);
   }
 }
 
@@ -182,8 +183,8 @@ function renderResources() {
   els.materials.innerHTML = "";
   els.steps.innerHTML = "";
   const data = state.resources;
-  if (!data || !activeBucket()) {
-    els.materials.innerHTML = '<p class="muted">Select a bucket to calculate materials.</p>';
+  if (!data || !activeLoadout()) {
+    els.materials.innerHTML = '<p class="muted">Select a Loadout to calculate materials.</p>';
     return;
   }
 
@@ -216,87 +217,87 @@ function renderResources() {
 }
 
 async function loadResources() {
-  const bucket = activeBucket();
-  if (!bucket) {
+  const loadout = activeLoadout();
+  if (!loadout) {
     state.resources = null;
     renderResources();
     return;
   }
-  state.resources = await api(`/api/buckets/${bucket.id}/resources`);
+  state.resources = await api(`/api/loadouts/${loadout.id}/resources`);
   renderResources();
 }
 
 async function loadAll() {
-  const [meta, foods, categories, buckets] = await Promise.all([
+  const [meta, items, categories, loadouts] = await Promise.all([
     api("/api/meta"),
     api("/api/items"),
     api("/api/categories"),
-    api("/api/buckets"),
+    api("/api/loadouts"),
   ]);
   renderMeta(meta);
-  state.foods = foods.items;
+  state.items = items.items;
   state.categories = categories.categories;
-  state.buckets = buckets.buckets;
-  if (!state.buckets.length) {
-    const created = await api("/api/buckets", {
+  state.loadouts = loadouts.loadouts;
+  if (!state.loadouts.length) {
+    const created = await api("/api/loadouts", {
       method: "POST",
       body: JSON.stringify({ name: "Team Loadout" }),
     });
-    state.buckets = [created];
+    state.loadouts = [created];
   }
   renderCategories();
-  renderFoods();
-  renderBuckets();
+  renderItems();
+  renderLoadouts();
   await loadResources();
 }
 
-async function addFood(food, quantity) {
-  const bucket = activeBucket();
-  if (!bucket) return;
-  const existing = bucket.items.find((item) => item.food === food);
+async function addItem(itemName, quantity) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const existing = loadout.items.find((entry) => (entry.item || entry.food) === itemName);
   const nextQuantity = (existing?.quantity || 0) + Math.max(1, quantity);
-  const updated = await api(`/api/buckets/${bucket.id}/items`, {
+  const updated = await api(`/api/loadouts/${loadout.id}/items`, {
     method: "PUT",
-    body: JSON.stringify({ food, quantity: nextQuantity }),
+    body: JSON.stringify({ item: itemName, quantity: nextQuantity }),
   });
-  state.buckets = state.buckets.map((entry) => (entry.id === updated.id ? updated : entry));
-  renderBuckets();
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
   await loadResources();
 }
 
-async function removeFood(food) {
-  const bucket = activeBucket();
-  if (!bucket) return;
-  const updated = await api(`/api/buckets/${bucket.id}/items/${encodeURIComponent(food)}`, { method: "DELETE" });
-  state.buckets = state.buckets.map((entry) => (entry.id === updated.id ? updated : entry));
-  renderBuckets();
+async function removeItem(itemName) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/items/${encodeURIComponent(itemName)}`, { method: "DELETE" });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
   await loadResources();
 }
 
-els.search.addEventListener("input", renderFoods);
+els.search.addEventListener("input", renderItems);
 els.categoryFilter.addEventListener("change", () => {
   state.activeCategory = els.categoryFilter.value;
-  saveLocalBuckets();
-  renderFoods();
+  saveLocalLoadouts();
+  renderItems();
 });
-els.bucketSelect.addEventListener("change", async () => {
-  state.activeBucketId = els.bucketSelect.value;
-  saveLocalBuckets();
-  renderBucketItems();
+els.loadoutSelect.addEventListener("change", async () => {
+  state.activeLoadoutId = els.loadoutSelect.value;
+  saveLocalLoadouts();
+  renderLoadoutItems();
   await loadResources();
 });
-els.bucketForm.addEventListener("submit", async (event) => {
+els.loadoutForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const name = els.bucketName.value.trim();
+  const name = els.loadoutName.value.trim();
   if (!name) return;
-  const bucket = await api("/api/buckets", {
+  const loadout = await api("/api/loadouts", {
     method: "POST",
     body: JSON.stringify({ name }),
   });
-  state.buckets.push(bucket);
-  state.activeBucketId = bucket.id;
-  els.bucketName.value = "";
-  renderBuckets();
+  state.loadouts.push(loadout);
+  state.activeLoadoutId = loadout.id;
+  els.loadoutName.value = "";
+  renderLoadouts();
   await loadResources();
 });
 els.refreshBtn.addEventListener("click", async () => {
@@ -304,11 +305,11 @@ els.refreshBtn.addEventListener("click", async () => {
   els.refreshBtn.textContent = "Refreshing...";
   const meta = await api("/api/refresh", { method: "POST" });
   renderMeta(meta);
-  const [foods, categories] = await Promise.all([api("/api/items"), api("/api/categories")]);
-  state.foods = foods.items;
+  const [items, categories] = await Promise.all([api("/api/items"), api("/api/categories")]);
+  state.items = items.items;
   state.categories = categories.categories;
   renderCategories();
-  renderFoods();
+  renderItems();
   await loadResources();
   els.refreshBtn.disabled = false;
   els.refreshBtn.textContent = "Refresh Wiki Data";

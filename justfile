@@ -27,10 +27,10 @@ test:
     python -m pytest
 
 update:
-    python -c "from app.services.wiki import refresh_food_data; print(refresh_food_data())"
+    python -c "from app.services.wiki import refresh_item_data; print(refresh_item_data())"
 
 status:
-    python -c "from app.services.storage import food_metadata; print(food_metadata())"
+    python -c "from app.services.storage import item_metadata; print(item_metadata())"
 
 api:
     Invoke-RestMethod -Uri 'http://127.0.0.1:8000/api/meta' | ConvertTo-Json
@@ -43,8 +43,11 @@ clean:
       if ($resolved -and $resolved.Path.StartsWith($root)) { Remove-Item -LiteralPath $resolved.Path -Recurse -Force } \
     }
 
+reset-loadouts:
+    Set-Content -Path data/loadouts.json -Value '{ "loadouts": [] }'
+
 reset-buckets:
-    Set-Content -Path data/buckets.json -Value '{ "buckets": [] }'
+    just reset-loadouts
 
 docker-build:
     docker build -t icarus-calculator .

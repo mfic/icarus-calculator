@@ -7,8 +7,8 @@ from typing import Iterable
 import httpx
 
 from app.config import USER_AGENT, WIKI_API_URL
-from app.models import FoodItem, Ingredient, Recipe
-from app.services.storage import save_foods
+from app.models import Ingredient, Item, Recipe
+from app.services.storage import save_items
 
 
 ITEM_CATEGORIES = [
@@ -314,7 +314,7 @@ def slugify(title: str) -> str:
     return title.replace(" ", "_")
 
 
-def food_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()) -> FoodItem:
+def item_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()) -> Item:
     consumables = parse_consumables(wikitext)
     item_info = parse_item_info(wikitext)
     info_fields = {**item_info, **consumables}
@@ -324,7 +324,7 @@ def food_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()
     description = clean_text(info_fields.get("description"))
     categories = parse_categories(wikitext, categories)
     effects = parse_effects(info_fields)
-    return FoodItem(
+    return Item(
         name=title,
         slug=slugify(title),
         categories=categories,
@@ -451,7 +451,7 @@ async def fetch_wikitext_batch(client: httpx.AsyncClient, titles: list[str]) -> 
     return result
 
 
-def recipe_dependencies(items: Iterable[FoodItem]) -> set[str]:
+def recipe_dependencies(items: Iterable[Item]) -> set[str]:
     deps: set[str] = set()
     for item in items:
         if not item.recipe:
@@ -461,13 +461,13 @@ def recipe_dependencies(items: Iterable[FoodItem]) -> set[str]:
     return deps
 
 
-async def scrape_foods(max_extra_pages: int = 800) -> list[FoodItem]:
+async def scrape_items(max_extra_pages: int = 800) -> list[Item]:
     headers = {"User-Agent": USER_AGENT}
     async with httpx.AsyncClient(headers=headers, timeout=30, follow_redirects=True) as client:
         seed_titles = await fetch_seed_titles(client)
         queue = list(seed_titles)
         seen: set[str] = set()
-        items: dict[str, FoodItem] = {}
+        items: dict[str, Item] = {}
         extra_pages = 0
 
         while queue:
@@ -488,7 +488,7 @@ async def scrape_foods(max_extra_pages: int = 800) -> list[FoodItem]:
                 pages = {}
 
             for title, wikitext in pages.items():
-                item = food_from_wikitext(title, wikitext, seed_titles.get(title, set()))
+                item = item_from_wikitext(title, wikitext, seed_titles.get(title, set()))
                 if item.categories or item.buffs or item.recipe:
                     items[item.name.lower()] = item
 
@@ -503,8 +503,13 @@ async def scrape_foods(max_extra_pages: int = 800) -> list[FoodItem]:
     return sorted(items.values(), key=lambda item: item.name.lower())
 
 
-def refresh_food_data() -> dict[str, str | int]:
-    items = asyncio.run(scrape_foods())
+def refresh_item_data() -> dict[str, str | int]:
+    items = asyncio.run(scrape_items())
     refreshed_at = datetime.now(timezone.utc).isoformat()
-    save_foods(items, refreshed_at)
+    save_items(items, refreshed_at)
     return {"refreshed_at": refreshed_at, "count": len(items)}
+
+
+food_from_wikitext = item_from_wikitext
+scrape_foods = scrape_items
+refresh_food_data = refresh_item_data

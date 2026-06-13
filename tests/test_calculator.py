@@ -1,10 +1,10 @@
-from app.models import Bucket, BucketItem, FoodItem, Ingredient, Recipe
-from app.services.calculator import calculate_bucket
+from app.models import Ingredient, Item, Loadout, LoadoutItem, Recipe
+from app.services.calculator import calculate_loadout
 
 
-def test_calculate_bucket_expands_intermediate_recipes():
-    foods = [
-        FoodItem(
+def test_calculate_loadout_expands_intermediate_recipes():
+    items = [
+        Item(
             name="Pie",
             slug="Pie",
             recipe=Recipe(
@@ -14,7 +14,7 @@ def test_calculate_bucket_expands_intermediate_recipes():
             ),
             benches=["Stove"],
         ),
-        FoodItem(
+        Item(
             name="Dough",
             slug="Dough",
             recipe=Recipe(
@@ -25,15 +25,15 @@ def test_calculate_bucket_expands_intermediate_recipes():
             benches=["Cooking Station"],
         ),
     ]
-    bucket = Bucket(
+    loadout = Loadout(
         id="loadout",
         name="Loadout",
-        items=[BucketItem(food="Pie", quantity=3)],
+        items=[LoadoutItem(item="Pie", quantity=3)],
         created_at="2026-06-12T00:00:00+00:00",
         updated_at="2026-06-12T00:00:00+00:00",
     )
 
-    result = calculate_bucket(bucket, foods)
+    result = calculate_loadout(loadout, items)
 
     assert result["materials"] == [
         {"name": "Berry", "quantity": 12},

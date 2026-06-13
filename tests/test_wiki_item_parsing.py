@@ -1,8 +1,8 @@
-from app.services.wiki import food_from_wikitext
+from app.services.wiki import item_from_wikitext
 
 
 def test_ammo_template_attributes_become_effects():
-    item = food_from_wikitext(
+    item = item_from_wikitext(
         "9mm Miasmic Round",
         """{{Ammo
   | attributes=+15% chance to cause Miasma on Hit with Attacks<br><br>Inflicts the 'Miasma' modifier for 10 seconds
@@ -21,7 +21,7 @@ def test_ammo_template_attributes_become_effects():
 
 
 def test_compact_crafting_table_parses_dirt_recipe():
-    item = food_from_wikitext(
+    item = item_from_wikitext(
         "Dirt Corner",
         """{{Buildings
   | attributes=+2 Insulation from Temperature

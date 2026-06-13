@@ -1,11 +1,11 @@
 from collections import defaultdict
 from typing import Any
 
-from app.models import Bucket, FoodItem, Ingredient
+from app.models import Ingredient, Item, Loadout
 
 
-def _food_index(foods: list[FoodItem]) -> dict[str, FoodItem]:
-    return {food.name.lower(): food for food in foods}
+def _item_index(items: list[Item]) -> dict[str, Item]:
+    return {item.name.lower(): item for item in items}
 
 
 def _round(value: float) -> int | float:
@@ -15,10 +15,10 @@ def _round(value: float) -> int | float:
 def resolve_materials(
     item_name: str,
     quantity: float,
-    foods_by_name: dict[str, FoodItem],
+    items_by_name: dict[str, Item],
     trail: tuple[str, ...] = (),
 ) -> tuple[dict[str, float], list[dict[str, Any]]]:
-    item = foods_by_name.get(item_name.lower())
+    item = items_by_name.get(item_name.lower())
     if not item or not item.recipe or not item.recipe.inputs or item.name in trail:
         return {item_name: quantity}, []
 
@@ -46,7 +46,7 @@ def resolve_materials(
         child_totals, child_steps = resolve_materials(
             ingredient.name,
             ingredient.quantity,
-            foods_by_name,
+            items_by_name,
             trail + (item.name,),
         )
         for name, amount in child_totals.items():
@@ -56,22 +56,23 @@ def resolve_materials(
     return dict(totals), steps
 
 
-def calculate_bucket(bucket: Bucket, foods: list[FoodItem]) -> dict[str, Any]:
-    foods_by_name = _food_index(foods)
+def calculate_loadout(loadout: Loadout, items: list[Item]) -> dict[str, Any]:
+    items_by_name = _item_index(items)
     materials: dict[str, float] = defaultdict(float)
     steps: list[dict[str, Any]] = []
     missing: list[str] = []
 
-    for item in bucket.items:
-        totals, item_steps = resolve_materials(item.food, item.quantity, foods_by_name)
-        if item.food.lower() not in foods_by_name:
-            missing.append(item.food)
+    for loadout_item in loadout.items:
+        totals, item_steps = resolve_materials(loadout_item.item, loadout_item.quantity, items_by_name)
+        if loadout_item.item.lower() not in items_by_name:
+            missing.append(loadout_item.item)
         for name, amount in totals.items():
             materials[name] += amount
         steps.extend(item_steps)
 
     return {
-        "bucket": bucket.model_dump(),
+        "loadout": loadout.model_dump(),
+        "bucket": loadout.model_dump(),
         "materials": [
             {"name": name, "quantity": _round(amount)}
             for name, amount in sorted(materials.items(), key=lambda entry: entry[0].lower())
@@ -79,3 +80,6 @@ def calculate_bucket(bucket: Bucket, foods: list[FoodItem]) -> dict[str, Any]:
         "steps": steps,
         "missing": missing,
     }
+
+
+calculate_bucket = calculate_loadout

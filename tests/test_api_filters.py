@@ -1,16 +1,16 @@
 from app.main import filter_items
-from app.models import FoodItem, Ingredient, Recipe
+from app.models import Ingredient, Item, Recipe
 
 
 def test_category_filter_applies_before_search():
     items = [
-        FoodItem(
+        Item(
             name="Banana Bread",
             slug="Banana_Bread",
             categories=["Food", "Consumables"],
             buffs=["Maximum Stamina"],
         ),
-        FoodItem(
+        Item(
             name="Iron Knife",
             slug="Iron_Knife",
             categories=["Weapons"],
@@ -26,8 +26,8 @@ def test_category_filter_applies_before_search():
 
 def test_search_matches_tier():
     items = [
-        FoodItem(name="Stone Axe", slug="Stone_Axe", categories=["Tools"], tier="Tier 1"),
-        FoodItem(name="Iron Knife", slug="Iron_Knife", categories=["Weapons"], tier="Tier 2"),
+        Item(name="Stone Axe", slug="Stone_Axe", categories=["Tools"], tier="Tier 1"),
+        Item(name="Iron Knife", slug="Iron_Knife", categories=["Weapons"], tier="Tier 2"),
     ]
 
     result = filter_items(items, q="tier 2")

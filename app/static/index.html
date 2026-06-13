@@ -16,7 +16,7 @@
     </header>
 
     <main class="layout">
-      <section class="panel foods-panel">
+      <section class="panel items-panel">
         <div class="panel-heading">
           <h2>Items</h2>
           <div class="filters">
@@ -26,19 +26,19 @@
             <input id="search" type="search" placeholder="Search item, effect, stat, bench, ingredient" />
           </div>
         </div>
-        <div id="foods" class="food-list"></div>
+        <div id="items" class="item-list"></div>
       </section>
 
-      <aside class="panel bucket-panel">
+      <aside class="panel loadout-panel">
         <div class="panel-heading">
           <h2>Loadouts</h2>
-          <form id="bucketForm" class="inline-form">
-            <input id="bucketName" type="text" placeholder="New bucket" maxlength="80" />
+          <form id="loadoutForm" class="inline-form">
+            <input id="loadoutName" type="text" placeholder="New Loadout" maxlength="80" />
             <button type="submit">Create</button>
           </form>
         </div>
-        <select id="bucketSelect"></select>
-        <div id="bucketItems" class="bucket-items"></div>
+        <select id="loadoutSelect"></select>
+        <div id="loadoutItems" class="loadout-items"></div>
 
         <h3>Bare Materials</h3>
         <div id="materials" class="summary-list"></div>
@@ -48,9 +48,9 @@
       </aside>
     </main>
 
-    <template id="foodTemplate">
-      <article class="food-card">
-        <div class="food-main">
+    <template id="itemTemplate">
+      <article class="item-card">
+        <div class="item-main">
           <h3></h3>
           <p class="bench"></p>
           <div class="categories"></div>

@@ -138,7 +138,7 @@ h3 {
   gap: 8px;
 }
 
-.food-list {
+.item-list {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -147,7 +147,7 @@ h3 {
   padding-right: 4px;
 }
 
-.food-card {
+.item-card {
   background: var(--panel-2);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -219,17 +219,17 @@ ul {
   width: 100%;
 }
 
-.bucket-panel {
+.loadout-panel {
   align-self: start;
   max-height: calc(100vh - 32px);
   overflow: auto;
 }
 
-#bucketSelect {
+#loadoutSelect {
   width: 100%;
 }
 
-.bucket-items,
+.loadout-items,
 .summary-list,
 .steps-list {
   display: grid;
@@ -237,7 +237,7 @@ ul {
   margin: 10px 0 16px;
 }
 
-.bucket-row,
+.loadout-row,
 .material-row,
 .step {
   background: #121812;
@@ -246,7 +246,7 @@ ul {
   padding: 10px;
 }
 
-.bucket-row,
+.loadout-row,
 .material-row {
   align-items: center;
   display: flex;
@@ -275,7 +275,7 @@ ul {
     grid-template-columns: 1fr;
   }
 
-  .bucket-panel {
+  .loadout-panel {
     max-height: none;
   }
 }
@@ -296,12 +296,12 @@ ul {
     flex-direction: column;
   }
 
-  .food-list {
+  .item-list {
     grid-template-columns: 1fr;
     max-height: none;
   }
 
-  .food-card {
+  .item-card {
     grid-template-columns: 1fr;
   }
 

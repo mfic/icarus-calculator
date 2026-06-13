@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 
 class Ingredient(BaseModel):
@@ -12,7 +12,7 @@ class Recipe(BaseModel):
     benches: list[str] = Field(default_factory=list)
 
 
-class FoodItem(BaseModel):
+class Item(BaseModel):
     name: str
     slug: str
     categories: list[str] = Field(default_factory=list)
@@ -31,23 +31,34 @@ class FoodItem(BaseModel):
     source: str = "icarus.wiki.gg"
 
 
-class BucketItem(BaseModel):
-    food: str
+class LoadoutItem(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    item: str = Field(validation_alias=AliasChoices("item", "food"))
     quantity: int = Field(default=1, ge=1)
 
 
-class Bucket(BaseModel):
+class Loadout(BaseModel):
     id: str
     name: str
-    items: list[BucketItem] = Field(default_factory=list)
+    items: list[LoadoutItem] = Field(default_factory=list)
     created_at: str
     updated_at: str
 
 
-class BucketCreate(BaseModel):
+class LoadoutCreate(BaseModel):
     name: str = Field(min_length=1, max_length=80)
 
 
-class BucketItemInput(BaseModel):
-    food: str
+class LoadoutItemInput(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    item: str = Field(validation_alias=AliasChoices("item", "food"))
     quantity: int = Field(default=1, ge=1)
+
+
+FoodItem = Item
+BucketItem = LoadoutItem
+Bucket = Loadout
+BucketCreate = LoadoutCreate
+BucketItemInput = LoadoutItemInput

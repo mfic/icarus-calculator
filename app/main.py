@@ -7,30 +7,30 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.config import BASE_DIR, FOODS_PATH
-from app.models import BucketCreate, BucketItemInput, FoodItem
-from app.services.calculator import calculate_bucket
+from app.config import BASE_DIR, ITEMS_PATH
+from app.models import Item, LoadoutCreate, LoadoutItemInput
+from app.services.calculator import calculate_loadout
 from app.services.storage import (
-    create_bucket,
-    delete_bucket,
-    delete_bucket_item,
-    food_metadata,
-    load_buckets,
-    load_foods,
-    upsert_bucket_item,
+    create_loadout,
+    delete_loadout,
+    delete_loadout_item,
+    item_metadata,
+    load_items,
+    load_loadouts,
+    upsert_loadout_item,
 )
-from app.services.wiki import refresh_food_data
+from app.services.wiki import refresh_item_data
 
 
 scheduler = BackgroundScheduler(timezone="UTC")
 
 
 def refresh_if_needed() -> None:
-    metadata = food_metadata()
+    metadata = item_metadata()
     refreshed_at = metadata.get("refreshed_at")
-    if not FOODS_PATH.exists() or not refreshed_at or metadata.get("count", 0) == 0:
+    if not ITEMS_PATH.exists() or not refreshed_at or metadata.get("count", 0) == 0:
         try:
-            refresh_food_data()
+            refresh_item_data()
         except Exception:
             pass
         return
@@ -38,7 +38,7 @@ def refresh_if_needed() -> None:
     age = datetime.now(timezone.utc) - then
     if age.total_seconds() >= 24 * 60 * 60:
         try:
-            refresh_food_data()
+            refresh_item_data()
         except Exception:
             pass
 
@@ -46,7 +46,7 @@ def refresh_if_needed() -> None:
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     refresh_if_needed()
-    scheduler.add_job(refresh_food_data, "interval", days=1, id="daily-wiki-refresh", replace_existing=True)
+    scheduler.add_job(refresh_item_data, "interval", days=1, id="daily-wiki-refresh", replace_existing=True)
     scheduler.start()
     yield
     scheduler.shutdown(wait=False)
@@ -72,15 +72,15 @@ def index() -> FileResponse:
 
 @app.get("/api/meta")
 def meta() -> dict:
-    return food_metadata()
+    return item_metadata()
 
 
 @app.post("/api/refresh")
 def refresh() -> dict:
-    return refresh_food_data()
+    return refresh_item_data()
 
 
-def filter_items(items: list[FoodItem], q: str | None = None, category: str | None = None) -> list[FoodItem]:
+def filter_items(items: list[Item], q: str | None = None, category: str | None = None) -> list[Item]:
     if category:
         category_needle = category.lower()
         items = [
@@ -109,7 +109,7 @@ def filter_items(items: list[FoodItem], q: str | None = None, category: str | No
 
 @app.get("/api/items")
 def items(q: str | None = Query(default=None), category: str | None = Query(default=None)) -> dict:
-    items = filter_items(load_foods(), q=q, category=category)
+    items = filter_items(load_items(), q=q, category=category)
     return {"items": [item.model_dump() for item in items]}
 
 
@@ -121,7 +121,7 @@ def foods(q: str | None = Query(default=None), category: str | None = Query(defa
 @app.get("/api/categories")
 def categories() -> dict:
     counts: dict[str, int] = {}
-    for item in load_foods():
+    for item in load_items():
         for category in item.categories:
             counts[category] = counts.get(category, 0) + 1
     return {
@@ -132,44 +132,74 @@ def categories() -> dict:
     }
 
 
+@app.get("/api/loadouts")
+def loadouts() -> dict:
+    return {"loadouts": [loadout.model_dump() for loadout in load_loadouts()]}
+
+
+@app.post("/api/loadouts")
+def add_loadout(payload: LoadoutCreate) -> dict:
+    return create_loadout(payload).model_dump()
+
+
+@app.delete("/api/loadouts/{loadout_id}")
+def remove_loadout(loadout_id: str) -> dict:
+    try:
+        delete_loadout(loadout_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+    return {"ok": True}
+
+
+@app.put("/api/loadouts/{loadout_id}/items")
+def put_loadout_item(loadout_id: str, payload: LoadoutItemInput) -> dict:
+    try:
+        return upsert_loadout_item(loadout_id, payload).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.delete("/api/loadouts/{loadout_id}/items/{item_name}")
+def remove_loadout_item(loadout_id: str, item_name: str) -> dict:
+    try:
+        return delete_loadout_item(loadout_id, item_name).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.get("/api/loadouts/{loadout_id}/resources")
+def loadout_resources(loadout_id: str) -> dict:
+    loadout = next((entry for entry in load_loadouts() if entry.id == loadout_id), None)
+    if not loadout:
+        raise HTTPException(status_code=404, detail="Loadout not found")
+    return calculate_loadout(loadout, load_items())
+
+
 @app.get("/api/buckets")
 def buckets() -> dict:
-    return {"buckets": [bucket.model_dump() for bucket in load_buckets()]}
+    return {"buckets": loadouts()["loadouts"]}
 
 
 @app.post("/api/buckets")
-def add_bucket(payload: BucketCreate) -> dict:
-    return create_bucket(payload).model_dump()
+def add_bucket(payload: LoadoutCreate) -> dict:
+    return add_loadout(payload)
 
 
 @app.delete("/api/buckets/{bucket_id}")
 def remove_bucket(bucket_id: str) -> dict:
-    try:
-        delete_bucket(bucket_id)
-    except KeyError as exc:
-        raise HTTPException(status_code=404, detail="Bucket not found") from exc
-    return {"ok": True}
+    return remove_loadout(bucket_id)
 
 
 @app.put("/api/buckets/{bucket_id}/items")
-def put_bucket_item(bucket_id: str, payload: BucketItemInput) -> dict:
-    try:
-        return upsert_bucket_item(bucket_id, payload).model_dump()
-    except KeyError as exc:
-        raise HTTPException(status_code=404, detail="Bucket not found") from exc
+def put_bucket_item(bucket_id: str, payload: LoadoutItemInput) -> dict:
+    return put_loadout_item(bucket_id, payload)
 
 
 @app.delete("/api/buckets/{bucket_id}/items/{food}")
 def remove_bucket_item(bucket_id: str, food: str) -> dict:
-    try:
-        return delete_bucket_item(bucket_id, food).model_dump()
-    except KeyError as exc:
-        raise HTTPException(status_code=404, detail="Bucket not found") from exc
+    return remove_loadout_item(bucket_id, food)
 
 
 @app.get("/api/buckets/{bucket_id}/resources")
 def bucket_resources(bucket_id: str) -> dict:
-    bucket = next((entry for entry in load_buckets() if entry.id == bucket_id), None)
-    if not bucket:
-        raise HTTPException(status_code=404, detail="Bucket not found")
-    return calculate_bucket(bucket, load_foods())
+    return loadout_resources(bucket_id)

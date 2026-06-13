@@ -1,6 +1,6 @@
 # ICARUS Resource Calculator
 
-A small hosted PoC for ICARUS item and food loadouts. It fetches item data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadout buckets persistent in `data/buckets.json`.
+A small hosted PoC for ICARUS item loadouts. It fetches item data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadouts persistent in `data/loadouts.json`.
 
 Items include wiki categories, tier metadata, and effects/stats when the wiki exposes them.
 
@@ -32,7 +32,7 @@ just clean         # remove Python/test cache files
 docker compose up --build
 ```
 
-The `data/` folder is mounted as a volume so wiki cache and buckets survive restarts.
+The `data/` folder is mounted as a volume so wiki cache and loadouts survive restarts.
 
 ## Data Refresh
 
@@ -48,16 +48,17 @@ The app refreshes wiki data:
 - `GET /api/items?q=stamina&category=Food`
 - `GET /api/categories`
 - `GET /api/foods` compatibility alias for items
-- `GET /api/buckets`
-- `POST /api/buckets`
-- `PUT /api/buckets/{bucket_id}/items`
-- `GET /api/buckets/{bucket_id}/resources`
+- `GET /api/loadouts`
+- `POST /api/loadouts`
+- `PUT /api/loadouts/{loadout_id}/items`
+- `GET /api/loadouts/{loadout_id}/resources`
+- `GET /api/buckets` compatibility alias for loadouts
 
 ## Persistence
 
 Server state is JSON-file based:
 
-- `data/foods.json`: current wiki cache
-- `data/buckets.json`: shared bucket/loadout data
+- `data/items.json`: current wiki cache
+- `data/loadouts.json`: shared loadout data
 
-The browser also mirrors the selected bucket and latest bucket snapshot in `localStorage` as a client-side convenience.
+The browser also mirrors the selected loadout and latest loadout snapshot in `localStorage` as a client-side convenience.
