@@ -60,7 +60,8 @@ function renderFoods() {
     : state.foods;
   const filtered = categoryFiltered.filter((food) => {
     const recipeInputs = food.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
-    return `${food.name} ${food.tier || ""} ${food.buffs.join(" ")} ${food.benches.join(" ")} ${food.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
+    const effects = food.effects?.length ? food.effects : food.buffs || [];
+    return `${food.name} ${food.tier || ""} ${effects.join(" ")} ${food.benches.join(" ")} ${food.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
   });
 
   els.foods.innerHTML = "";
@@ -87,18 +88,19 @@ function renderFoods() {
       categories.appendChild(pill);
     }
 
-    const buffs = node.querySelector(".buffs");
-    for (const buff of food.buffs.slice(0, 8)) {
+    const effects = food.effects?.length ? food.effects : food.buffs || [];
+    const effectList = node.querySelector(".effects");
+    for (const effect of effects.slice(0, 8)) {
       const pill = document.createElement("span");
-      pill.className = "buff";
-      pill.textContent = buff;
-      buffs.appendChild(pill);
+      pill.className = "effect";
+      pill.textContent = effect;
+      effectList.appendChild(pill);
     }
-    if (!food.buffs.length) {
+    if (!effects.length) {
       const empty = document.createElement("span");
       empty.className = "muted";
-      empty.textContent = "No buff data listed";
-      buffs.appendChild(empty);
+      empty.textContent = "No effects or stats listed";
+      effectList.appendChild(empty);
     }
 
     const recipe = node.querySelector(".recipe");

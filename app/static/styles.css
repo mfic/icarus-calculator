@@ -164,7 +164,7 @@ h3 {
   margin-top: 4px;
 }
 
-.buffs,
+.effects,
 .categories {
   display: flex;
   flex-wrap: wrap;
@@ -172,7 +172,7 @@ h3 {
   margin: 10px 0;
 }
 
-.buff,
+.effect,
 .category-pill {
   border: 1px solid #4b654f;
   border-radius: 999px;

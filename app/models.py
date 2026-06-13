@@ -24,6 +24,7 @@ class FoodItem(BaseModel):
     stack: str | None = None
     bench: str | None = None
     benches: list[str] = Field(default_factory=list)
+    effects: list[str] = Field(default_factory=list)
     buffs: list[str] = Field(default_factory=list)
     recipe: Recipe | None = None
     wiki_url: str | None = None

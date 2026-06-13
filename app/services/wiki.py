@@ -26,6 +26,28 @@ ITEM_CATEGORIES = [
     "Category:Bows",
     "Category:Crossbows",
     "Category:Firearms",
+    "Category:Dirt Buildings",
+]
+
+ITEM_INFO_TEMPLATES = [
+    "Ammo",
+    "Buildings",
+    "Consumables",
+    "Deployables",
+    "Weapons",
+    "Tools",
+    "Armor",
+]
+
+EFFECT_FIELDS = [
+    "attributes",
+    "projdamageMin",
+    "projdamageMax",
+    "elementdamageMin",
+    "elementdamageMax",
+    "projectileBreakChance",
+    "durability",
+    "flammable",
 ]
 
 
@@ -183,12 +205,23 @@ def table_cells(row: str) -> list[str]:
         if not line.startswith("|") or line.startswith("|+") or line.startswith("|-"):
             continue
         value = line[1:].strip()
+        if "||" in value:
+            for part in value.split("||"):
+                cleaned = clean_text(part)
+                if cleaned:
+                    cells.append(cleaned)
+            continue
         if "|" in value and not value.startswith("{{"):
             value = value.rsplit("|", 1)[-1].strip()
         cleaned = clean_text(value)
         if cleaned:
             cells.append(cleaned)
     return cells
+
+
+def caption_output_quantity(caption: str) -> float:
+    match = re.search(r"(?<![\d.])(\d+(?:\.\d+)?)\s*x\b", caption, re.IGNORECASE)
+    return parse_quantity(match.group(1)) if match else 1
 
 
 def parse_wikitable_recipe(title: str, wikitext: str) -> Recipe | None:
@@ -203,6 +236,7 @@ def parse_wikitable_recipe(title: str, wikitext: str) -> Recipe | None:
     table = wikitext[table_start:table_end]
     caption = next((line for line in table.splitlines() if line.strip().startswith("|+")), "")
     benches = item_icons(caption)
+    output_quantity = caption_output_quantity(caption)
     has_output_columns = "Output" in table
     inputs: list[Ingredient] = []
     outputs: list[Ingredient] = []
@@ -217,7 +251,7 @@ def parse_wikitable_recipe(title: str, wikitext: str) -> Recipe | None:
             inputs.append(Ingredient(name=cells[1], quantity=parse_quantity(cells[0])))
 
     if inputs and not outputs:
-        outputs.append(Ingredient(name=title, quantity=1))
+        outputs.append(Ingredient(name=title, quantity=output_quantity))
     recipe = Recipe(inputs=inputs, outputs=outputs, benches=benches)
     return recipe if recipe.inputs else None
 
@@ -247,36 +281,70 @@ def parse_buffs(attributes: str | None) -> list[str]:
     return [entry for entry in (clean_text(part) for part in normalized.split("<br>")) if entry]
 
 
+def parse_effects(fields: dict[str, str]) -> list[str]:
+    effects = parse_buffs(fields.get("attributes"))
+    labels = {
+        "projdamageMin": "Projectile Damage Min",
+        "projdamageMax": "Projectile Damage Max",
+        "elementdamageMin": "Element Damage Min",
+        "elementdamageMax": "Element Damage Max",
+        "projectileBreakChance": "Projectile Break Chance",
+        "durability": "Durability",
+        "flammable": "Flammable",
+    }
+    for field in EFFECT_FIELDS:
+        if field == "attributes":
+            continue
+        value = clean_text(fields.get(field))
+        if value:
+            effects.append(f"{labels[field]}: {value}")
+    return effects
+
+
+def parse_item_info(wikitext: str) -> dict[str, str]:
+    fields: dict[str, str] = {}
+    for template in ITEM_INFO_TEMPLATES:
+        body = extract_template(wikitext, template)
+        if body:
+            fields.update(parse_fields(body))
+    return fields
+
+
 def slugify(title: str) -> str:
     return title.replace(" ", "_")
 
 
 def food_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()) -> FoodItem:
     consumables = parse_consumables(wikitext)
+    item_info = parse_item_info(wikitext)
+    info_fields = {**item_info, **consumables}
     recipe = parse_recipe(wikitext) or parse_wikitable_recipe(title, wikitext)
-    bench = clean_text(consumables.get("bench"))
+    bench = clean_text(info_fields.get("bench") or info_fields.get("benchtool"))
     benches = recipe.benches if recipe and recipe.benches else ([bench] if bench else [])
-    description = clean_text(consumables.get("description"))
+    description = clean_text(info_fields.get("description"))
     categories = parse_categories(wikitext, categories)
+    effects = parse_effects(info_fields)
     return FoodItem(
         name=title,
         slug=slugify(title),
         categories=categories,
         tier=parse_tier(
             categories,
-            consumables.get("tech"),
-            consumables.get("tier"),
-            consumables.get("techLevelNeeded"),
-            consumables.get("techLevelUnlock"),
+            info_fields.get("tech"),
+            info_fields.get("techlvl"),
+            info_fields.get("tier"),
+            info_fields.get("techLevelNeeded"),
+            info_fields.get("techLevelUnlock"),
         ),
         description=description,
-        duration=clean_text(consumables.get("duration")),
-        spoil_time=clean_text(consumables.get("spoiltime") or consumables.get("spoil_time")),
-        weight=clean_text(consumables.get("weight")),
-        stack=clean_text(consumables.get("stack")),
+        duration=clean_text(info_fields.get("duration")),
+        spoil_time=clean_text(info_fields.get("spoiltime") or info_fields.get("spoil_time")),
+        weight=clean_text(info_fields.get("weight")),
+        stack=clean_text(info_fields.get("stack")),
         bench=bench,
         benches=benches,
-        buffs=parse_buffs(consumables.get("attributes")),
+        effects=effects,
+        buffs=effects,
         recipe=recipe,
         wiki_url=f"https://icarus.wiki.gg/wiki/{slugify(title)}",
     )

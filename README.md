@@ -2,7 +2,7 @@
 
 A small hosted PoC for ICARUS item and food loadouts. It fetches item data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadout buckets persistent in `data/buckets.json`.
 
-Items include wiki categories and tier metadata when the wiki exposes a tier.
+Items include wiki categories, tier metadata, and effects/stats when the wiki exposes them.
 
 ## Run Locally
 
