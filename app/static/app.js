@@ -18,6 +18,7 @@ const els = {
   loadoutItems: document.querySelector("#loadoutItems"),
   materials: document.querySelector("#materials"),
   steps: document.querySelector("#steps"),
+  clearFarmedBtn: document.querySelector("#clearFarmedBtn"),
   refreshBtn: document.querySelector("#refreshBtn"),
   itemTemplate: document.querySelector("#itemTemplate"),
 };
@@ -194,7 +195,27 @@ function renderResources() {
   for (const material of data.materials) {
     const row = document.createElement("div");
     row.className = "material-row";
-    row.innerHTML = `<span>${material.name}</span><span class="qty">${formatQuantity(material.quantity)}</span>`;
+    row.innerHTML = `
+      <div class="material-main">
+        <strong>${material.name}</strong>
+        <span class="muted">Need ${formatQuantity(material.quantity)} · Remaining ${formatQuantity(material.remaining ?? material.quantity)}</span>
+      </div>
+    `;
+    const tracker = document.createElement("div");
+    tracker.className = "farmed-control";
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = "0";
+    input.step = "1";
+    input.value = formatQuantity(material.farmed || 0);
+    input.setAttribute("aria-label", `Farmed ${material.name}`);
+    const save = document.createElement("button");
+    save.type = "button";
+    save.textContent = "Save";
+    save.addEventListener("click", () => updateFarmed(material.name, Number(input.value || 0)));
+    tracker.appendChild(input);
+    tracker.appendChild(save);
+    row.appendChild(tracker);
     els.materials.appendChild(row);
   }
 
@@ -274,6 +295,27 @@ async function removeItem(itemName) {
   await loadResources();
 }
 
+async function updateFarmed(itemName, quantity) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/farmed`, {
+    method: "PUT",
+    body: JSON.stringify({ item: itemName, quantity: Math.max(0, quantity) }),
+  });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
+  await loadResources();
+}
+
+async function clearFarmed() {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/farmed`, { method: "DELETE" });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
+  await loadResources();
+}
+
 els.search.addEventListener("input", renderItems);
 els.categoryFilter.addEventListener("change", () => {
   state.activeCategory = els.categoryFilter.value;
@@ -300,6 +342,7 @@ els.loadoutForm.addEventListener("submit", async (event) => {
   renderLoadouts();
   await loadResources();
 });
+els.clearFarmedBtn.addEventListener("click", clearFarmed);
 els.refreshBtn.addEventListener("click", async () => {
   els.refreshBtn.disabled = true;
   els.refreshBtn.textContent = "Refreshing...";

@@ -8,15 +8,17 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import BASE_DIR, ITEMS_PATH
-from app.models import Item, LoadoutCreate, LoadoutItemInput
+from app.models import FarmedItemInput, Item, LoadoutCreate, LoadoutItemInput
 from app.services.calculator import calculate_loadout
 from app.services.storage import (
     create_loadout,
     delete_loadout,
     delete_loadout_item,
+    clear_farmed_items,
     item_metadata,
     load_items,
     load_loadouts,
+    set_farmed_item,
     upsert_loadout_item,
 )
 from app.services.wiki import refresh_item_data
@@ -167,6 +169,22 @@ def remove_loadout_item(loadout_id: str, item_name: str) -> dict:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 
 
+@app.put("/api/loadouts/{loadout_id}/farmed")
+def put_farmed_item(loadout_id: str, payload: FarmedItemInput) -> dict:
+    try:
+        return set_farmed_item(loadout_id, payload).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.delete("/api/loadouts/{loadout_id}/farmed")
+def clear_farmed(loadout_id: str) -> dict:
+    try:
+        return clear_farmed_items(loadout_id).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
 @app.get("/api/loadouts/{loadout_id}/resources")
 def loadout_resources(loadout_id: str) -> dict:
     loadout = next((entry for entry in load_loadouts() if entry.id == loadout_id), None)
@@ -198,6 +216,16 @@ def put_bucket_item(bucket_id: str, payload: LoadoutItemInput) -> dict:
 @app.delete("/api/buckets/{bucket_id}/items/{food}")
 def remove_bucket_item(bucket_id: str, food: str) -> dict:
     return remove_loadout_item(bucket_id, food)
+
+
+@app.put("/api/buckets/{bucket_id}/farmed")
+def put_bucket_farmed_item(bucket_id: str, payload: FarmedItemInput) -> dict:
+    return put_farmed_item(bucket_id, payload)
+
+
+@app.delete("/api/buckets/{bucket_id}/farmed")
+def clear_bucket_farmed(bucket_id: str) -> dict:
+    return clear_farmed(bucket_id)
 
 
 @app.get("/api/buckets/{bucket_id}/resources")

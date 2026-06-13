@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from app.config import DATA_DIR, ITEMS_PATH, LOADOUTS_PATH
-from app.models import Item, Loadout, LoadoutCreate, LoadoutItem, LoadoutItemInput
+from app.models import FarmedItemInput, Item, Loadout, LoadoutCreate, LoadoutItem, LoadoutItemInput
 
 
 def utc_now() -> str:
@@ -96,6 +96,31 @@ def delete_loadout_item(loadout_id: str, item_name: str) -> Loadout:
     for loadout in loadouts:
         if loadout.id == loadout_id:
             loadout.items = [item for item in loadout.items if item.item != item_name]
+            loadout.updated_at = utc_now()
+            save_loadouts(loadouts)
+            return loadout
+    raise KeyError(loadout_id)
+
+
+def set_farmed_item(loadout_id: str, farmed_item: FarmedItemInput) -> Loadout:
+    loadouts = load_loadouts()
+    for loadout in loadouts:
+        if loadout.id == loadout_id:
+            if farmed_item.quantity > 0:
+                loadout.farmed[farmed_item.item] = farmed_item.quantity
+            else:
+                loadout.farmed.pop(farmed_item.item, None)
+            loadout.updated_at = utc_now()
+            save_loadouts(loadouts)
+            return loadout
+    raise KeyError(loadout_id)
+
+
+def clear_farmed_items(loadout_id: str) -> Loadout:
+    loadouts = load_loadouts()
+    for loadout in loadouts:
+        if loadout.id == loadout_id:
+            loadout.farmed = {}
             loadout.updated_at = utc_now()
             save_loadouts(loadouts)
             return loadout

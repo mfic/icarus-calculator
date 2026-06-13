@@ -29,6 +29,7 @@ def test_calculate_loadout_expands_intermediate_recipes():
         id="loadout",
         name="Loadout",
         items=[LoadoutItem(item="Pie", quantity=3)],
+        farmed={"Flour": 2},
         created_at="2026-06-12T00:00:00+00:00",
         updated_at="2026-06-12T00:00:00+00:00",
     )
@@ -36,8 +37,8 @@ def test_calculate_loadout_expands_intermediate_recipes():
     result = calculate_loadout(loadout, items)
 
     assert result["materials"] == [
-        {"name": "Berry", "quantity": 12},
-        {"name": "Flour", "quantity": 6},
-        {"name": "Water", "quantity": 6},
+        {"name": "Berry", "quantity": 12, "farmed": 0, "remaining": 12},
+        {"name": "Flour", "quantity": 6, "farmed": 2, "remaining": 4},
+        {"name": "Water", "quantity": 6, "farmed": 0, "remaining": 6},
     ]
     assert [step["item"] for step in result["steps"]] == ["Pie", "Dough"]

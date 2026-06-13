@@ -42,6 +42,7 @@ class Loadout(BaseModel):
     id: str
     name: str
     items: list[LoadoutItem] = Field(default_factory=list)
+    farmed: dict[str, float] = Field(default_factory=dict)
     created_at: str
     updated_at: str
 
@@ -55,6 +56,11 @@ class LoadoutItemInput(BaseModel):
 
     item: str = Field(validation_alias=AliasChoices("item", "food"))
     quantity: int = Field(default=1, ge=1)
+
+
+class FarmedItemInput(BaseModel):
+    item: str = Field(min_length=1)
+    quantity: float = Field(default=0, ge=0)
 
 
 FoodItem = Item

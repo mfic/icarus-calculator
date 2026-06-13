@@ -74,9 +74,15 @@ def calculate_loadout(loadout: Loadout, items: list[Item]) -> dict[str, Any]:
         "loadout": loadout.model_dump(),
         "bucket": loadout.model_dump(),
         "materials": [
-            {"name": name, "quantity": _round(amount)}
+            {
+                "name": name,
+                "quantity": _round(amount),
+                "farmed": _round(float(loadout.farmed.get(name, 0))),
+                "remaining": _round(max(amount - float(loadout.farmed.get(name, 0)), 0)),
+            }
             for name, amount in sorted(materials.items(), key=lambda entry: entry[0].lower())
         ],
+        "farmed": loadout.farmed,
         "steps": steps,
         "missing": missing,
     }

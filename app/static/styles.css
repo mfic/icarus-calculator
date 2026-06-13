@@ -117,6 +117,13 @@ h3 {
   margin-bottom: 12px;
 }
 
+.section-heading {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
 .filters {
   display: flex;
   gap: 8px;
@@ -246,12 +253,36 @@ ul {
   padding: 10px;
 }
 
-.loadout-row,
-.material-row {
+.loadout-row {
   align-items: center;
   display: flex;
   gap: 10px;
   justify-content: space-between;
+}
+
+.material-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) 132px;
+}
+
+.material-main {
+  display: grid;
+  gap: 4px;
+}
+
+.farmed-control {
+  display: flex;
+  gap: 6px;
+}
+
+.farmed-control input {
+  min-width: 0;
+  width: 70px;
+}
+
+.farmed-control button {
+  padding: 0 8px;
 }
 
 .qty {
@@ -307,5 +338,9 @@ ul {
 
   .add-control {
     flex-direction: row;
+  }
+
+  .material-row {
+    grid-template-columns: 1fr;
   }
 }
