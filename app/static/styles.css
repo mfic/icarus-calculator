@@ -292,10 +292,8 @@ ul {
 }
 
 .share-tools {
-  align-items: center;
   display: grid;
   gap: 8px;
-  grid-template-columns: minmax(0, 1fr) auto auto auto;
   margin-top: 10px;
 }
 
@@ -305,15 +303,24 @@ ul {
   margin: 8px 0;
 }
 
-.account-code-row {
+.account-code-row,
+.loadout-code-row {
   display: grid;
   gap: 6px;
 }
 
-.account-action-row {
+.account-action-row,
+.loadout-action-row {
   display: grid;
   gap: 8px;
+}
+
+.account-action-row {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+}
+
+.loadout-action-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .share-row {
@@ -324,7 +331,8 @@ ul {
   margin: 8px 0;
 }
 
-.account-tools .code-pill {
+.account-tools .code-pill,
+.share-tools .code-pill {
   overflow-wrap: anywhere;
   white-space: normal;
 }
@@ -590,7 +598,8 @@ ul {
     justify-self: start;
   }
 
-  .share-tools {
+  .share-tools,
+  .loadout-action-row {
     grid-template-columns: 1fr;
   }
 

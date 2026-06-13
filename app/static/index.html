@@ -62,13 +62,18 @@
         </div>
         <select id="loadoutSelect"></select>
         <div class="share-tools">
-          <span id="loadoutId" class="code-pill">No loadout selected</span>
-          <button id="copyShareBtn" class="secondary" type="button">Copy Link</button>
-          <button id="exportLoadoutBtn" class="secondary" type="button">Export</button>
-          <label class="file-button">
-            Import
-            <input id="importLoadoutInput" type="file" accept="application/json,.json" />
-          </label>
+          <div class="loadout-code-row">
+            <span class="muted">Loadout code:</span>
+            <span id="loadoutId" class="code-pill">No loadout selected</span>
+          </div>
+          <div class="loadout-action-row">
+            <button id="copyShareBtn" class="secondary" type="button">Copy Link</button>
+            <button id="exportLoadoutBtn" class="secondary" type="button">Export</button>
+            <label class="file-button">
+              Import
+              <input id="importLoadoutInput" type="file" accept="application/json,.json" />
+            </label>
+          </div>
         </div>
         <div id="shareSection" class="share-row" hidden>
           <span class="muted">Shared with:</span>
