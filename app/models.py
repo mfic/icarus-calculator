@@ -15,6 +15,7 @@ class Recipe(BaseModel):
 class Item(BaseModel):
     name: str
     slug: str
+    primary_category: str = "Other"
     categories: list[str] = Field(default_factory=list)
     tier: str | None = None
     description: str | None = None

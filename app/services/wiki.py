@@ -58,6 +58,48 @@ TAG_RE = re.compile(r"<[^>]+>")
 CATEGORY_RE = re.compile(r"\[\[Category:([^|\]]+)")
 TIER_RE = re.compile(r"\bTier\s+\d+\b", re.IGNORECASE)
 
+IN_GAME_CATEGORIES = [
+    "Tools",
+    "Bows",
+    "Projectiles",
+    "Weapons",
+    "Deployables",
+    "Structures",
+    "Armor",
+    "Storage",
+    "Consumables",
+    "Resources",
+    "Mission Items",
+    "Other",
+]
+
+PRIMARY_CATEGORY_RULES = [
+    ("Mission Items", {"Mission Items", "Mission Resources", "Objective Items"}),
+    ("Storage", {"Storage", "Storage Containers", "Liquid Containers"}),
+    ("Structures", {"Buildings", "Building Pieces", "Walls", "Floors", "Doors", "Windows", "Beams", "Railings", "Ramps", "Roofs", "Pillars"}),
+    ("Armor", {"Armor", "Armors", "Workshop Armor"}),
+    ("Projectiles", {"Ammo", "Arrows", "Bolts", "Bullets", "Rounds", "Shells", "Arrow Bundles", "Bolt Bundles", "5.56mm Rounds", "7.62mm Rounds", "9mm Rounds", "12.7mm Rounds", "12-Gauge Shells"}),
+    ("Bows", {"Bows", "Crossbows", "Workshop Bows"}),
+    ("Weapons", {"Weapons", "Firearms", "Pistols", "Rifles", "Shotguns", "Knives", "Spears", "Throwing Knives", "Javelins", "Grenades"}),
+    ("Tools", {"Tools", "Axes", "Pickaxes", "Hammers", "Sickles", "Fishing Rods", "Shields", "Gadgets"}),
+    ("Consumables", {"Consumables", "Food", "Medicine", "Pastes", "Pills", "Tonics", "Vaccines", "Buff Pastes"}),
+    ("Resources", {"Resources", "Crafted Resources", "Animal Resources", "Plant Resources", "Minerals"}),
+    ("Deployables", {"Deployables", "Benches", "Crafting Benches", "Furniture", "Ranching Deployables", "Trophies", "Statues", "Lamps", "Water Sources", "Heating", "Climate Control", "Electricity Source", "Animal Beds"}),
+]
+
+NAME_CATEGORY_RULES = [
+    ("Projectiles", (" round", " shell", " arrow", " bolt", " ammo", "ammo box")),
+    ("Bows", (" bow", " crossbow")),
+    ("Weapons", (" pistol", " rifle", " shotgun", " knife", " spear", " javelin", " grenade")),
+    ("Armor", (" armor", " helmet", " chest", " arms armor", " legs armor", " feet armor")),
+    ("Structures", (" wall", " floor", " roof", " ramp", " beam", " railing", " door", " window", " pillar", " foundation")),
+    ("Storage", (" crate", " container", " cupboard", " wardrobe", " barrel", " tank")),
+    ("Consumables", (" tonic", " paste", " pill", " vaccine", " bandage", " syringe", " antibiotic", " treatment", " bread", " soup", " stew")),
+    ("Resources", (" ore", " ingot", " screw", " wire", " plate", " seed", " flour", " leather", " pelt", " carcass", " vestige", " tusk", " bone", " fiber", " composite", " paste", " oil")),
+    ("Tools", (" scanner", " canteen", " waterskin", " backpack", " module", " attachment", " sickle", " axe", " pickaxe", " hammer")),
+    ("Deployables", (" bench", " furnace", " generator", " processor", " polymerizer", " trap", " bed", " smoker", " stove", " lamp", " statue", " trophy")),
+]
+
 
 def extract_template(wikitext: str, name: str) -> str | None:
     start = wikitext.find("{{" + name)
@@ -123,6 +165,52 @@ def parse_tier(categories: Iterable[str], *values: str | None) -> str | None:
         if match:
             return match.group(0).title()
     return None
+
+
+def category_matches(category: str, rule: str) -> bool:
+    category = category.lower()
+    rule = rule.lower()
+    return category == rule or category.endswith(" " + rule)
+
+
+def classify_primary_category(categories: Iterable[str], name: str = "") -> str:
+    category_set = {category for category in categories if category}
+    for primary, rules in PRIMARY_CATEGORY_RULES:
+        if any(category_matches(category, rule) for category in category_set for rule in rules):
+            return primary
+    normalized_name = " " + name.lower()
+    for primary, fragments in NAME_CATEGORY_RULES:
+        if any(fragment in normalized_name for fragment in fragments):
+            return primary
+    return "Other"
+
+
+def categories_from_gameplay_tags(info_fields: dict[str, str]) -> set[str]:
+    tags = ", ".join(
+        value
+        for value in (
+            info_fields.get("GameplayTags"),
+            info_fields.get("ItemableGameplayTags"),
+        )
+        if value
+    ).lower()
+    categories: set[str] = set()
+    if "item.resource" in tags:
+        categories.add("Resources")
+    if "item.consumable" in tags:
+        categories.add("Consumables")
+    if "item.ammo" in tags:
+        categories.update({"Projectiles", "Ammo"})
+    if "item.armor" in tags:
+        categories.add("Armor")
+    if "building." in tags:
+        categories.add("Structures")
+    if "item.bench" in tags:
+        categories.add("Deployables")
+        categories.add("Benches")
+    if "item.weapon" in tags:
+        categories.add("Weapons")
+    return categories
 
 
 def load_item_overrides() -> dict[str, dict]:
@@ -337,6 +425,7 @@ def item_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()
     overrides = load_item_overrides().get(title.lower(), {})
     description = clean_text(info_fields.get("description") or info_fields.get("Itemable_description"))
     categories = parse_categories(wikitext, categories)
+    categories = sorted(set(categories).union(categories_from_gameplay_tags(info_fields)))
     categories = sorted(set(categories).union(overrides.get("categories", [])))
     effects = parse_effects(info_fields)
     tier = overrides.get("tier") or parse_tier(
@@ -351,6 +440,7 @@ def item_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()
     return Item(
         name=title,
         slug=slugify(title),
+        primary_category=overrides.get("primary_category") or classify_primary_category(categories, title),
         categories=categories,
         tier=tier,
         description=description,

@@ -26,6 +26,20 @@ from app.services.wiki import refresh_item_data
 
 
 scheduler = BackgroundScheduler(timezone="UTC")
+CATEGORY_ORDER = [
+    "Tools",
+    "Bows",
+    "Projectiles",
+    "Weapons",
+    "Deployables",
+    "Structures",
+    "Armor",
+    "Storage",
+    "Consumables",
+    "Resources",
+    "Mission Items",
+    "Other",
+]
 
 
 def refresh_if_needed() -> None:
@@ -87,6 +101,7 @@ def filter_items(
     items: list[Item],
     q: str | None = None,
     category: str | None = None,
+    subcategory: str | None = None,
     tier: str | None = None,
 ) -> list[Item]:
     if category:
@@ -94,7 +109,15 @@ def filter_items(
         items = [
             item
             for item in items
-            if any(category_needle == item_category.lower() for item_category in item.categories)
+            if item.primary_category.lower() == category_needle
+            or any(category_needle == item_category.lower() for item_category in item.categories)
+        ]
+    if subcategory:
+        subcategory_needle = subcategory.lower()
+        items = [
+            item
+            for item in items
+            if any(subcategory_needle == item_category.lower() for item_category in item.categories)
         ]
     if tier:
         tier_needle = tier.lower()
@@ -122,9 +145,10 @@ def filter_items(
 def items(
     q: str | None = Query(default=None),
     category: str | None = Query(default=None),
+    subcategory: str | None = Query(default=None),
     tier: str | None = Query(default=None),
 ) -> dict:
-    items = filter_items(load_items(), q=q, category=category, tier=tier)
+    items = filter_items(load_items(), q=q, category=category, subcategory=subcategory, tier=tier)
     return {"items": [item.model_dump() for item in items]}
 
 
@@ -132,19 +156,41 @@ def items(
 def foods(
     q: str | None = Query(default=None),
     category: str | None = Query(default=None),
+    subcategory: str | None = Query(default=None),
     tier: str | None = Query(default=None),
 ) -> dict:
-    return items(q=q, category=category, tier=tier)
+    return items(q=q, category=category, subcategory=subcategory, tier=tier)
 
 
 @app.get("/api/categories")
 def categories() -> dict:
     counts: dict[str, int] = {}
     for item in load_items():
-        for category in item.categories:
-            counts[category] = counts.get(category, 0) + 1
+        counts[item.primary_category] = counts.get(item.primary_category, 0) + 1
     return {
         "categories": [
+            {"name": name, "count": count}
+            for name, count in sorted(
+                counts.items(),
+                key=lambda entry: (
+                    CATEGORY_ORDER.index(entry[0]) if entry[0] in CATEGORY_ORDER else len(CATEGORY_ORDER),
+                    entry[0].lower(),
+                ),
+            )
+        ]
+    }
+
+
+@app.get("/api/subcategories")
+def subcategories(category: str | None = Query(default=None)) -> dict:
+    counts: dict[str, int] = {}
+    for item in load_items():
+        if category and item.primary_category.lower() != category.lower():
+            continue
+        for subcategory in item.categories:
+            counts[subcategory] = counts.get(subcategory, 0) + 1
+    return {
+        "subcategories": [
             {"name": name, "count": count}
             for name, count in sorted(counts.items(), key=lambda entry: entry[0].lower())
         ]

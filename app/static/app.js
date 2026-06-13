@@ -1,10 +1,12 @@
 const state = {
   items: [],
   categories: [],
+  subcategories: [],
   tiers: [],
   loadouts: [],
   activeLoadoutId: localStorage.getItem("icarus.activeLoadoutId") || localStorage.getItem("icarus.activeBucketId") || "",
   activeCategory: localStorage.getItem("icarus.activeCategory") || "",
+  activeSubcategory: localStorage.getItem("icarus.activeSubcategory") || "",
   activeTier: localStorage.getItem("icarus.activeTier") || "",
   resources: null,
 };
@@ -14,6 +16,7 @@ const els = {
   items: document.querySelector("#items"),
   search: document.querySelector("#search"),
   categoryFilter: document.querySelector("#categoryFilter"),
+  subcategoryFilter: document.querySelector("#subcategoryFilter"),
   tierFilter: document.querySelector("#tierFilter"),
   loadoutForm: document.querySelector("#loadoutForm"),
   loadoutName: document.querySelector("#loadoutName"),
@@ -45,6 +48,7 @@ function saveLocalLoadouts() {
   localStorage.setItem("icarus.loadouts.snapshot", JSON.stringify(state.loadouts));
   localStorage.setItem("icarus.activeLoadoutId", state.activeLoadoutId || "");
   localStorage.setItem("icarus.activeCategory", state.activeCategory || "");
+  localStorage.setItem("icarus.activeSubcategory", state.activeSubcategory || "");
   localStorage.setItem("icarus.activeTier", state.activeTier || "");
 }
 
@@ -64,13 +68,17 @@ function renderMeta(meta) {
 function renderItems() {
   const term = els.search.value.trim().toLowerCase();
   const category = state.activeCategory.toLowerCase();
+  const subcategory = state.activeSubcategory.toLowerCase();
   const tier = state.activeTier.toLowerCase();
   const categoryFiltered = category
-    ? state.items.filter((item) => item.categories.some((entry) => entry.toLowerCase() === category))
+    ? state.items.filter((item) => item.primary_category.toLowerCase() === category || item.categories.some((entry) => entry.toLowerCase() === category))
     : state.items;
-  const tierFiltered = tier
-    ? categoryFiltered.filter((item) => item.tier && item.tier.toLowerCase() === tier)
+  const subcategoryFiltered = subcategory
+    ? categoryFiltered.filter((item) => item.categories.some((entry) => entry.toLowerCase() === subcategory))
     : categoryFiltered;
+  const tierFiltered = tier
+    ? subcategoryFiltered.filter((item) => item.tier && item.tier.toLowerCase() === tier)
+    : subcategoryFiltered;
   const filtered = tierFiltered.filter((item) => {
     const recipeInputs = item.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
     const effects = item.effects?.length ? item.effects : item.buffs || [];
@@ -149,6 +157,35 @@ function renderCategories() {
   } else {
     state.activeCategory = "";
     els.categoryFilter.value = "";
+  }
+  saveLocalLoadouts();
+}
+
+function renderSubcategories() {
+  const sourceItems = state.activeCategory
+    ? state.items.filter((item) => item.primary_category === state.activeCategory)
+    : state.items;
+  const counts = new Map();
+  for (const item of sourceItems) {
+    for (const subcategory of item.categories) {
+      counts.set(subcategory, (counts.get(subcategory) || 0) + 1);
+    }
+  }
+  const subcategories = [...counts.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  els.subcategoryFilter.innerHTML = '<option value="">All subcategories</option>';
+  for (const subcategory of subcategories) {
+    const option = document.createElement("option");
+    option.value = subcategory.name;
+    option.textContent = `${subcategory.name} (${subcategory.count})`;
+    els.subcategoryFilter.appendChild(option);
+  }
+  if (state.activeSubcategory && subcategories.some((subcategory) => subcategory.name === state.activeSubcategory)) {
+    els.subcategoryFilter.value = state.activeSubcategory;
+  } else {
+    state.activeSubcategory = "";
+    els.subcategoryFilter.value = "";
   }
   saveLocalLoadouts();
 }
@@ -311,6 +348,7 @@ async function loadAll() {
     state.loadouts = [created];
   }
   renderCategories();
+  renderSubcategories();
   renderTiers();
   renderItems();
   renderLoadouts();
@@ -415,6 +453,13 @@ async function importLoadout(file) {
 els.search.addEventListener("input", renderItems);
 els.categoryFilter.addEventListener("change", () => {
   state.activeCategory = els.categoryFilter.value;
+  state.activeSubcategory = "";
+  saveLocalLoadouts();
+  renderSubcategories();
+  renderItems();
+});
+els.subcategoryFilter.addEventListener("change", () => {
+  state.activeSubcategory = els.subcategoryFilter.value;
   saveLocalLoadouts();
   renderItems();
 });
@@ -460,6 +505,7 @@ els.refreshBtn.addEventListener("click", async () => {
   state.categories = categories.categories;
   state.tiers = tiers.tiers;
   renderCategories();
+  renderSubcategories();
   renderTiers();
   renderItems();
   await loadResources();

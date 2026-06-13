@@ -1,6 +1,7 @@
 {
   "items": {
     "Polymerizer": {
+      "primary_category": "Deployables",
       "tier": "Tier 5",
       "categories": ["Deployables", "Benches", "Crafting Benches", "Tier 5"]
     }
