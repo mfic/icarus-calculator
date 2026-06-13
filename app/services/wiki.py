@@ -1,4 +1,6 @@
 import asyncio
+import functools
+import json
 import re
 from datetime import datetime, timezone
 from html import unescape
@@ -52,11 +54,13 @@ EFFECT_FIELDS = [
 ]
 
 
-ITEM_ICON_RE = re.compile(r"\{\{Item icon\|([^}|]+).*?\}\}")
+ITEM_ICON_RE = re.compile(r"\{\{(?:Item[ _]icon|Icon[ _]link)\s*\|([^}|]+).*?\}{1,2}")
 LINK_RE = re.compile(r"\[\[(?:[^|\]]+\|)?([^\]]+)\]\]")
 TAG_RE = re.compile(r"<[^>]+>")
 CATEGORY_RE = re.compile(r"\[\[Category:([^|\]]+)")
 TIER_RE = re.compile(r"\bTier\s+\d+\b", re.IGNORECASE)
+CRAFTING_HEADING_RE = re.compile(r"==\s*(?:Crafting|Refining)\s*==")
+SECTION_HEADING_RE = re.compile(r"^==.*==\s*$", re.MULTILINE)
 
 IN_GAME_CATEGORIES = [
     "Tools",
@@ -101,27 +105,42 @@ NAME_CATEGORY_RULES = [
 ]
 
 
-def extract_template(wikitext: str, name: str) -> str | None:
-    start = wikitext.find("{{" + name)
-    if start == -1:
-        return None
+def extract_all_templates(wikitext: str, name: str) -> list[str]:
+    needle = "{{" + name
+    bodies: list[str] = []
+    search_start = 0
+    while True:
+        start = wikitext.find(needle, search_start)
+        if start == -1:
+            return bodies
 
-    depth = 0
-    index = start
-    while index < len(wikitext) - 1:
-        pair = wikitext[index : index + 2]
-        if pair == "{{":
-            depth += 1
-            index += 2
-            continue
-        if pair == "}}":
-            depth -= 1
-            index += 2
-            if depth == 0:
-                return wikitext[start + len(name) + 2 : index - 2]
-            continue
-        index += 1
-    return None
+        depth = 0
+        index = start
+        end: int | None = None
+        while index < len(wikitext) - 1:
+            pair = wikitext[index : index + 2]
+            if pair == "{{":
+                depth += 1
+                index += 2
+                continue
+            if pair == "}}":
+                depth -= 1
+                index += 2
+                if depth == 0:
+                    end = index
+                    break
+                continue
+            index += 1
+
+        if end is None:
+            return bodies
+        bodies.append(wikitext[start + len(name) + 2 : end - 2])
+        search_start = end
+
+
+def extract_template(wikitext: str, name: str) -> str | None:
+    bodies = extract_all_templates(wikitext, name)
+    return bodies[0] if bodies else None
 
 
 def clean_text(value: str | None) -> str | None:
@@ -199,6 +218,8 @@ def categories_from_gameplay_tags(info_fields: dict[str, str]) -> set[str]:
         categories.add("Resources")
     if "item.consumable" in tags:
         categories.add("Consumables")
+    if "item.consumable.food" in tags:
+        categories.add("Food")
     if "item.ammo" in tags:
         categories.update({"Projectiles", "Ammo"})
     if "item.armor" in tags:
@@ -213,11 +234,11 @@ def categories_from_gameplay_tags(info_fields: dict[str, str]) -> set[str]:
     return categories
 
 
+@functools.lru_cache(maxsize=1)
 def load_item_overrides() -> dict[str, dict]:
     path = DATA_DIR / "item_overrides.json"
     if not path.exists():
         return {}
-    import json
 
     with path.open("r", encoding="utf-8") as handle:
         payload = json.load(handle)
@@ -298,6 +319,31 @@ def parse_fields(body: str) -> dict[str, str]:
     return fields
 
 
+def _strip_cell_prefix(value: str) -> str:
+    """Strip a leading wikitable attribute prefix like `rowspan="2" |` from a cell value.
+
+    Only splits on a `|` at template/link depth 0, so the pipe inside
+    `{{Item icon|X}}` or `[[Page|Display]]` is left intact.
+    """
+    depth = 0
+    last_split = -1
+    index = 0
+    while index < len(value):
+        pair = value[index : index + 2]
+        if pair in ("{{", "[["):
+            depth += 1
+            index += 2
+            continue
+        if pair in ("}}", "]]"):
+            depth = max(0, depth - 1)
+            index += 2
+            continue
+        if value[index] == "|" and depth == 0:
+            last_split = index
+        index += 1
+    return value[last_split + 1 :].strip() if last_split != -1 else value
+
+
 def table_cells(row: str) -> list[str]:
     cells: list[str] = []
     for raw_line in row.splitlines():
@@ -307,13 +353,11 @@ def table_cells(row: str) -> list[str]:
         value = line[1:].strip()
         if "||" in value:
             for part in value.split("||"):
-                cleaned = clean_text(part)
+                cleaned = clean_text(_strip_cell_prefix(part.strip()))
                 if cleaned:
                     cells.append(cleaned)
             continue
-        if "|" in value and not value.startswith("{{"):
-            value = value.rsplit("|", 1)[-1].strip()
-        cleaned = clean_text(value)
+        cleaned = clean_text(_strip_cell_prefix(value))
         if cleaned:
             cells.append(cleaned)
     return cells
@@ -324,16 +368,40 @@ def caption_output_quantity(caption: str) -> float:
     return parse_quantity(match.group(1)) if match else 1
 
 
+def _recipe_id(inputs: list[Ingredient]) -> str:
+    if not inputs:
+        return "no-inputs"
+    return "+".join(sorted(ingredient.name.lower() for ingredient in inputs))
+
+
+def _recipe_label(inputs: list[Ingredient]) -> str:
+    if not inputs:
+        return "No inputs"
+    return " + ".join(f"{ingredient.quantity:g} {ingredient.name}" for ingredient in inputs)
+
+
+def _split_resource_names(value: str) -> list[str]:
+    return [part.strip() for part in re.split(r"\s*\+\s*", value) if part.strip()]
+
+
 def parse_wikitable_recipe(title: str, wikitext: str) -> Recipe | None:
-    crafting_start = wikitext.find("==Crafting==")
-    if crafting_start == -1:
+    heading_match = CRAFTING_HEADING_RE.search(wikitext)
+    if not heading_match:
         return None
-    table_start = wikitext.find("{|", crafting_start)
-    table_end = wikitext.find("|}", table_start)
+    section_start = heading_match.end()
+    next_heading = SECTION_HEADING_RE.search(wikitext, section_start)
+    section_end = next_heading.start() if next_heading else len(wikitext)
+    section = wikitext[section_start:section_end]
+
+    table_start = section.find("{|")
+    table_end = section.find("|}", table_start)
     if table_start == -1 or table_end == -1:
         return None
 
-    table = wikitext[table_start:table_end]
+    table = section[table_start:table_end]
+    if "resource" not in table.lower():
+        return None
+
     caption = next((line for line in table.splitlines() if line.strip().startswith("|+")), "")
     benches = item_icons(caption)
     output_quantity = caption_output_quantity(caption)
@@ -344,29 +412,52 @@ def parse_wikitable_recipe(title: str, wikitext: str) -> Recipe | None:
     for row in table.split("|-")[1:]:
         cells = table_cells(row)
         if has_output_columns and len(cells) >= 4:
-            inputs.append(Ingredient(name=cells[1], quantity=parse_quantity(cells[0])))
+            quantity = parse_quantity(cells[0])
+            for resource_name in _split_resource_names(cells[1]):
+                inputs.append(Ingredient(name=resource_name, quantity=quantity))
             output_name = title if "PAGENAME" in cells[3] else cells[3]
             outputs.append(Ingredient(name=output_name, quantity=parse_quantity(cells[2])))
         elif len(cells) >= 2:
-            inputs.append(Ingredient(name=cells[1], quantity=parse_quantity(cells[0])))
+            quantity = parse_quantity(cells[0])
+            for resource_name in _split_resource_names(cells[1]):
+                inputs.append(Ingredient(name=resource_name, quantity=quantity))
 
     if inputs and not outputs:
         outputs.append(Ingredient(name=title, quantity=output_quantity))
-    recipe = Recipe(inputs=inputs, outputs=outputs, benches=benches)
+    recipe = Recipe(
+        inputs=inputs,
+        outputs=outputs,
+        benches=benches,
+        id=_recipe_id(inputs),
+        label=_recipe_label(inputs),
+    )
     return recipe if recipe.inputs else None
 
 
-def parse_recipe(wikitext: str) -> Recipe | None:
-    body = extract_template(wikitext, "Recipe")
-    if not body:
-        return None
-    fields = parse_fields(body)
-    recipe = Recipe(
-        inputs=parse_ingredients(fields.get("Inputs")),
-        outputs=parse_ingredients(fields.get("Outputs")),
-        benches=split_list(fields.get("Benches")),
-    )
-    return recipe if recipe.inputs or recipe.outputs or recipe.benches else None
+def parse_recipes(wikitext: str) -> list[Recipe]:
+    recipes: list[Recipe] = []
+    id_counts: dict[str, int] = {}
+    for body in extract_all_templates(wikitext, "Recipe"):
+        fields = parse_fields(body)
+        inputs = parse_ingredients(fields.get("Inputs"))
+        outputs = parse_ingredients(fields.get("Outputs"))
+        benches = split_list(fields.get("Benches"))
+        if not (inputs or outputs or benches):
+            continue
+        recipe_id = _recipe_id(inputs)
+        id_counts[recipe_id] = id_counts.get(recipe_id, 0) + 1
+        if id_counts[recipe_id] > 1:
+            recipe_id = f"{recipe_id}#{id_counts[recipe_id]}"
+        recipes.append(
+            Recipe(
+                inputs=inputs,
+                outputs=outputs,
+                benches=benches,
+                id=recipe_id,
+                label=_recipe_label(inputs),
+            )
+        )
+    return recipes
 
 
 def parse_consumables(wikitext: str) -> dict[str, str]:
@@ -419,7 +510,11 @@ def item_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()
     item_info = parse_item_info(wikitext)
     info_fields = {**item_info, **consumables}
     resolved_wikitext = wikitext.replace("{{PAGENAME}}", title)
-    recipe = parse_recipe(resolved_wikitext) or parse_wikitable_recipe(title, resolved_wikitext)
+    recipes = parse_recipes(resolved_wikitext)
+    if not recipes:
+        table_recipe = parse_wikitable_recipe(title, resolved_wikitext)
+        recipes = [table_recipe] if table_recipe else []
+    recipe = recipes[0] if recipes else None
     bench = clean_text(info_fields.get("bench") or info_fields.get("benchtool"))
     benches = recipe.benches if recipe and recipe.benches else ([bench] if bench else [])
     overrides = load_item_overrides().get(title.lower(), {})
@@ -453,6 +548,7 @@ def item_from_wikitext(title: str, wikitext: str, categories: Iterable[str] = ()
         effects=effects,
         buffs=effects,
         recipe=recipe,
+        recipes=recipes,
         wiki_url=f"https://icarus.wiki.gg/wiki/{slugify(title)}",
     )
 
@@ -635,11 +731,15 @@ async def scrape_items(max_extra_pages: int = 800) -> list[Item]:
     return sorted(items.values(), key=lambda item: item.name.lower())
 
 
-def refresh_item_data() -> dict[str, str | int]:
-    items = asyncio.run(scrape_items())
+async def refresh_item_data_async() -> dict[str, str | int]:
+    items = await scrape_items()
     refreshed_at = datetime.now(timezone.utc).isoformat()
     save_items(items, refreshed_at)
     return {"refreshed_at": refreshed_at, "count": len(items)}
+
+
+def refresh_item_data() -> dict[str, str | int]:
+    return asyncio.run(refresh_item_data_async())
 
 
 food_from_wikitext = item_from_wikitext

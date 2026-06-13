@@ -15,6 +15,7 @@ const els = {
   meta: document.querySelector("#meta"),
   items: document.querySelector("#items"),
   search: document.querySelector("#search"),
+  resetFiltersBtn: document.querySelector("#resetFiltersBtn"),
   categoryFilter: document.querySelector("#categoryFilter"),
   subcategoryFilter: document.querySelector("#subcategoryFilter"),
   tierFilter: document.querySelector("#tierFilter"),
@@ -60,6 +61,43 @@ function activeLoadout() {
   return state.loadouts.find((loadout) => loadout.id === state.activeLoadoutId) || state.loadouts[0];
 }
 
+const SOURCE_COLORS = [
+  "#d2a84a",
+  "#72b587",
+  "#5f9ee1",
+  "#e16f5f",
+  "#b58fe1",
+  "#e1c95f",
+  "#5fe1c9",
+  "#e15f9e",
+  "#9ee15f",
+  "#e1925f",
+];
+
+function sourceColorMap(loadout) {
+  const map = new Map();
+  if (!loadout) return map;
+  loadout.items.forEach((entry, index) => {
+    const name = entry.item || entry.food;
+    map.set(name, SOURCE_COLORS[index % SOURCE_COLORS.length]);
+  });
+  return map;
+}
+
+function renderSourceDots(sources, colors) {
+  if (!sources?.length) return null;
+  const wrap = document.createElement("span");
+  wrap.className = "source-dots";
+  for (const source of sources) {
+    const dot = document.createElement("span");
+    dot.className = "source-dot";
+    dot.style.backgroundColor = colors.get(source) || "var(--muted)";
+    dot.title = source;
+    wrap.appendChild(dot);
+  }
+  return wrap;
+}
+
 function renderMeta(meta) {
   const when = meta.refreshed_at ? new Date(meta.refreshed_at).toLocaleString() : "not refreshed yet";
   els.meta.textContent = `${meta.count || 0} items cached from wiki.gg. Last refresh: ${when}.`;
@@ -80,17 +118,25 @@ function renderItems() {
     ? subcategoryFiltered.filter((item) => item.tier && item.tier.toLowerCase() === tier)
     : subcategoryFiltered;
   const filtered = tierFiltered.filter((item) => {
-    const recipeInputs = item.recipe?.inputs?.map((entry) => entry.name).join(" ") || "";
+    const recipes = item.recipes?.length ? item.recipes : item.recipe ? [item.recipe] : [];
+    const recipeInputs = recipes.flatMap((recipe) => recipe.inputs?.map((entry) => entry.name) || []).join(" ");
     const effects = item.effects?.length ? item.effects : item.buffs || [];
     return `${item.name} ${item.tier || ""} ${effects.join(" ")} ${item.benches.join(" ")} ${item.categories.join(" ")} ${recipeInputs}`.toLowerCase().includes(term);
   });
+  const sorted = term
+    ? [...filtered].sort((a, b) => {
+        const aMatches = a.name.toLowerCase().includes(term) ? 0 : 1;
+        const bMatches = b.name.toLowerCase().includes(term) ? 0 : 1;
+        return aMatches - bMatches;
+      })
+    : filtered;
 
   els.items.innerHTML = "";
-  if (!filtered.length) {
+  if (!sorted.length) {
     els.items.innerHTML = '<p class="muted">No items match this filter.</p>';
     return;
   }
-  for (const item of filtered) {
+  for (const item of sorted) {
     const node = els.itemTemplate.content.firstElementChild.cloneNode(true);
     node.querySelector("h3").textContent = item.name;
     node.querySelector(".bench").textContent = item.benches.length ? `Crafted at: ${item.benches.join(", ")}` : "No crafting bench listed";
@@ -125,13 +171,23 @@ function renderItems() {
     }
 
     const recipe = node.querySelector(".recipe");
-    const inputs = item.recipe?.inputs || [];
-    if (inputs.length) {
-      for (const ingredient of inputs) {
-        const li = document.createElement("li");
-        li.textContent = `${formatQuantity(ingredient.quantity)} ${ingredient.name}`;
-        recipe.appendChild(li);
-      }
+    const recipes = item.recipes?.length ? item.recipes : item.recipe ? [item.recipe] : [];
+    if (recipes.length) {
+      recipes.forEach((option, index) => {
+        if (recipes.length > 1) {
+          const header = document.createElement("li");
+          header.className = "recipe-option-label";
+          const strong = document.createElement("strong");
+          strong.textContent = `Option ${index + 1}: ${option.label}`;
+          header.appendChild(strong);
+          recipe.appendChild(header);
+        }
+        for (const ingredient of option.inputs || []) {
+          const li = document.createElement("li");
+          li.textContent = `${formatQuantity(ingredient.quantity)} ${ingredient.name}`;
+          recipe.appendChild(li);
+        }
+      });
     } else {
       const li = document.createElement("li");
       li.textContent = "No recipe listed";
@@ -240,11 +296,33 @@ function renderLoadoutItems() {
     els.loadoutItems.innerHTML = '<p class="muted">No items in this loadout yet.</p>';
     return;
   }
+  const colors = sourceColorMap(loadout);
   for (const entry of loadout.items) {
     const itemName = entry.item || entry.food;
     const row = document.createElement("div");
     row.className = "loadout-row";
-    row.innerHTML = `<span>${itemName}</span><span class="qty">x${entry.quantity}</span>`;
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "name";
+    const dot = document.createElement("span");
+    dot.className = "source-dot";
+    dot.style.backgroundColor = colors.get(itemName) || "var(--muted)";
+    dot.style.marginRight = "6px";
+    nameSpan.appendChild(dot);
+    nameSpan.appendChild(document.createTextNode(itemName));
+    const qtyInput = document.createElement("input");
+    qtyInput.type = "number";
+    qtyInput.className = "qty-input";
+    qtyInput.min = "1";
+    qtyInput.step = "1";
+    qtyInput.value = entry.quantity;
+    qtyInput.setAttribute("aria-label", `Quantity for ${itemName}`);
+    qtyInput.addEventListener("change", () => {
+      const value = Math.max(1, Math.round(Number(qtyInput.value) || 1));
+      qtyInput.value = value;
+      setItemQuantity(itemName, value);
+    });
+    row.appendChild(nameSpan);
+    row.appendChild(qtyInput);
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "danger";
@@ -267,15 +345,22 @@ function renderResources() {
   if (!data.materials.length) {
     els.materials.innerHTML = '<p class="muted">No materials needed yet.</p>';
   }
+  const colors = sourceColorMap(activeLoadout());
   for (const material of data.materials) {
     const row = document.createElement("div");
     row.className = "material-row";
-    row.innerHTML = `
-      <div class="material-main">
-        <strong>${material.name}</strong>
-        <span class="muted">Need ${formatQuantity(material.quantity)} · Remaining ${formatQuantity(material.remaining ?? material.quantity)}</span>
-      </div>
-    `;
+    const main = document.createElement("div");
+    main.className = "material-main";
+    const name = document.createElement("strong");
+    name.textContent = material.name;
+    const materialDots = renderSourceDots(material.sources, colors);
+    if (materialDots) name.appendChild(materialDots);
+    const summary = document.createElement("span");
+    summary.className = "muted";
+    summary.textContent = `Need ${formatQuantity(material.quantity)} · Remaining ${formatQuantity(material.remaining ?? material.quantity)}`;
+    main.appendChild(name);
+    main.appendChild(summary);
+    row.appendChild(main);
     const tracker = document.createElement("div");
     tracker.className = "collected-control";
     const input = document.createElement("input");
@@ -297,17 +382,59 @@ function renderResources() {
   if (!data.steps.length) {
     els.steps.innerHTML = '<p class="muted">No craftable steps in this loadout.</p>';
   }
+  const recipeOptionsByItem = new Map((data.recipe_options || []).map((entry) => [entry.item, entry]));
   for (const step of data.steps) {
     const node = document.createElement("div");
     node.className = "step";
-    node.innerHTML = `
-      <div class="step-title">
-        <strong>${step.item}</strong>
-        <span class="qty">x${formatQuantity(step.quantity)}</span>
-      </div>
-      <p class="muted">${step.benches?.length ? `Bench: ${step.benches.join(", ")}` : "Bench not listed"} · batches ${formatQuantity(step.batches)}</p>
-      <ul>${step.inputs.map((input) => `<li>${formatQuantity(input.quantity)} ${input.name}</li>`).join("")}</ul>
-    `;
+
+    const title = document.createElement("div");
+    title.className = "step-title";
+    const name = document.createElement("strong");
+    name.textContent = step.item;
+    const stepDots = renderSourceDots(step.sources, colors);
+    if (stepDots) name.appendChild(stepDots);
+    const qty = document.createElement("span");
+    qty.className = "qty";
+    qty.textContent = `x${formatQuantity(step.quantity)}`;
+    title.appendChild(name);
+    title.appendChild(qty);
+    node.appendChild(title);
+
+    const recipeOptions = recipeOptionsByItem.get(step.item);
+    if (recipeOptions) {
+      const recipeRow = document.createElement("div");
+      recipeRow.className = "step-recipe";
+      const label = document.createElement("label");
+      label.textContent = "Recipe: ";
+      const select = document.createElement("select");
+      for (const option of recipeOptions.options) {
+        const optionEl = document.createElement("option");
+        optionEl.value = option.id;
+        optionEl.textContent = option.label;
+        if (option.id === recipeOptions.selected) {
+          optionEl.selected = true;
+        }
+        select.appendChild(optionEl);
+      }
+      select.addEventListener("change", () => setRecipeChoice(step.item, select.value));
+      label.appendChild(select);
+      recipeRow.appendChild(label);
+      node.appendChild(recipeRow);
+    }
+
+    const summary = document.createElement("p");
+    summary.className = "muted";
+    summary.textContent = `${step.benches?.length ? `Bench: ${step.benches.join(", ")}` : "Bench not listed"} · batches ${formatQuantity(step.batches)}`;
+    node.appendChild(summary);
+
+    const list = document.createElement("ul");
+    for (const input of step.inputs) {
+      const li = document.createElement("li");
+      li.textContent = `${formatQuantity(input.quantity)} ${input.name}`;
+      list.appendChild(li);
+    }
+    node.appendChild(list);
+
     els.steps.appendChild(node);
   }
 }
@@ -369,6 +496,18 @@ async function addItem(itemName, quantity) {
   await loadResources();
 }
 
+async function setItemQuantity(itemName, quantity) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/items`, {
+    method: "PUT",
+    body: JSON.stringify({ item: itemName, quantity }),
+  });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
+  await loadResources();
+}
+
 async function removeItem(itemName) {
   const loadout = activeLoadout();
   if (!loadout) return;
@@ -384,6 +523,18 @@ async function updateCollected(itemName, quantity) {
   const updated = await api(`/api/loadouts/${loadout.id}/collected`, {
     method: "PUT",
     body: JSON.stringify({ item: itemName, quantity: Math.max(0, quantity) }),
+  });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
+  await loadResources();
+}
+
+async function setRecipeChoice(itemName, recipeId) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/recipe-choice`, {
+    method: "PUT",
+    body: JSON.stringify({ item: itemName, recipe_id: recipeId }),
   });
   state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
   renderLoadouts();
@@ -419,6 +570,7 @@ function exportLoadout() {
       name: loadout.name,
       items: loadout.items.map((entry) => ({ item: entry.item || entry.food, quantity: entry.quantity })),
       collected: loadout.collected || {},
+      recipe_choices: loadout.recipe_choices || {},
     },
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -434,7 +586,13 @@ function exportLoadout() {
 
 async function importLoadout(file) {
   if (!file) return;
-  const payload = JSON.parse(await file.text());
+  let payload;
+  try {
+    payload = JSON.parse(await file.text());
+  } catch (error) {
+    alert("Could not import loadout: the selected file is not valid JSON.");
+    return;
+  }
   const loadout = payload.loadout || payload;
   const created = await api("/api/loadouts/import", {
     method: "POST",
@@ -442,6 +600,7 @@ async function importLoadout(file) {
       name: loadout.name || "Imported Loadout",
       items: loadout.items || [],
       collected: loadout.collected || loadout.farmed || {},
+      recipe_choices: loadout.recipe_choices || {},
     }),
   });
   state.loadouts.push(created);
@@ -468,6 +627,16 @@ els.tierFilter.addEventListener("change", () => {
   saveLocalLoadouts();
   renderItems();
 });
+els.resetFiltersBtn.addEventListener("click", () => {
+  els.search.value = "";
+  state.activeCategory = "";
+  state.activeSubcategory = "";
+  state.activeTier = "";
+  renderCategories();
+  renderSubcategories();
+  renderTiers();
+  renderItems();
+});
 els.loadoutSelect.addEventListener("change", async () => {
   state.activeLoadoutId = els.loadoutSelect.value;
   saveLocalLoadouts();
@@ -492,8 +661,13 @@ els.clearCollectedBtn.addEventListener("click", clearCollected);
 els.copyShareBtn.addEventListener("click", copyShareLink);
 els.exportLoadoutBtn.addEventListener("click", exportLoadout);
 els.importLoadoutInput.addEventListener("change", async () => {
-  await importLoadout(els.importLoadoutInput.files[0]);
-  els.importLoadoutInput.value = "";
+  try {
+    await importLoadout(els.importLoadoutInput.files[0]);
+  } catch (error) {
+    alert(`Could not import loadout: ${error.message}`);
+  } finally {
+    els.importLoadoutInput.value = "";
+  }
 });
 els.refreshBtn.addEventListener("click", async () => {
   els.refreshBtn.disabled = true;

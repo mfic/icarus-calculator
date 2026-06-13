@@ -3,9 +3,13 @@
 A small hosted PoC for ICARUS item loadouts. It fetches item data from the ICARUS wiki.gg API once a day, stores the cached item data in JSON, and keeps team loadouts persistent in `data/loadouts.json`.
 
 Items include wiki categories, tier metadata, and effects/stats when the wiki exposes them.
-Each loadout can also track collected material quantities, so the material summary shows what is still remaining.
+Some items (e.g. Epoxy) have multiple alternative recipes scraped from the wiki; each loadout
+can pick which alternative to use via a recipe selector in the Crafting Steps panel, and the
+choice is saved with the loadout.
+Each loadout can also track collected material quantities, so the material summary shows what is still remaining, and loadout item quantities can be edited inline.
 Loadouts have UUIDs for shareable links, and can be exported/imported as JSON files without user accounts.
-The main category filter uses normalized in-game categories; wiki categories remain available as subcategories.
+The main category filter uses normalized in-game categories; wiki categories remain available as subcategories, and items can additionally be filtered by tier. A Reset button clears all active filters and the search box.
+The Bare Materials and Crafting Steps lists show small color-coded dots indicating which loadout item(s) each material or step comes from.
 
 ## Run Locally
 
@@ -47,15 +51,27 @@ The app refreshes wiki data:
 
 ## API
 
+### Items
+
 - `GET /api/items`
 - `GET /api/items?q=stamina&category=Consumables&subcategory=Food&tier=Tier%202`
 - `GET /api/categories`
 - `GET /api/subcategories`
 - `GET /api/tiers`
 - `GET /api/foods` compatibility alias for items
+
+### Loadouts
+
 - `GET /api/loadouts`
 - `POST /api/loadouts`
+- `POST /api/loadouts/import`
+- `GET /api/loadouts/{loadout_id}`
+- `DELETE /api/loadouts/{loadout_id}`
 - `PUT /api/loadouts/{loadout_id}/items`
+- `DELETE /api/loadouts/{loadout_id}/items/{item_name}`
+- `PUT /api/loadouts/{loadout_id}/collected`
+- `DELETE /api/loadouts/{loadout_id}/collected`
+- `PUT /api/loadouts/{loadout_id}/recipe-choice`
 - `GET /api/loadouts/{loadout_id}/resources`
 - `GET /api/buckets` compatibility alias for loadouts
 
@@ -65,5 +81,6 @@ Server state is JSON-file based:
 
 - `data/items.json`: current wiki cache
 - `data/loadouts.json`: shared loadout data
+- `data/item_overrides.json`: manual corrections (tier, primary category, extra categories), keyed by item name and merged into the wiki-scraped item data on each refresh
 
 The browser also mirrors the selected loadout and latest loadout snapshot in `localStorage` as a client-side convenience.

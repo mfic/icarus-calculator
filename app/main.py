@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
@@ -8,8 +9,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import BASE_DIR, ITEMS_PATH
-from app.models import CollectedItemInput, Item, LoadoutCreate, LoadoutImport, LoadoutItemInput
-from app.services.calculator import calculate_loadout
+from app.models import CollectedItemInput, Item, LoadoutCreate, LoadoutImport, LoadoutItemInput, RecipeChoiceInput
+from app.services.calculator import _item_recipes, calculate_loadout
 from app.services.storage import (
     create_loadout,
     delete_loadout,
@@ -20,10 +21,13 @@ from app.services.storage import (
     load_items,
     load_loadouts,
     set_collected_item,
+    set_recipe_choice,
     upsert_loadout_item,
 )
-from app.services.wiki import refresh_item_data
+from app.services.wiki import refresh_item_data, refresh_item_data_async
 
+
+logger = logging.getLogger(__name__)
 
 scheduler = BackgroundScheduler(timezone="UTC")
 CATEGORY_ORDER = [
@@ -42,27 +46,23 @@ CATEGORY_ORDER = [
 ]
 
 
-def refresh_if_needed() -> None:
+def needs_refresh() -> bool:
     metadata = item_metadata()
     refreshed_at = metadata.get("refreshed_at")
     if not ITEMS_PATH.exists() or not refreshed_at or metadata.get("count", 0) == 0:
-        try:
-            refresh_item_data()
-        except Exception:
-            pass
-        return
+        return True
     then = datetime.fromisoformat(str(refreshed_at).replace("Z", "+00:00"))
     age = datetime.now(timezone.utc) - then
-    if age.total_seconds() >= 24 * 60 * 60:
-        try:
-            refresh_item_data()
-        except Exception:
-            pass
+    return age.total_seconds() >= 24 * 60 * 60
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    refresh_if_needed()
+    if needs_refresh():
+        try:
+            await refresh_item_data_async()
+        except Exception:
+            logger.exception("Initial wiki data refresh failed")
     scheduler.add_job(refresh_item_data, "interval", days=1, id="daily-wiki-refresh", replace_existing=True)
     scheduler.start()
     yield
@@ -73,7 +73,6 @@ app = FastAPI(title="ICARUS Resource Calculator", version="0.1.0", lifespan=life
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -85,6 +84,11 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(static_dir / "index.html")
+
+
+@app.get("/favicon.ico")
+def favicon() -> FileResponse:
+    return FileResponse(static_dir / "favicon.ico")
 
 
 @app.get("/api/meta")
@@ -132,9 +136,10 @@ def filter_items(
             or any(needle in buff.lower() for buff in item.buffs)
             or any(needle in bench.lower() for bench in item.benches)
             or (item.tier and needle in item.tier.lower())
-            or (
-                item.recipe
-                and any(needle in ingredient.name.lower() for ingredient in item.recipe.inputs)
+            or any(
+                needle in ingredient.name.lower()
+                for recipe in _item_recipes(item)
+                for ingredient in recipe.inputs
             )
             or any(needle in category.lower() for category in item.categories)
         ]
@@ -197,6 +202,12 @@ def subcategories(category: str | None = Query(default=None)) -> dict:
     }
 
 
+def _tier_sort_key(entry: tuple[str, int]) -> tuple[int, int | str]:
+    parts = entry[0].split()
+    last = parts[-1] if parts else entry[0]
+    return (0, int(last)) if last.isdigit() else (1, entry[0])
+
+
 @app.get("/api/tiers")
 def tiers() -> dict:
     counts: dict[str, int] = {}
@@ -206,10 +217,7 @@ def tiers() -> dict:
     return {
         "tiers": [
             {"name": name, "count": count}
-            for name, count in sorted(
-                counts.items(),
-                key=lambda entry: int(entry[0].split()[-1]) if entry[0].split()[-1].isdigit() else entry[0],
-            )
+            for name, count in sorted(counts.items(), key=_tier_sort_key)
         ]
     }
 
@@ -274,6 +282,14 @@ def put_collected_item(loadout_id: str, payload: CollectedItemInput) -> dict:
 def clear_collected(loadout_id: str) -> dict:
     try:
         return clear_collected_items(loadout_id).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.put("/api/loadouts/{loadout_id}/recipe-choice")
+def put_recipe_choice(loadout_id: str, payload: RecipeChoiceInput) -> dict:
+    try:
+        return set_recipe_choice(loadout_id, payload).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 

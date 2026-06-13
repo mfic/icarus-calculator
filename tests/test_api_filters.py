@@ -1,4 +1,4 @@
-from app.main import filter_items
+from app.main import _tier_sort_key, filter_items
 from app.services.wiki import classify_primary_category
 from app.models import Ingredient, Item, Recipe
 
@@ -62,3 +62,11 @@ def test_primary_and_subcategory_filters_apply_before_search():
 
 def test_name_fallback_classifies_uncategorized_projectiles():
     assert classify_primary_category(["Items"], "9mm Lithium Round") == "Projectiles"
+
+
+def test_tier_sort_key_handles_mixed_numeric_and_text_tiers():
+    entries = [("Tier 10", 1), ("Tier 2", 1), ("Bonus", 1), ("Tier 1", 1)]
+
+    result = sorted(entries, key=_tier_sort_key)
+
+    assert [name for name, _ in result] == ["Tier 1", "Tier 2", "Tier 10", "Bonus"]

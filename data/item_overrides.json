@@ -4,6 +4,32 @@
       "primary_category": "Deployables",
       "tier": "Tier 5",
       "categories": ["Deployables", "Benches", "Crafting Benches", "Tier 5"]
-    }
+    },
+    "Manufacturer": { "tier": "Tier 5" },
+    "Crude Oil Piping Tool": { "tier": "Tier 5" },
+    "Natural Oil Refiner": { "tier": "Tier 5" },
+    "Chainsaw": { "tier": "Tier 5" },
+    "Jackhammer": { "tier": "Tier 5" },
+    "Nailgun": { "tier": "Tier 5" },
+    "Lithium Axe": { "tier": "Tier 5" },
+    "Lithium Pickaxe": { "tier": "Tier 5" },
+    "Lithium Knife": { "tier": "Tier 5" },
+    "Lithium Sickle": { "tier": "Tier 5" },
+    "Lithium Sledgehammer": { "tier": "Tier 5" },
+    "Lithium Bow": { "tier": "Tier 5" },
+    "Lithium Crossbow": { "tier": "Tier 5" },
+    "Lithium Spear": { "tier": "Tier 5" },
+    "Lithium Shield": { "tier": "Tier 5" },
+    "Lithium Throwing Knife": { "tier": "Tier 5" },
+    "Aluminium Screw": { "tier": "Tier 5" },
+    "Powerbank": { "tier": "Tier 5" },
+    "Limestone": { "tier": "Tier 5" },
+    "Lithium Ore": { "tier": "Tier 5" },
+    "Cobalt Ore": { "tier": "Tier 5" },
+    "Uranium Rod": { "tier": "Tier 5" },
+    "Inert Uranium Ingot": { "tier": "Tier 5" },
+    "Radioactive Waste": { "tier": "Tier 5" },
+    "Ionic Dust": { "tier": "Tier 5" },
+    "Tainted Plant DNA": { "tier": "Tier 5" }
   }
 }

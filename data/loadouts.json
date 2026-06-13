@@ -3,14 +3,44 @@
     {
       "id": "3faa4957-54df-4555-a797-3edf212b3bd0",
       "name": "Team Loadout",
+      "items": [],
+      "collected": {},
+      "recipe_choices": {},
+      "created_at": "2026-06-12T22:14:54.138569+00:00",
+      "updated_at": "2026-06-13T00:39:38.346763+00:00"
+    },
+    {
+      "id": "e422d6b1-dcd3-49a5-8caa-3e7efd3bb767",
+      "name": "Test",
+      "items": [],
+      "collected": {},
+      "recipe_choices": {
+        "Epoxy": "sulfur+tree sap"
+      },
+      "created_at": "2026-06-13T00:56:38.196482+00:00",
+      "updated_at": "2026-06-13T14:17:56.106062+00:00"
+    },
+    {
+      "id": "bdcd086b-0a55-4948-b0a7-81173c540c69",
+      "name": "Food default",
       "items": [
         {
-          "item": "Dirt Ramp",
-          "quantity": 2
+          "item": "Vegetable Roll",
+          "quantity": 10
+        },
+        {
+          "item": "Savory Roll",
+          "quantity": 10
+        },
+        {
+          "item": "Bacon Butty",
+          "quantity": 10
         }
       ],
-      "created_at": "2026-06-12T22:14:54.138569+00:00",
-      "updated_at": "2026-06-13T00:07:20.993945+00:00"
+      "collected": {},
+      "recipe_choices": {},
+      "created_at": "2026-06-13T14:18:08.549131+00:00",
+      "updated_at": "2026-06-13T14:19:39.520888+00:00"
     }
   ]
 }

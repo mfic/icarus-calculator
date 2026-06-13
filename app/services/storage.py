@@ -1,4 +1,5 @@
 import json
+import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,6 +14,7 @@ from app.models import (
     LoadoutImport,
     LoadoutItem,
     LoadoutItemInput,
+    RecipeChoiceInput,
 )
 
 
@@ -40,12 +42,19 @@ def write_json(path: Path, data: Any) -> None:
     tmp_path.replace(path)
 
 
+_items_cache: list[Item] | None = None
+
+
 def load_items() -> list[Item]:
-    payload = read_json(ITEMS_PATH, {"items": []})
-    return [Item.model_validate(item) for item in payload.get("items", [])]
+    global _items_cache
+    if _items_cache is None:
+        payload = read_json(ITEMS_PATH, {"items": []})
+        _items_cache = [Item.model_validate(item) for item in payload.get("items", [])]
+    return _items_cache
 
 
 def save_items(items: list[Item], refreshed_at: str) -> None:
+    global _items_cache
     write_json(
         ITEMS_PATH,
         {
@@ -54,6 +63,7 @@ def save_items(items: list[Item], refreshed_at: str) -> None:
             "items": [item.model_dump() for item in items],
         },
     )
+    _items_cache = items
 
 
 def item_metadata() -> dict[str, Any]:
@@ -75,88 +85,114 @@ def save_loadouts(loadouts: list[Loadout]) -> None:
     write_json(LOADOUTS_PATH, {"loadouts": [loadout.model_dump() for loadout in loadouts]})
 
 
+_loadouts_lock = threading.Lock()
+
+
 def create_loadout(data: LoadoutCreate) -> Loadout:
-    loadouts = load_loadouts()
-    now = utc_now()
-    loadout = Loadout(id=str(uuid.uuid4()), name=data.name.strip(), created_at=now, updated_at=now)
-    loadouts.append(loadout)
-    save_loadouts(loadouts)
-    return loadout
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        now = utc_now()
+        loadout = Loadout(id=str(uuid.uuid4()), name=data.name.strip(), created_at=now, updated_at=now)
+        loadouts.append(loadout)
+        save_loadouts(loadouts)
+        return loadout
 
 
 def import_loadout(data: LoadoutImport) -> Loadout:
-    loadouts = load_loadouts()
-    now = utc_now()
-    loadout = Loadout(
-        id=str(uuid.uuid4()),
-        name=data.name.strip(),
-        items=data.items,
-        collected=data.collected,
-        created_at=now,
-        updated_at=now,
-    )
-    loadouts.append(loadout)
-    save_loadouts(loadouts)
-    return loadout
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        now = utc_now()
+        loadout = Loadout(
+            id=str(uuid.uuid4()),
+            name=data.name.strip(),
+            items=data.items,
+            collected=data.collected,
+            recipe_choices=data.recipe_choices,
+            created_at=now,
+            updated_at=now,
+        )
+        loadouts.append(loadout)
+        save_loadouts(loadouts)
+        return loadout
 
 
 def upsert_loadout_item(loadout_id: str, item: LoadoutItemInput) -> Loadout:
-    loadouts = load_loadouts()
-    for loadout in loadouts:
-        if loadout.id == loadout_id:
-            existing = next((entry for entry in loadout.items if entry.item == item.item), None)
-            if existing:
-                existing.quantity = item.quantity
-            else:
-                loadout.items.append(LoadoutItem(item=item.item, quantity=item.quantity))
-            loadout.updated_at = utc_now()
-            save_loadouts(loadouts)
-            return loadout
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id:
+                existing = next((entry for entry in loadout.items if entry.item == item.item), None)
+                if existing:
+                    existing.quantity = item.quantity
+                else:
+                    loadout.items.append(LoadoutItem(item=item.item, quantity=item.quantity))
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
     raise KeyError(loadout_id)
 
 
 def delete_loadout_item(loadout_id: str, item_name: str) -> Loadout:
-    loadouts = load_loadouts()
-    for loadout in loadouts:
-        if loadout.id == loadout_id:
-            loadout.items = [item for item in loadout.items if item.item != item_name]
-            loadout.updated_at = utc_now()
-            save_loadouts(loadouts)
-            return loadout
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id:
+                loadout.items = [item for item in loadout.items if item.item != item_name]
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
     raise KeyError(loadout_id)
 
 
 def set_collected_item(loadout_id: str, collected_item: CollectedItemInput) -> Loadout:
-    loadouts = load_loadouts()
-    for loadout in loadouts:
-        if loadout.id == loadout_id:
-            if collected_item.quantity > 0:
-                loadout.collected[collected_item.item] = collected_item.quantity
-            else:
-                loadout.collected.pop(collected_item.item, None)
-            loadout.updated_at = utc_now()
-            save_loadouts(loadouts)
-            return loadout
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id:
+                if collected_item.quantity > 0:
+                    loadout.collected[collected_item.item] = collected_item.quantity
+                else:
+                    loadout.collected.pop(collected_item.item, None)
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
+    raise KeyError(loadout_id)
+
+
+def set_recipe_choice(loadout_id: str, choice: RecipeChoiceInput) -> Loadout:
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id:
+                if choice.recipe_id:
+                    loadout.recipe_choices[choice.item] = choice.recipe_id
+                else:
+                    loadout.recipe_choices.pop(choice.item, None)
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
     raise KeyError(loadout_id)
 
 
 def clear_collected_items(loadout_id: str) -> Loadout:
-    loadouts = load_loadouts()
-    for loadout in loadouts:
-        if loadout.id == loadout_id:
-            loadout.collected = {}
-            loadout.updated_at = utc_now()
-            save_loadouts(loadouts)
-            return loadout
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id:
+                loadout.collected = {}
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
     raise KeyError(loadout_id)
 
 
 def delete_loadout(loadout_id: str) -> None:
-    loadouts = load_loadouts()
-    next_loadouts = [loadout for loadout in loadouts if loadout.id != loadout_id]
-    if len(next_loadouts) == len(loadouts):
-        raise KeyError(loadout_id)
-    save_loadouts(next_loadouts)
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        next_loadouts = [loadout for loadout in loadouts if loadout.id != loadout_id]
+        if len(next_loadouts) == len(loadouts):
+            raise KeyError(loadout_id)
+        save_loadouts(next_loadouts)
 
 
 load_foods = load_items
