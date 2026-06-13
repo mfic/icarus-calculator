@@ -144,6 +144,65 @@ def calculate_loadout(loadout: Loadout, items: list[Item]) -> dict[str, Any]:
     merged_steps = _merge_steps(steps)
     for step in merged_steps:
         step["sources"] = step_sources.get(step["item"], [])
+
+    crafted_totals = {step["item"]: step["quantity"] for step in merged_steps}
+    storage_items = [
+        {
+            "name": name,
+            "quantity": _round(total),
+            "have": _round(float(loadout.in_storage.get(name, 0))),
+            "remaining": _round(max(total - float(loadout.in_storage.get(name, 0)), 0)),
+        }
+        for name, total in sorted(crafted_totals.items(), key=lambda entry: entry[0].lower())
+    ]
+
+    reduced_materials: dict[str, float] = dict(materials)
+    reduced_steps = [
+        {**step, "inputs": [dict(ingredient) for ingredient in step["inputs"]]} for step in merged_steps
+    ]
+    for name, have in loadout.in_storage.items():
+        amount = min(float(have), crafted_totals.get(name, 0))
+        if amount <= 0:
+            continue
+        reduction_materials, reduction_steps = resolve_materials(
+            name, amount, items_by_name, loadout.recipe_choices, ignored=ignored
+        )
+        for material_name, material_amount in reduction_materials.items():
+            if material_name in reduced_materials:
+                reduced_materials[material_name] = max(reduced_materials[material_name] - material_amount, 0)
+
+        reduction_by_item: dict[str, dict[str, Any]] = {}
+        for reduction_step in reduction_steps:
+            entry = reduction_by_item.setdefault(
+                reduction_step["item"], {"quantity": 0.0, "batches": 0.0, "inputs": defaultdict(float)}
+            )
+            entry["quantity"] += reduction_step["quantity"]
+            entry["batches"] += reduction_step["batches"]
+            for ingredient in reduction_step["inputs"]:
+                entry["inputs"][ingredient["name"]] += ingredient["quantity"]
+
+        for step in reduced_steps:
+            reduction = reduction_by_item.get(step["item"])
+            if not reduction:
+                continue
+            step["quantity"] = max(step["quantity"] - reduction["quantity"], 0)
+            step["batches"] = max(step["batches"] - reduction["batches"], 0)
+            for ingredient in step["inputs"]:
+                ingredient["quantity"] = max(
+                    ingredient["quantity"] - reduction["inputs"].get(ingredient["name"], 0), 0
+                )
+
+    merged_steps = [step for step in reduced_steps if step["quantity"] > 0]
+    for step in merged_steps:
+        step["quantity"] = _round(step["quantity"])
+        step["batches"] = _round(step["batches"])
+        step["inputs"] = [
+            {"name": ingredient["name"], "quantity": _round(ingredient["quantity"])}
+            for ingredient in step["inputs"]
+            if ingredient["quantity"] > 0
+        ]
+    materials = reduced_materials
+
     recipe_options: list[dict[str, Any]] = []
     for step in merged_steps:
         item = items_by_name.get(step["item"].lower())
@@ -178,15 +237,17 @@ def calculate_loadout(loadout: Loadout, items: list[Item]) -> dict[str, Any]:
         "materials": [
             {
                 "name": name,
-                "quantity": _round(amount),
+                "quantity": quantity,
                 "collected": _round(float(loadout.collected.get(name, 0))),
                 "remaining": _round(max(amount - float(loadout.collected.get(name, 0)), 0)),
                 "sources": material_sources.get(name, []),
             }
             for name, amount in sorted(materials.items(), key=lambda entry: entry[0].lower())
+            if (quantity := _round(amount))
         ],
         "collected": loadout.collected,
         "steps": merged_steps,
+        "storage_items": storage_items,
         "recipe_options": recipe_options,
         "missing": missing,
     }

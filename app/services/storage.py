@@ -137,6 +137,7 @@ def import_loadout(data: LoadoutImport, owner_id: str) -> Loadout:
             name=data.name.strip(),
             items=data.items,
             collected=data.collected,
+            in_storage=data.in_storage,
             recipe_choices=data.recipe_choices,
             ignored_materials=data.ignored_materials,
             owner_id=owner_id,
@@ -185,6 +186,33 @@ def set_collected_item(loadout_id: str, account_id: str, collected_item: Collect
                     loadout.collected[collected_item.item] = collected_item.quantity
                 else:
                     loadout.collected.pop(collected_item.item, None)
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
+    raise KeyError(loadout_id)
+
+
+def set_storage_item(loadout_id: str, account_id: str, storage_item: CollectedItemInput) -> Loadout:
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
+                if storage_item.quantity > 0:
+                    loadout.in_storage[storage_item.item] = storage_item.quantity
+                else:
+                    loadout.in_storage.pop(storage_item.item, None)
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
+    raise KeyError(loadout_id)
+
+
+def clear_storage_items(loadout_id: str, account_id: str) -> Loadout:
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
+                loadout.in_storage = {}
                 loadout.updated_at = utc_now()
                 save_loadouts(loadouts)
                 return loadout

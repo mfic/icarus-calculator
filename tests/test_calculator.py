@@ -45,6 +45,102 @@ def test_calculate_loadout_expands_intermediate_recipes():
     assert all(step["sources"] == ["Pie"] for step in result["steps"])
 
 
+def _pie_items() -> list[Item]:
+    return [
+        Item(
+            name="Pie",
+            slug="Pie",
+            recipe=Recipe(
+                inputs=[Ingredient(name="Dough", quantity=2), Ingredient(name="Berry", quantity=4)],
+                outputs=[Ingredient(name="Pie", quantity=1)],
+                benches=["Stove"],
+            ),
+            benches=["Stove"],
+        ),
+        Item(
+            name="Dough",
+            slug="Dough",
+            recipe=Recipe(
+                inputs=[Ingredient(name="Flour", quantity=1), Ingredient(name="Water", quantity=1)],
+                outputs=[Ingredient(name="Dough", quantity=1)],
+                benches=["Cooking Station"],
+            ),
+            benches=["Cooking Station"],
+        ),
+    ]
+
+
+def test_calculate_loadout_storage_items_lists_craftable_totals():
+    loadout = Loadout(
+        id="loadout",
+        name="Loadout",
+        items=[LoadoutItem(item="Pie", quantity=3)],
+        created_at="2026-06-12T00:00:00+00:00",
+        updated_at="2026-06-12T00:00:00+00:00",
+    )
+
+    result = calculate_loadout(loadout, _pie_items())
+
+    assert result["storage_items"] == [
+        {"name": "Dough", "quantity": 6, "have": 0, "remaining": 6},
+        {"name": "Pie", "quantity": 3, "have": 0, "remaining": 3},
+    ]
+
+
+def test_calculate_loadout_in_storage_reduces_materials_and_steps():
+    loadout = Loadout(
+        id="loadout",
+        name="Loadout",
+        items=[LoadoutItem(item="Pie", quantity=3)],
+        in_storage={"Dough": 2},
+        created_at="2026-06-12T00:00:00+00:00",
+        updated_at="2026-06-12T00:00:00+00:00",
+    )
+
+    result = calculate_loadout(loadout, _pie_items())
+
+    assert result["materials"] == [
+        {"name": "Berry", "quantity": 12, "collected": 0, "remaining": 12, "sources": ["Pie"]},
+        {"name": "Flour", "quantity": 4, "collected": 0, "remaining": 4, "sources": ["Pie"]},
+        {"name": "Water", "quantity": 4, "collected": 0, "remaining": 4, "sources": ["Pie"]},
+    ]
+
+    pie_step = next(step for step in result["steps"] if step["item"] == "Pie")
+    assert pie_step["inputs"] == [{"name": "Dough", "quantity": 6}, {"name": "Berry", "quantity": 12}]
+
+    dough_step = next(step for step in result["steps"] if step["item"] == "Dough")
+    assert dough_step["quantity"] == 4
+    assert dough_step["batches"] == 4
+    assert dough_step["inputs"] == [{"name": "Flour", "quantity": 4}, {"name": "Water", "quantity": 4}]
+
+    assert result["storage_items"] == [
+        {"name": "Dough", "quantity": 6, "have": 2, "remaining": 4},
+        {"name": "Pie", "quantity": 3, "have": 0, "remaining": 3},
+    ]
+
+
+def test_calculate_loadout_in_storage_can_remove_step_entirely():
+    loadout = Loadout(
+        id="loadout",
+        name="Loadout",
+        items=[LoadoutItem(item="Pie", quantity=3)],
+        in_storage={"Dough": 10},
+        created_at="2026-06-12T00:00:00+00:00",
+        updated_at="2026-06-12T00:00:00+00:00",
+    )
+
+    result = calculate_loadout(loadout, _pie_items())
+
+    assert [step["item"] for step in result["steps"]] == ["Pie"]
+    assert result["materials"] == [
+        {"name": "Berry", "quantity": 12, "collected": 0, "remaining": 12, "sources": ["Pie"]},
+    ]
+    assert result["storage_items"] == [
+        {"name": "Dough", "quantity": 6, "have": 10, "remaining": 0},
+        {"name": "Pie", "quantity": 3, "have": 0, "remaining": 3},
+    ]
+
+
 def test_calculate_loadout_merges_steps_for_shared_subrecipes():
     items = [
         Item(

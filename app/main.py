@@ -20,6 +20,7 @@ from app.services.storage import (
     delete_loadout,
     delete_loadout_item,
     clear_collected_items,
+    clear_storage_items,
     get_authorized_loadout,
     import_loadout,
     item_metadata,
@@ -29,6 +30,7 @@ from app.services.storage import (
     set_ignored_material,
     set_loadout_share,
     set_recipe_choice,
+    set_storage_item,
     upsert_loadout_item,
 )
 
@@ -271,6 +273,22 @@ def put_collected_item(loadout_id: str, payload: CollectedItemInput, account_id:
 def clear_collected(loadout_id: str, account_id: str = Depends(get_account_id)) -> dict:
     try:
         return clear_collected_items(loadout_id, account_id).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.put("/api/loadouts/{loadout_id}/storage")
+def put_storage_item(loadout_id: str, payload: CollectedItemInput, account_id: str = Depends(get_account_id)) -> dict:
+    try:
+        return set_storage_item(loadout_id, account_id, payload).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.delete("/api/loadouts/{loadout_id}/storage")
+def clear_storage(loadout_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    try:
+        return clear_storage_items(loadout_id, account_id).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 

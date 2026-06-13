@@ -44,7 +44,9 @@ const els = {
   ignoredMaterials: document.querySelector("#ignoredMaterials"),
   materials: document.querySelector("#materials"),
   steps: document.querySelector("#steps"),
+  storageItems: document.querySelector("#storageItems"),
   clearCollectedBtn: document.querySelector("#clearCollectedBtn"),
+  clearStorageBtn: document.querySelector("#clearStorageBtn"),
   copyShareBtn: document.querySelector("#copyShareBtn"),
   exportLoadoutBtn: document.querySelector("#exportLoadoutBtn"),
   importLoadoutInput: document.querySelector("#importLoadoutInput"),
@@ -324,6 +326,7 @@ function renderLoadoutItems() {
 function renderResources() {
   els.materials.innerHTML = "";
   els.steps.innerHTML = "";
+  els.storageItems.innerHTML = "";
   const data = state.resources;
   if (!data || !activeLoadout()) {
     els.materials.innerHTML = '<p class="muted">Select a Loadout to calculate materials.</p>';
@@ -428,6 +431,36 @@ function renderResources() {
     node.appendChild(list);
 
     els.steps.appendChild(node);
+  }
+
+  if (!data.storage_items?.length) {
+    els.storageItems.innerHTML = '<p class="muted">No craftable items to track in storage.</p>';
+  }
+  for (const entry of data.storage_items || []) {
+    const row = document.createElement("div");
+    row.className = "material-row";
+    const main = document.createElement("div");
+    main.className = "material-main";
+    const name = document.createElement("strong");
+    name.textContent = entry.name;
+    const summary = document.createElement("span");
+    summary.className = "muted";
+    summary.textContent = `Need ${formatQuantity(entry.quantity)} · Remaining ${formatQuantity(entry.remaining)}`;
+    main.appendChild(name);
+    main.appendChild(summary);
+    row.appendChild(main);
+    const tracker = document.createElement("div");
+    tracker.className = "collected-control";
+    const stepper = createStepper({
+      value: formatQuantity(entry.have ?? 0),
+      min: 0,
+      step: 1,
+      ariaLabel: `In storage ${entry.name}`,
+      onChange: (value) => setStorageQuantity(entry.name, value),
+    });
+    tracker.appendChild(stepper);
+    row.appendChild(tracker);
+    els.storageItems.appendChild(row);
   }
 }
 
@@ -605,6 +638,27 @@ async function clearCollected() {
   await loadResources();
 }
 
+async function setStorageQuantity(itemName, quantity) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/storage`, {
+    method: "PUT",
+    body: JSON.stringify({ item: itemName, quantity: Math.max(0, quantity) }),
+  });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
+  await loadResources();
+}
+
+async function clearStorage() {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/storage`, { method: "DELETE" });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
+  await loadResources();
+}
+
 async function copyShareLink() {
   const loadout = activeLoadout();
   if (!loadout) return;
@@ -625,6 +679,7 @@ function exportLoadout() {
       name: loadout.name,
       items: loadout.items.map((entry) => ({ item: entry.item || entry.food, quantity: entry.quantity })),
       collected: loadout.collected || {},
+      in_storage: loadout.in_storage || {},
       recipe_choices: loadout.recipe_choices || {},
       ignored_materials: loadout.ignored_materials || [],
     },
@@ -674,6 +729,7 @@ async function importLoadout(file) {
       name: loadout.name || "Imported Loadout",
       items: loadout.items || [],
       collected: loadout.collected || loadout.farmed || {},
+      in_storage: loadout.in_storage || {},
       recipe_choices: loadout.recipe_choices || {},
       ignored_materials: loadout.ignored_materials || [],
     }),
@@ -733,6 +789,13 @@ els.loadoutForm.addEventListener("submit", async (event) => {
   await loadResources();
 });
 els.clearCollectedBtn.addEventListener("click", clearCollected);
+els.clearStorageBtn.addEventListener("click", async () => {
+  try {
+    await clearStorage();
+  } catch (error) {
+    alert(`Could not clear storage: ${error.message}`);
+  }
+});
 els.calculatorTab.addEventListener("click", () => switchView("calculator"));
 els.gatherTab.addEventListener("click", () => switchView("gather"));
 els.gatherLoadoutSelect.addEventListener("change", async () => {

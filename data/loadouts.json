@@ -7,6 +7,7 @@
       "collected": {
         "Wood": 5.0
       },
+      "in_storage": {},
       "recipe_choices": {},
       "ignored_materials": [],
       "owner_id": "a8349878-7a46-4647-900b-22fc4fce4774",
@@ -19,6 +20,7 @@
       "name": "Test",
       "items": [],
       "collected": {},
+      "in_storage": {},
       "recipe_choices": {
         "Epoxy": "sulfur+tree sap"
       },
@@ -43,13 +45,12 @@
         {
           "item": "Bacon Butty",
           "quantity": 10
-        },
-        {
-          "item": "Shepherd's Roll",
-          "quantity": 10
         }
       ],
       "collected": {},
+      "in_storage": {
+        "Glass Milk Bottle": 7.0
+      },
       "recipe_choices": {
         "Milk": "glass milk bottle+soy bean"
       },
@@ -60,13 +61,14 @@
       "owner_id": "a8349878-7a46-4647-900b-22fc4fce4774",
       "shared_with": [],
       "created_at": "2026-06-13T14:18:08.549131+00:00",
-      "updated_at": "2026-06-13T15:37:24.415543+00:00"
+      "updated_at": "2026-06-13T20:44:09.618161+00:00"
     },
     {
       "id": "d7aba3f7-c936-402c-af85-fe9243d05938",
       "name": "Loadout",
       "items": [],
       "collected": {},
+      "in_storage": {},
       "recipe_choices": {},
       "ignored_materials": [],
       "owner_id": "4429e06a-4b2d-47c7-b73f-2862a7fce77b",
@@ -96,6 +98,7 @@
         }
       ],
       "collected": {},
+      "in_storage": {},
       "recipe_choices": {
         "Milk": "glass milk bottle+soy bean"
       },

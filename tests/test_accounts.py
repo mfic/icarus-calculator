@@ -8,6 +8,7 @@ from app.services.storage import (
     loadouts_for_account,
     set_collected_item,
     set_loadout_share,
+    set_storage_item,
 )
 
 
@@ -48,6 +49,31 @@ def test_mutation_raises_keyerror_for_unauthorized_account(monkeypatch, tmp_path
 
     with pytest.raises(KeyError):
         set_collected_item(loadout.id, "acct-2", CollectedItemInput(item="Stick", quantity=1))
+
+
+def test_set_storage_item_sets_and_clears(monkeypatch, tmp_path):
+    import app.services.storage as storage
+
+    monkeypatch.setattr(storage, "LOADOUTS_PATH", tmp_path / "loadouts.json")
+
+    loadout = create_loadout(LoadoutCreate(name="Owned"), owner_id="acct-1")
+
+    updated = set_storage_item(loadout.id, "acct-1", CollectedItemInput(item="Dough", quantity=2))
+    assert updated.in_storage == {"Dough": 2}
+
+    cleared = set_storage_item(loadout.id, "acct-1", CollectedItemInput(item="Dough", quantity=0))
+    assert cleared.in_storage == {}
+
+
+def test_set_storage_item_raises_keyerror_for_unauthorized_account(monkeypatch, tmp_path):
+    import app.services.storage as storage
+
+    monkeypatch.setattr(storage, "LOADOUTS_PATH", tmp_path / "loadouts.json")
+
+    loadout = create_loadout(LoadoutCreate(name="Owned"), owner_id="acct-1")
+
+    with pytest.raises(KeyError):
+        set_storage_item(loadout.id, "acct-2", CollectedItemInput(item="Dough", quantity=2))
 
 
 def test_get_authorized_loadout_returns_none_without_access(monkeypatch, tmp_path):

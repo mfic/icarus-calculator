@@ -52,6 +52,7 @@ class Loadout(BaseModel):
         default_factory=dict,
         validation_alias=AliasChoices("collected", "farmed"),
     )
+    in_storage: dict[str, float] = Field(default_factory=dict)
     recipe_choices: dict[str, str] = Field(default_factory=dict)
     ignored_materials: list[str] = Field(default_factory=list)
     owner_id: str = ""
@@ -68,6 +69,7 @@ class LoadoutImport(BaseModel):
     name: str = Field(min_length=1, max_length=80)
     items: list[LoadoutItem] = Field(default_factory=list, max_length=500)
     collected: dict[str, float] = Field(default_factory=dict)
+    in_storage: dict[str, float] = Field(default_factory=dict, max_length=500)
     recipe_choices: dict[str, str] = Field(default_factory=dict)
     ignored_materials: list[str] = Field(default_factory=list, max_length=500)
 
@@ -79,6 +81,16 @@ class LoadoutImport(BaseModel):
         for key in value:
             if not (1 <= len(key) <= 120):
                 raise ValueError("collected keys must be between 1 and 120 characters")
+        return value
+
+    @field_validator("in_storage")
+    @classmethod
+    def _validate_in_storage(cls, value: dict[str, float]) -> dict[str, float]:
+        if len(value) > 500:
+            raise ValueError("in_storage may not contain more than 500 entries")
+        for key in value:
+            if not (1 <= len(key) <= 120):
+                raise ValueError("in_storage keys must be between 1 and 120 characters")
         return value
 
     @field_validator("recipe_choices")
