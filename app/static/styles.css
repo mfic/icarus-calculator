@@ -125,19 +125,21 @@ h3 {
 }
 
 .filters {
-  display: flex;
+  display: grid;
   gap: 8px;
-  max-width: 620px;
-  width: 65%;
+  grid-template-columns: repeat(3, minmax(130px, 170px)) minmax(220px, 1fr);
+  min-width: 0;
+  width: min(100%, 860px);
 }
 
 .filters input {
-  min-width: 220px;
+  min-width: 0;
   width: 100%;
 }
 
 .filters select {
-  min-width: 180px;
+  min-width: 0;
+  width: 100%;
 }
 
 .inline-form {
@@ -348,6 +350,22 @@ ul {
   }
 }
 
+@media (max-width: 1320px) {
+  .panel-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .filters input {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 640px) {
   .topbar,
   .panel-heading {
@@ -356,12 +374,7 @@ ul {
   }
 
   .filters {
-    max-width: none;
-    width: 100%;
-  }
-
-  .filters {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .item-list {
