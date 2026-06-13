@@ -350,10 +350,20 @@ ul {
   justify-content: center;
 }
 
+.loadout-action-row {
+  grid-column: 1 / -1;
+}
+
 .account-action-row button,
 .loadout-action-row button,
 .loadout-action-row .file-button {
   min-width: 0;
+}
+
+.loadout-action-row button,
+.loadout-action-row .file-button {
+  flex: 1;
+  justify-content: center;
 }
 
 .share-row {

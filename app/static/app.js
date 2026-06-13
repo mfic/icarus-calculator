@@ -48,6 +48,7 @@ const els = {
   copyShareBtn: document.querySelector("#copyShareBtn"),
   exportLoadoutBtn: document.querySelector("#exportLoadoutBtn"),
   importLoadoutInput: document.querySelector("#importLoadoutInput"),
+  deleteLoadoutBtn: document.querySelector("#deleteLoadoutBtn"),
   gatherLink: document.querySelector("#gatherLink"),
   itemTemplate: document.querySelector("#itemTemplate"),
 };
@@ -257,6 +258,7 @@ function renderShare() {
   const isOwner = loadout && loadout.owner_id === getAccountId();
   els.shareSection.hidden = !isOwner;
   els.sharedBadge.hidden = !loadout || isOwner;
+  els.deleteLoadoutBtn.hidden = !isOwner;
   if (isOwner) {
     renderShareChips(els.sharedWithChips, loadout.shared_with, (accountId) => setShared(accountId, false));
   }
@@ -311,7 +313,8 @@ function renderLoadoutItems() {
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "danger";
-    remove.textContent = "Remove";
+    remove.textContent = "X";
+    remove.setAttribute("aria-label", `Remove ${itemName}`);
     remove.addEventListener("click", () => removeItem(itemName));
     row.appendChild(remove);
     els.loadoutItems.appendChild(row);
@@ -598,7 +601,7 @@ async function copyShareLink() {
   await navigator.clipboard.writeText(loadoutShareUrl(loadout));
   els.copyShareBtn.textContent = "Copied";
   setTimeout(() => {
-    els.copyShareBtn.textContent = "Copy Link";
+    els.copyShareBtn.textContent = "Link";
   }, 1200);
 }
 
@@ -625,6 +628,24 @@ function exportLoadout() {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+}
+
+async function deleteLoadout() {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  if (!confirm(`Delete loadout "${loadout.name}"? This cannot be undone.`)) return;
+  await api(`/api/loadouts/${loadout.id}`, { method: "DELETE" });
+  state.loadouts = state.loadouts.filter((entry) => entry.id !== loadout.id);
+  if (!state.loadouts.length) {
+    const created = await api("/api/loadouts", {
+      method: "POST",
+      body: JSON.stringify({ name: "Loadout" }),
+    });
+    state.loadouts = [created];
+  }
+  state.activeLoadoutId = state.loadouts[0].id;
+  renderLoadouts();
+  await loadResources();
 }
 
 async function importLoadout(file) {
@@ -738,6 +759,13 @@ els.addShareBtn.addEventListener("click", async () => {
   await setShared(trimmed, true);
 });
 els.exportLoadoutBtn.addEventListener("click", exportLoadout);
+els.deleteLoadoutBtn.addEventListener("click", async () => {
+  try {
+    await deleteLoadout();
+  } catch (error) {
+    alert(`Could not delete loadout: ${error.message}`);
+  }
+});
 els.importLoadoutInput.addEventListener("change", async () => {
   try {
     await importLoadout(els.importLoadoutInput.files[0]);

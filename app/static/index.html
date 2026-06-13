@@ -70,16 +70,15 @@
         <div class="share-tools">
           <div class="code-tools-row">
             <span class="muted">Loadout code:</span>
-            <div class="code-tools-stack">
-              <span id="loadoutId" class="code-pill">No loadout selected</span>
-              <div class="loadout-action-row">
-                <button id="copyShareBtn" class="secondary" type="button">Copy Link</button>
-                <button id="exportLoadoutBtn" class="secondary" type="button">Export</button>
-                <label class="file-button">
-                  Import
-                  <input id="importLoadoutInput" type="file" accept="application/json,.json" />
-                </label>
-              </div>
+            <span id="loadoutId" class="code-pill">No loadout selected</span>
+            <div class="loadout-action-row">
+              <button id="copyShareBtn" class="secondary" type="button">Link</button>
+              <button id="exportLoadoutBtn" class="secondary" type="button">Export</button>
+              <label class="file-button">
+                Import
+                <input id="importLoadoutInput" type="file" accept="application/json,.json" />
+              </label>
+              <button id="deleteLoadoutBtn" class="danger" type="button">Delete</button>
             </div>
           </div>
         </div>
