@@ -39,9 +39,11 @@ just logs          # follow Docker compose logs
 just logs-traefik  # follow logs with Traefik override
 just dev-traefik   # run dev compose with Traefik override
 just test          # run tests
-just update        # refresh wiki data cache (local Python env)
+just update        # refresh wiki data cache (Docker one-shot)
+just local-update  # refresh wiki data cache (local Python env)
 just refresh       # refresh wiki data cache (running Docker container)
-just status        # print cached item metadata (local Python env)
+just status        # print cached item metadata (running Docker container)
+just local-status  # print cached item metadata (local Python env)
 just api           # call /api/meta on the local dev server
 just reset-loadouts # reset data/loadouts.json to an empty list
 just docker-build  # build the icarus-calculator image directly
@@ -90,9 +92,10 @@ The wiki data cache is refreshed:
 
 - automatically by the `icarus-refresh` compose service (once on startup, then every
   24 hours)
-- manually via `just refresh` (running Docker container) or `just update` (local
-  Python env). There is no internet-facing refresh endpoint or button, so the
-  re-scrape can only be triggered by the operator.
+- manually via `just update` (Docker one-shot), `just refresh` (running Docker
+  container), or `just local-update` (local Python env). There is no
+  internet-facing refresh endpoint or button, so the re-scrape can only be
+  triggered by the operator.
 
 ## Gather View
 

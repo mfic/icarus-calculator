@@ -45,6 +45,13 @@ just update
 
 Manual corrections belong in `data/item_overrides.json`.
 
+`just update` runs the refresh inside Docker. If you are working in a local
+Python environment instead, use:
+
+```bash
+just local-update
+```
+
 ## Conduct
 
 Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
