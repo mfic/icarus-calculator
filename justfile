@@ -1,4 +1,5 @@
-set shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+set shell := ["sh", "-cu"]
+set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
 
 default:
     just --list
@@ -16,13 +17,15 @@ start:
     docker compose up -d --build
 
 start-traefik:
-    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d --build
+    python -c "from pathlib import Path; raise SystemExit(0 if Path('docker-compose.traefik.yml').exists() else 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.')"
+    docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d --build
 
 stop:
     docker compose down
 
 stop-traefik:
-    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.traefik.yml down
+    python -c "from pathlib import Path; raise SystemExit(0 if Path('docker-compose.traefik.yml').exists() else 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.')"
+    docker compose -f docker-compose.yml -f docker-compose.traefik.yml down
 
 restart: stop start
 
@@ -32,10 +35,12 @@ logs:
     docker compose logs -f
 
 logs-traefik:
-    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.traefik.yml logs -f
+    python -c "from pathlib import Path; raise SystemExit(0 if Path('docker-compose.traefik.yml').exists() else 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.')"
+    docker compose -f docker-compose.yml -f docker-compose.traefik.yml logs -f
 
 dev-traefik:
-    if (!(Test-Path docker-compose.traefik.yml)) { throw 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.' }; docker compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.traefik.yml up --build
+    python -c "from pathlib import Path; raise SystemExit(0 if Path('docker-compose.traefik.yml').exists() else 'Missing docker-compose.traefik.yml. Copy docker-compose.traefik.example.yml and edit it first.')"
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml -f docker-compose.traefik.yml up --build
 
 test:
     python -m pytest
@@ -50,18 +55,13 @@ status:
     python -c "from app.services.storage import item_metadata; print(item_metadata())"
 
 api:
-    Invoke-RestMethod -Uri 'http://127.0.0.1:8000/api/meta' | ConvertTo-Json
+    python -c "import json, urllib.request; print(json.dumps(json.load(urllib.request.urlopen('http://127.0.0.1:8000/api/meta')), indent=2))"
 
 clean:
-    $root = (Resolve-Path '.').Path; \
-    $targets = @('.pytest_cache') + (Get-ChildItem -Path . -Recurse -Directory -Filter '__pycache__' | ForEach-Object { $_.FullName }); \
-    foreach ($target in $targets) { \
-      $resolved = Resolve-Path -LiteralPath $target -ErrorAction SilentlyContinue; \
-      if ($resolved -and $resolved.Path.StartsWith($root)) { Remove-Item -LiteralPath $resolved.Path -Recurse -Force } \
-    }
+    python -c "from pathlib import Path; import shutil; [shutil.rmtree(p, ignore_errors=True) for p in [Path('.pytest_cache'), *Path('.').rglob('__pycache__')]]"
 
 reset-loadouts:
-    Set-Content -Path data/loadouts.json -Value '{ "loadouts": [] }'
+    python -c "from pathlib import Path; import json; Path('data/loadouts.json').write_text(json.dumps({'loadouts': []}, indent=2) + '\n', encoding='utf-8')"
 
 reset-buckets:
     just reset-loadouts
