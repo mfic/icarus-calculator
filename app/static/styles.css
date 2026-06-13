@@ -315,8 +315,17 @@ ul {
   gap: 8px;
 }
 
+.account-code-row {
+  justify-self: center;
+  max-width: 100%;
+  width: max-content;
+}
+
 .account-action-row {
+  justify-self: center;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  max-width: 100%;
+  width: max-content;
 }
 
 .loadout-action-row {
