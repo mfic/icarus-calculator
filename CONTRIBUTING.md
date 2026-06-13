@@ -21,7 +21,9 @@ just dev
 For a Traefik-backed local or hosted setup:
 
 ```bash
-Copy-Item docker-compose.traefik.example.yml docker-compose.traefik.yml
+cp docker-compose.traefik.example.yml docker-compose.traefik.yml
+# Windows PowerShell:
+# Copy-Item docker-compose.traefik.example.yml docker-compose.traefik.yml
 just dev-traefik
 ```
 

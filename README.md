@@ -69,8 +69,10 @@ automatically (no restart needed).
 Traefik labels are optional and live in a local override file that is ignored by
 git:
 
-```powershell
-Copy-Item docker-compose.traefik.example.yml docker-compose.traefik.yml
+```bash
+cp docker-compose.traefik.example.yml docker-compose.traefik.yml
+# Windows PowerShell:
+# Copy-Item docker-compose.traefik.example.yml docker-compose.traefik.yml
 ```
 
 Edit `docker-compose.traefik.yml` for your hostname, certificate resolver, and
