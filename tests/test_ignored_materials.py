@@ -9,15 +9,15 @@ def test_set_ignored_material_adds_and_removes(monkeypatch, tmp_path):
 
     monkeypatch.setattr(storage, "LOADOUTS_PATH", tmp_path / "loadouts.json")
 
-    loadout = create_loadout(LoadoutCreate(name="Test"))
+    loadout = create_loadout(LoadoutCreate(name="Test"), owner_id="acct-1")
 
-    updated = set_ignored_material(loadout.id, IgnoredMaterialInput(item="Milk Bottle", ignored=True))
+    updated = set_ignored_material(loadout.id, "acct-1", IgnoredMaterialInput(item="Milk Bottle", ignored=True))
     assert updated.ignored_materials == ["Milk Bottle"]
 
-    again = set_ignored_material(loadout.id, IgnoredMaterialInput(item="Milk Bottle", ignored=True))
+    again = set_ignored_material(loadout.id, "acct-1", IgnoredMaterialInput(item="Milk Bottle", ignored=True))
     assert again.ignored_materials == ["Milk Bottle"]
 
-    restored = set_ignored_material(loadout.id, IgnoredMaterialInput(item="milk bottle", ignored=False))
+    restored = set_ignored_material(loadout.id, "acct-1", IgnoredMaterialInput(item="milk bottle", ignored=False))
     assert restored.ignored_materials == []
 
 
@@ -27,4 +27,4 @@ def test_set_ignored_material_raises_for_missing_loadout(monkeypatch, tmp_path):
     monkeypatch.setattr(storage, "LOADOUTS_PATH", tmp_path / "loadouts.json")
 
     with pytest.raises(KeyError):
-        set_ignored_material("missing", IgnoredMaterialInput(item="Milk Bottle", ignored=True))
+        set_ignored_material("missing", "acct-1", IgnoredMaterialInput(item="Milk Bottle", ignored=True))

@@ -47,6 +47,12 @@
             <button type="submit">Create</button>
           </form>
         </div>
+        <div class="account-tools">
+          <span class="muted">Account code:</span>
+          <span id="accountId" class="code-pill"></span>
+          <button id="copyAccountBtn" class="secondary" type="button">Copy</button>
+          <button id="switchAccountBtn" class="secondary" type="button">Use different code</button>
+        </div>
         <select id="loadoutSelect"></select>
         <div class="share-tools">
           <span id="loadoutId" class="code-pill">No loadout selected</span>
@@ -57,6 +63,12 @@
             <input id="importLoadoutInput" type="file" accept="application/json,.json" />
           </label>
         </div>
+        <div id="shareSection" class="share-row" hidden>
+          <span class="muted">Shared with:</span>
+          <div id="sharedWithChips" class="ignored-chips"></div>
+          <button id="addShareBtn" class="secondary" type="button">Share</button>
+        </div>
+        <span id="sharedBadge" class="muted" hidden>Shared with you</span>
         <div id="loadoutItems" class="loadout-items"></div>
 
         <div class="section-heading">

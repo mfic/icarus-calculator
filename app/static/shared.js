@@ -1,6 +1,15 @@
+function getAccountId() {
+  let id = localStorage.getItem("icarus.accountId");
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem("icarus.accountId", id);
+  }
+  return id;
+}
+
 async function api(path, options = {}) {
   const response = await fetch(path, {
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "X-Account-Id": getAccountId() },
     ...options,
   });
   if (!response.ok) {
@@ -127,6 +136,20 @@ function renderIgnoredChips(container, names, onRestore) {
     chip.title = `Restore ${name}`;
     chip.setAttribute("aria-label", `Restore ${name}`);
     chip.addEventListener("click", () => onRestore(name));
+    container.appendChild(chip);
+  }
+}
+
+function renderShareChips(container, accountIds, onRemove) {
+  container.innerHTML = "";
+  for (const accountId of accountIds || []) {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "ignored-chip";
+    chip.textContent = accountId;
+    chip.title = `Remove ${accountId}`;
+    chip.setAttribute("aria-label", `Remove ${accountId}`);
+    chip.addEventListener("click", () => onRemove(accountId));
     container.appendChild(chip);
   }
 }

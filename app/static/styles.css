@@ -292,6 +292,20 @@ ul {
   margin-top: 10px;
 }
 
+.account-tools,
+.share-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.account-tools .code-pill {
+  flex: 1;
+  min-width: 0;
+}
+
 .code-pill {
   background: #101410;
   border: 1px solid var(--line);

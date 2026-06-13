@@ -23,6 +23,13 @@ const els = {
   loadoutName: document.querySelector("#loadoutName"),
   loadoutSelect: document.querySelector("#loadoutSelect"),
   loadoutId: document.querySelector("#loadoutId"),
+  accountId: document.querySelector("#accountId"),
+  copyAccountBtn: document.querySelector("#copyAccountBtn"),
+  switchAccountBtn: document.querySelector("#switchAccountBtn"),
+  shareSection: document.querySelector("#shareSection"),
+  sharedWithChips: document.querySelector("#sharedWithChips"),
+  addShareBtn: document.querySelector("#addShareBtn"),
+  sharedBadge: document.querySelector("#sharedBadge"),
   loadoutItems: document.querySelector("#loadoutItems"),
   ignoredMaterials: document.querySelector("#ignoredMaterials"),
   materials: document.querySelector("#materials"),
@@ -232,6 +239,28 @@ function renderLoadouts() {
   }
   saveLocalLoadouts();
   renderLoadoutItems();
+  renderShare();
+}
+
+function renderShare() {
+  const loadout = activeLoadout();
+  const isOwner = loadout && loadout.owner_id === getAccountId();
+  els.shareSection.hidden = !isOwner;
+  els.sharedBadge.hidden = !loadout || isOwner;
+  if (isOwner) {
+    renderShareChips(els.sharedWithChips, loadout.shared_with, (accountId) => setShared(accountId, false));
+  }
+}
+
+async function setShared(accountId, shared) {
+  const loadout = activeLoadout();
+  if (!loadout) return;
+  const updated = await api(`/api/loadouts/${loadout.id}/share`, {
+    method: "PUT",
+    body: JSON.stringify({ account_id: accountId, shared }),
+  });
+  state.loadouts = state.loadouts.map((entry) => (entry.id === updated.id ? updated : entry));
+  renderLoadouts();
 }
 
 function loadoutShareUrl(loadout) {
@@ -401,6 +430,7 @@ async function loadResources() {
 }
 
 async function loadAll() {
+  els.accountId.textContent = getAccountId();
   const [meta, items, categories, tiers, loadouts] = await Promise.all([
     api("/api/meta"),
     api("/api/items"),
@@ -420,7 +450,7 @@ async function loadAll() {
   if (!state.loadouts.length) {
     const created = await api("/api/loadouts", {
       method: "POST",
-      body: JSON.stringify({ name: "Team Loadout" }),
+      body: JSON.stringify({ name: "Loadout" }),
     });
     state.loadouts = [created];
   }
@@ -623,6 +653,26 @@ els.loadoutForm.addEventListener("submit", async (event) => {
 });
 els.clearCollectedBtn.addEventListener("click", clearCollected);
 els.copyShareBtn.addEventListener("click", copyShareLink);
+els.copyAccountBtn.addEventListener("click", async () => {
+  await navigator.clipboard.writeText(getAccountId());
+  els.copyAccountBtn.textContent = "Copied";
+  setTimeout(() => {
+    els.copyAccountBtn.textContent = "Copy";
+  }, 1200);
+});
+els.switchAccountBtn.addEventListener("click", () => {
+  const code = window.prompt("Enter account code:", getAccountId());
+  const trimmed = code?.trim();
+  if (!trimmed || trimmed === getAccountId()) return;
+  localStorage.setItem("icarus.accountId", trimmed);
+  location.reload();
+});
+els.addShareBtn.addEventListener("click", async () => {
+  const code = window.prompt("Enter the account code to share this loadout with:");
+  const trimmed = code?.trim();
+  if (!trimmed) return;
+  await setShared(trimmed, true);
+});
 els.exportLoadoutBtn.addEventListener("click", exportLoadout);
 els.importLoadoutInput.addEventListener("change", async () => {
   try {

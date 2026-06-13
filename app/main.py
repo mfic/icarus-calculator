@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +12,7 @@ from app.models import (
     LoadoutImport,
     LoadoutItemInput,
     RecipeChoiceInput,
+    ShareInput,
 )
 from app.services.calculator import _item_recipes, calculate_loadout
 from app.services.storage import (
@@ -19,12 +20,14 @@ from app.services.storage import (
     delete_loadout,
     delete_loadout_item,
     clear_collected_items,
+    get_authorized_loadout,
     import_loadout,
     item_metadata,
     load_items,
-    load_loadouts,
+    loadouts_for_account,
     set_collected_item,
     set_ignored_material,
+    set_loadout_share,
     set_recipe_choice,
     upsert_loadout_item,
 )
@@ -56,6 +59,13 @@ app.add_middleware(
 
 static_dir = BASE_DIR / "app" / "static"
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+
+def get_account_id(x_account_id: str = Header(alias="X-Account-Id")) -> str:
+    account_id = x_account_id.strip()
+    if not (1 <= len(account_id) <= 64):
+        raise HTTPException(status_code=400, detail="Invalid X-Account-Id header")
+    return account_id
 
 
 @app.get("/")
@@ -200,153 +210,165 @@ def tiers() -> dict:
 
 
 @app.get("/api/loadouts")
-def loadouts() -> dict:
-    return {"loadouts": [loadout.model_dump() for loadout in load_loadouts()]}
+def loadouts(account_id: str = Depends(get_account_id)) -> dict:
+    return {"loadouts": [loadout.model_dump() for loadout in loadouts_for_account(account_id)]}
 
 
 @app.get("/api/loadouts/{loadout_id}")
-def get_loadout(loadout_id: str) -> dict:
-    loadout = next((entry for entry in load_loadouts() if entry.id == loadout_id), None)
+def get_loadout(loadout_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    loadout = get_authorized_loadout(loadout_id, account_id)
     if not loadout:
         raise HTTPException(status_code=404, detail="Loadout not found")
     return loadout.model_dump()
 
 
 @app.post("/api/loadouts")
-def add_loadout(payload: LoadoutCreate) -> dict:
-    return create_loadout(payload).model_dump()
+def add_loadout(payload: LoadoutCreate, account_id: str = Depends(get_account_id)) -> dict:
+    return create_loadout(payload, account_id).model_dump()
 
 
 @app.post("/api/loadouts/import")
-def import_loadout_file(payload: LoadoutImport) -> dict:
-    return import_loadout(payload).model_dump()
+def import_loadout_file(payload: LoadoutImport, account_id: str = Depends(get_account_id)) -> dict:
+    return import_loadout(payload, account_id).model_dump()
 
 
 @app.delete("/api/loadouts/{loadout_id}")
-def remove_loadout(loadout_id: str) -> dict:
+def remove_loadout(loadout_id: str, account_id: str = Depends(get_account_id)) -> dict:
     try:
-        delete_loadout(loadout_id)
+        delete_loadout(loadout_id, account_id)
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail="Only the owner can delete this loadout") from exc
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
     return {"ok": True}
 
 
 @app.put("/api/loadouts/{loadout_id}/items")
-def put_loadout_item(loadout_id: str, payload: LoadoutItemInput) -> dict:
+def put_loadout_item(loadout_id: str, payload: LoadoutItemInput, account_id: str = Depends(get_account_id)) -> dict:
     try:
-        return upsert_loadout_item(loadout_id, payload).model_dump()
+        return upsert_loadout_item(loadout_id, account_id, payload).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 
 
 @app.delete("/api/loadouts/{loadout_id}/items/{item_name}")
-def remove_loadout_item(loadout_id: str, item_name: str) -> dict:
+def remove_loadout_item(loadout_id: str, item_name: str, account_id: str = Depends(get_account_id)) -> dict:
     try:
-        return delete_loadout_item(loadout_id, item_name).model_dump()
+        return delete_loadout_item(loadout_id, account_id, item_name).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 
 
 @app.put("/api/loadouts/{loadout_id}/collected")
-def put_collected_item(loadout_id: str, payload: CollectedItemInput) -> dict:
+def put_collected_item(loadout_id: str, payload: CollectedItemInput, account_id: str = Depends(get_account_id)) -> dict:
     try:
-        return set_collected_item(loadout_id, payload).model_dump()
+        return set_collected_item(loadout_id, account_id, payload).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 
 
 @app.delete("/api/loadouts/{loadout_id}/collected")
-def clear_collected(loadout_id: str) -> dict:
+def clear_collected(loadout_id: str, account_id: str = Depends(get_account_id)) -> dict:
     try:
-        return clear_collected_items(loadout_id).model_dump()
+        return clear_collected_items(loadout_id, account_id).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 
 
 @app.put("/api/loadouts/{loadout_id}/recipe-choice")
-def put_recipe_choice(loadout_id: str, payload: RecipeChoiceInput) -> dict:
+def put_recipe_choice(loadout_id: str, payload: RecipeChoiceInput, account_id: str = Depends(get_account_id)) -> dict:
     try:
-        return set_recipe_choice(loadout_id, payload).model_dump()
+        return set_recipe_choice(loadout_id, account_id, payload).model_dump()
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 
 
 @app.put("/api/loadouts/{loadout_id}/ignored-materials")
-def put_ignored_material(loadout_id: str, payload: IgnoredMaterialInput) -> dict:
+def put_ignored_material(loadout_id: str, payload: IgnoredMaterialInput, account_id: str = Depends(get_account_id)) -> dict:
     try:
-        return set_ignored_material(loadout_id, payload).model_dump()
+        return set_ignored_material(loadout_id, account_id, payload).model_dump()
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Loadout not found") from exc
+
+
+@app.put("/api/loadouts/{loadout_id}/share")
+def put_loadout_share(loadout_id: str, payload: ShareInput, account_id: str = Depends(get_account_id)) -> dict:
+    try:
+        return set_loadout_share(loadout_id, account_id, payload).model_dump()
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail="Only the owner can manage sharing") from exc
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Loadout not found") from exc
 
 
 @app.put("/api/loadouts/{loadout_id}/farmed")
-def put_farmed_item(loadout_id: str, payload: CollectedItemInput) -> dict:
-    return put_collected_item(loadout_id, payload)
+def put_farmed_item(loadout_id: str, payload: CollectedItemInput, account_id: str = Depends(get_account_id)) -> dict:
+    return put_collected_item(loadout_id, payload, account_id)
 
 
 @app.delete("/api/loadouts/{loadout_id}/farmed")
-def clear_farmed(loadout_id: str) -> dict:
-    return clear_collected(loadout_id)
+def clear_farmed(loadout_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    return clear_collected(loadout_id, account_id)
 
 
 @app.get("/api/loadouts/{loadout_id}/resources")
-def loadout_resources(loadout_id: str) -> dict:
-    loadout = next((entry for entry in load_loadouts() if entry.id == loadout_id), None)
+def loadout_resources(loadout_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    loadout = get_authorized_loadout(loadout_id, account_id)
     if not loadout:
         raise HTTPException(status_code=404, detail="Loadout not found")
     return calculate_loadout(loadout, load_items())
 
 
 @app.get("/api/buckets")
-def buckets() -> dict:
-    return {"buckets": loadouts()["loadouts"]}
+def buckets(account_id: str = Depends(get_account_id)) -> dict:
+    return {"buckets": loadouts(account_id)["loadouts"]}
 
 
 @app.get("/api/buckets/{bucket_id}")
-def get_bucket(bucket_id: str) -> dict:
-    return get_loadout(bucket_id)
+def get_bucket(bucket_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    return get_loadout(bucket_id, account_id)
 
 
 @app.post("/api/buckets")
-def add_bucket(payload: LoadoutCreate) -> dict:
-    return add_loadout(payload)
+def add_bucket(payload: LoadoutCreate, account_id: str = Depends(get_account_id)) -> dict:
+    return add_loadout(payload, account_id)
 
 
 @app.delete("/api/buckets/{bucket_id}")
-def remove_bucket(bucket_id: str) -> dict:
-    return remove_loadout(bucket_id)
+def remove_bucket(bucket_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    return remove_loadout(bucket_id, account_id)
 
 
 @app.put("/api/buckets/{bucket_id}/items")
-def put_bucket_item(bucket_id: str, payload: LoadoutItemInput) -> dict:
-    return put_loadout_item(bucket_id, payload)
+def put_bucket_item(bucket_id: str, payload: LoadoutItemInput, account_id: str = Depends(get_account_id)) -> dict:
+    return put_loadout_item(bucket_id, payload, account_id)
 
 
 @app.delete("/api/buckets/{bucket_id}/items/{food}")
-def remove_bucket_item(bucket_id: str, food: str) -> dict:
-    return remove_loadout_item(bucket_id, food)
+def remove_bucket_item(bucket_id: str, food: str, account_id: str = Depends(get_account_id)) -> dict:
+    return remove_loadout_item(bucket_id, food, account_id)
 
 
 @app.put("/api/buckets/{bucket_id}/collected")
-def put_bucket_collected_item(bucket_id: str, payload: CollectedItemInput) -> dict:
-    return put_collected_item(bucket_id, payload)
+def put_bucket_collected_item(bucket_id: str, payload: CollectedItemInput, account_id: str = Depends(get_account_id)) -> dict:
+    return put_collected_item(bucket_id, payload, account_id)
 
 
 @app.delete("/api/buckets/{bucket_id}/collected")
-def clear_bucket_collected(bucket_id: str) -> dict:
-    return clear_collected(bucket_id)
+def clear_bucket_collected(bucket_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    return clear_collected(bucket_id, account_id)
 
 
 @app.put("/api/buckets/{bucket_id}/farmed")
-def put_bucket_farmed_item(bucket_id: str, payload: CollectedItemInput) -> dict:
-    return put_collected_item(bucket_id, payload)
+def put_bucket_farmed_item(bucket_id: str, payload: CollectedItemInput, account_id: str = Depends(get_account_id)) -> dict:
+    return put_collected_item(bucket_id, payload, account_id)
 
 
 @app.delete("/api/buckets/{bucket_id}/farmed")
-def clear_bucket_farmed(bucket_id: str) -> dict:
-    return clear_collected(bucket_id)
+def clear_bucket_farmed(bucket_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    return clear_collected(bucket_id, account_id)
 
 
 @app.get("/api/buckets/{bucket_id}/resources")
-def bucket_resources(bucket_id: str) -> dict:
-    return loadout_resources(bucket_id)
+def bucket_resources(bucket_id: str, account_id: str = Depends(get_account_id)) -> dict:
+    return loadout_resources(bucket_id, account_id)

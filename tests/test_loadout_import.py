@@ -12,13 +12,15 @@ def test_import_loadout_gets_new_uuid(monkeypatch, tmp_path):
             name="Shared Run",
             items=[LoadoutItem(item="Dirt Ramp", quantity=2)],
             collected={"Dirt": 5},
-        )
+        ),
+        owner_id="acct-1",
     )
 
     assert loadout.id
     assert loadout.name == "Shared Run"
     assert loadout.items[0].item == "Dirt Ramp"
     assert loadout.collected == {"Dirt": 5}
+    assert loadout.owner_id == "acct-1"
 
 
 def test_import_loadout_preserves_ignored_materials(monkeypatch, tmp_path):
@@ -31,7 +33,8 @@ def test_import_loadout_preserves_ignored_materials(monkeypatch, tmp_path):
             name="Shared Run",
             items=[LoadoutItem(item="Milk Bottle", quantity=1)],
             ignored_materials=["Milk Bottle"],
-        )
+        ),
+        owner_id="acct-1",
     )
 
     assert loadout.ignored_materials == ["Milk Bottle"]

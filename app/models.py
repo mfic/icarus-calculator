@@ -54,6 +54,8 @@ class Loadout(BaseModel):
     )
     recipe_choices: dict[str, str] = Field(default_factory=dict)
     ignored_materials: list[str] = Field(default_factory=list)
+    owner_id: str = ""
+    shared_with: list[str] = Field(default_factory=list)
     created_at: str
     updated_at: str
 
@@ -120,6 +122,11 @@ class RecipeChoiceInput(BaseModel):
 class IgnoredMaterialInput(BaseModel):
     item: str = Field(min_length=1, max_length=120)
     ignored: bool
+
+
+class ShareInput(BaseModel):
+    account_id: str = Field(min_length=1, max_length=64)
+    shared: bool
 
 
 FoodItem = Item

@@ -16,6 +16,7 @@ from app.models import (
     LoadoutItem,
     LoadoutItemInput,
     RecipeChoiceInput,
+    ShareInput,
 )
 
 
@@ -96,17 +97,38 @@ def save_loadouts(loadouts: list[Loadout]) -> None:
 _loadouts_lock = threading.Lock()
 
 
-def create_loadout(data: LoadoutCreate) -> Loadout:
+def _has_access(loadout: Loadout, account_id: str) -> bool:
+    return loadout.owner_id == account_id or account_id in loadout.shared_with
+
+
+def loadouts_for_account(account_id: str) -> list[Loadout]:
+    return [loadout for loadout in load_loadouts() if _has_access(loadout, account_id)]
+
+
+def get_authorized_loadout(loadout_id: str, account_id: str) -> Loadout | None:
+    for loadout in load_loadouts():
+        if loadout.id == loadout_id and _has_access(loadout, account_id):
+            return loadout
+    return None
+
+
+def create_loadout(data: LoadoutCreate, owner_id: str) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         now = utc_now()
-        loadout = Loadout(id=str(uuid.uuid4()), name=data.name.strip(), created_at=now, updated_at=now)
+        loadout = Loadout(
+            id=str(uuid.uuid4()),
+            name=data.name.strip(),
+            owner_id=owner_id,
+            created_at=now,
+            updated_at=now,
+        )
         loadouts.append(loadout)
         save_loadouts(loadouts)
         return loadout
 
 
-def import_loadout(data: LoadoutImport) -> Loadout:
+def import_loadout(data: LoadoutImport, owner_id: str) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         now = utc_now()
@@ -117,6 +139,7 @@ def import_loadout(data: LoadoutImport) -> Loadout:
             collected=data.collected,
             recipe_choices=data.recipe_choices,
             ignored_materials=data.ignored_materials,
+            owner_id=owner_id,
             created_at=now,
             updated_at=now,
         )
@@ -125,11 +148,11 @@ def import_loadout(data: LoadoutImport) -> Loadout:
         return loadout
 
 
-def upsert_loadout_item(loadout_id: str, item: LoadoutItemInput) -> Loadout:
+def upsert_loadout_item(loadout_id: str, account_id: str, item: LoadoutItemInput) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         for loadout in loadouts:
-            if loadout.id == loadout_id:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
                 existing = next((entry for entry in loadout.items if entry.item == item.item), None)
                 if existing:
                     existing.quantity = item.quantity
@@ -141,11 +164,11 @@ def upsert_loadout_item(loadout_id: str, item: LoadoutItemInput) -> Loadout:
     raise KeyError(loadout_id)
 
 
-def delete_loadout_item(loadout_id: str, item_name: str) -> Loadout:
+def delete_loadout_item(loadout_id: str, account_id: str, item_name: str) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         for loadout in loadouts:
-            if loadout.id == loadout_id:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
                 loadout.items = [item for item in loadout.items if item.item != item_name]
                 loadout.updated_at = utc_now()
                 save_loadouts(loadouts)
@@ -153,11 +176,11 @@ def delete_loadout_item(loadout_id: str, item_name: str) -> Loadout:
     raise KeyError(loadout_id)
 
 
-def set_collected_item(loadout_id: str, collected_item: CollectedItemInput) -> Loadout:
+def set_collected_item(loadout_id: str, account_id: str, collected_item: CollectedItemInput) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         for loadout in loadouts:
-            if loadout.id == loadout_id:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
                 if collected_item.quantity > 0:
                     loadout.collected[collected_item.item] = collected_item.quantity
                 else:
@@ -168,11 +191,11 @@ def set_collected_item(loadout_id: str, collected_item: CollectedItemInput) -> L
     raise KeyError(loadout_id)
 
 
-def set_recipe_choice(loadout_id: str, choice: RecipeChoiceInput) -> Loadout:
+def set_recipe_choice(loadout_id: str, account_id: str, choice: RecipeChoiceInput) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         for loadout in loadouts:
-            if loadout.id == loadout_id:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
                 if choice.recipe_id:
                     loadout.recipe_choices[choice.item] = choice.recipe_id
                 else:
@@ -183,11 +206,11 @@ def set_recipe_choice(loadout_id: str, choice: RecipeChoiceInput) -> Loadout:
     raise KeyError(loadout_id)
 
 
-def set_ignored_material(loadout_id: str, payload: IgnoredMaterialInput) -> Loadout:
+def set_ignored_material(loadout_id: str, account_id: str, payload: IgnoredMaterialInput) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         for loadout in loadouts:
-            if loadout.id == loadout_id:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
                 if payload.ignored:
                     if payload.item.lower() not in {name.lower() for name in loadout.ignored_materials}:
                         loadout.ignored_materials.append(payload.item)
@@ -201,11 +224,30 @@ def set_ignored_material(loadout_id: str, payload: IgnoredMaterialInput) -> Load
     raise KeyError(loadout_id)
 
 
-def clear_collected_items(loadout_id: str) -> Loadout:
+def set_loadout_share(loadout_id: str, account_id: str, payload: ShareInput) -> Loadout:
     with _loadouts_lock:
         loadouts = load_loadouts()
         for loadout in loadouts:
-            if loadout.id == loadout_id:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
+                if loadout.owner_id != account_id:
+                    raise PermissionError(loadout_id)
+                target = payload.account_id.strip()
+                if payload.shared:
+                    if target != loadout.owner_id and target not in loadout.shared_with:
+                        loadout.shared_with.append(target)
+                else:
+                    loadout.shared_with = [entry for entry in loadout.shared_with if entry != target]
+                loadout.updated_at = utc_now()
+                save_loadouts(loadouts)
+                return loadout
+    raise KeyError(loadout_id)
+
+
+def clear_collected_items(loadout_id: str, account_id: str) -> Loadout:
+    with _loadouts_lock:
+        loadouts = load_loadouts()
+        for loadout in loadouts:
+            if loadout.id == loadout_id and _has_access(loadout, account_id):
                 loadout.collected = {}
                 loadout.updated_at = utc_now()
                 save_loadouts(loadouts)
@@ -213,12 +255,15 @@ def clear_collected_items(loadout_id: str) -> Loadout:
     raise KeyError(loadout_id)
 
 
-def delete_loadout(loadout_id: str) -> None:
+def delete_loadout(loadout_id: str, account_id: str) -> None:
     with _loadouts_lock:
         loadouts = load_loadouts()
-        next_loadouts = [loadout for loadout in loadouts if loadout.id != loadout_id]
-        if len(next_loadouts) == len(loadouts):
+        target = next((loadout for loadout in loadouts if loadout.id == loadout_id), None)
+        if target is None or not _has_access(target, account_id):
             raise KeyError(loadout_id)
+        if target.owner_id != account_id:
+            raise PermissionError(loadout_id)
+        next_loadouts = [loadout for loadout in loadouts if loadout.id != loadout_id]
         save_loadouts(next_loadouts)
 
 

@@ -83,3 +83,9 @@ def test_ignored_materials_endpoint_is_exposed():
     paths = {route.path for route in app.routes}
 
     assert "/api/loadouts/{loadout_id}/ignored-materials" in paths
+
+
+def test_share_endpoint_is_exposed():
+    paths = {route.path for route in app.routes}
+
+    assert "/api/loadouts/{loadout_id}/share" in paths

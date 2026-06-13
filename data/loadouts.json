@@ -2,13 +2,17 @@
   "loadouts": [
     {
       "id": "3faa4957-54df-4555-a797-3edf212b3bd0",
-      "name": "Team Loadout",
+      "name": "Loadout",
       "items": [],
-      "collected": {},
+      "collected": {
+        "Wood": 5.0
+      },
       "recipe_choices": {},
       "ignored_materials": [],
+      "owner_id": "a8349878-7a46-4647-900b-22fc4fce4774",
+      "shared_with": [],
       "created_at": "2026-06-12T22:14:54.138569+00:00",
-      "updated_at": "2026-06-13T00:39:38.346763+00:00"
+      "updated_at": "2026-06-13T15:58:57.048195+00:00"
     },
     {
       "id": "e422d6b1-dcd3-49a5-8caa-3e7efd3bb767",
@@ -19,6 +23,8 @@
         "Epoxy": "sulfur+tree sap"
       },
       "ignored_materials": [],
+      "owner_id": "a8349878-7a46-4647-900b-22fc4fce4774",
+      "shared_with": [],
       "created_at": "2026-06-13T00:56:38.196482+00:00",
       "updated_at": "2026-06-13T14:17:56.106062+00:00"
     },
@@ -51,8 +57,53 @@
         "Glass",
         "Water"
       ],
+      "owner_id": "a8349878-7a46-4647-900b-22fc4fce4774",
+      "shared_with": [],
       "created_at": "2026-06-13T14:18:08.549131+00:00",
       "updated_at": "2026-06-13T15:37:24.415543+00:00"
+    },
+    {
+      "id": "d7aba3f7-c936-402c-af85-fe9243d05938",
+      "name": "Loadout",
+      "items": [],
+      "collected": {},
+      "recipe_choices": {},
+      "ignored_materials": [],
+      "owner_id": "4429e06a-4b2d-47c7-b73f-2862a7fce77b",
+      "shared_with": [],
+      "created_at": "2026-06-13T16:12:42.289309+00:00",
+      "updated_at": "2026-06-13T16:12:42.289309+00:00"
+    },
+    {
+      "id": "922b1ca1-1f4a-49f9-ad3f-70cb8c720c06",
+      "name": "Food default",
+      "items": [
+        {
+          "item": "Vegetable Roll",
+          "quantity": 10
+        },
+        {
+          "item": "Savory Roll",
+          "quantity": 10
+        },
+        {
+          "item": "Bacon Butty",
+          "quantity": 10
+        },
+        {
+          "item": "Shepherd's Roll",
+          "quantity": 10
+        }
+      ],
+      "collected": {},
+      "recipe_choices": {
+        "Milk": "glass milk bottle+soy bean"
+      },
+      "ignored_materials": [],
+      "owner_id": "4429e06a-4b2d-47c7-b73f-2862a7fce77b",
+      "shared_with": [],
+      "created_at": "2026-06-13T16:12:55.676414+00:00",
+      "updated_at": "2026-06-13T16:12:55.676414+00:00"
     }
   ]
 }
