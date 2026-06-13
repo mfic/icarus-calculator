@@ -292,13 +292,17 @@ ul {
 }
 
 .share-tools {
-  display: grid;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
   margin-top: 10px;
 }
 
 .account-tools {
-  display: grid;
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
   margin: 8px 0;
 }
@@ -311,25 +315,26 @@ ul {
 
 .account-action-row,
 .loadout-action-row {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  justify-content: center;
 }
 
 .account-code-row {
-  justify-self: center;
-  max-width: 100%;
-  width: max-content;
+  align-self: center;
+  width: min(100%, 34rem);
 }
 
 .account-action-row {
-  justify-self: center;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-  max-width: 100%;
-  width: max-content;
+  align-self: center;
+  width: min(100%, 34rem);
 }
 
-.loadout-action-row {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.account-action-row button,
+.loadout-action-row button,
+.loadout-action-row .file-button {
+  min-width: 0;
 }
 
 .share-row {
@@ -607,13 +612,10 @@ ul {
     justify-self: start;
   }
 
-  .share-tools,
+  .account-action-row,
   .loadout-action-row {
-    grid-template-columns: 1fr;
-  }
-
-  .account-action-row {
-    grid-template-columns: 1fr;
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 
